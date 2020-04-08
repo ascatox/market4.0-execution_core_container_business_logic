@@ -1,0 +1,90 @@
+package it.eng.idsa.businesslogic.processor.consumer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import de.fraunhofer.iais.eis.Message;
+import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
+import it.eng.idsa.businesslogic.processor.producer.websocket.client.MessageWebSocketOverHttpSender;
+import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
+import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
+import it.eng.idsa.businesslogic.util.RejectionMessageType;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author Antonio Scatoloni
+ */
+
+@Component
+public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
+
+	private static final Logger logger = LogManager.getLogger(ConsumerWebSocketSendDataToDataAppProcessor.class);
+	public static final String WS_URI = "wss://localhost:9000";
+
+	@Value("${application.openDataAppReceiverRouter}")
+    private String openDataAppReceiverRouter;
+
+    @Autowired
+    private ApplicationConfiguration configuration;
+
+    @Autowired
+    private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
+
+    @Autowired
+    private RejectionMessageServiceImpl rejectionMessageServiceImpl;
+
+    @Autowired
+    private MessageWebSocketOverHttpSender messageWebSocketOverHttpSender;
+
+    @Override
+    public void process(Exchange exchange) throws Exception {
+
+        Map<String, Object> multipartMessageParts = exchange.getIn().getBody(HashMap.class);
+
+        // Get header, payload and message
+        String header = filterHeader(multipartMessageParts.get("header").toString());
+        String payload = null;
+        if (multipartMessageParts.containsKey("payload")) {
+            payload = multipartMessageParts.get("payload").toString();
+        }
+        Message message = multiPartMessageServiceImpl.getMessage(multipartMessageParts.get("header"));
+        String response = messageWebSocketOverHttpSender.sendMultipartMessageWebSocketOverHttps(header, payload, WS_URI);
+        // Handle response
+        handleResponse(exchange, message, response, configuration.getOpenDataAppReceiver());
+
+    }
+
+
+    private String filterHeader(String header) throws JsonMappingException, JsonProcessingException {
+        Message message = multiPartMessageServiceImpl.getMessage(header);
+        return multiPartMessageServiceImpl.removeToken(message);
+    }
+
+    private void handleResponse(Exchange exchange, Message message, String response, String openApiDataAppAddress) throws UnsupportedOperationException, IOException {
+        if (response == null) {
+            logger.info("...communication error with: " + openApiDataAppAddress);
+            rejectionMessageServiceImpl.sendRejectionMessage(
+                    RejectionMessageType.REJECTION_COMMUNICATION_LOCAL_ISSUES,
+                    message);
+        } else {
+            logger.info("content type response received from the DataAPP=" + response);
+            logger.info("response received from the DataAPP=" + response);
+            logger.info("Successful response: " + response);
+            String header = multiPartMessageServiceImpl.getHeader(response);
+            String payload = multiPartMessageServiceImpl.getPayload(response);
+            exchange.getOut().setHeader("header", header);
+            if (payload != null) {
+                exchange.getOut().setHeader("payload", payload);
+            }
+        }
+    }
+}

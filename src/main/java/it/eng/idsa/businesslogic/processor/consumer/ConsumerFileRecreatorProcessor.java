@@ -1,13 +1,17 @@
 package it.eng.idsa.businesslogic.processor.consumer;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+import it.eng.idsa.businesslogic.configuration.CommunicationRole;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import de.fraunhofer.iais.eis.Message;
@@ -37,6 +41,10 @@ public class ConsumerFileRecreatorProcessor implements Processor {
 	@Autowired
 	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
 
+
+	@Value("${spring.profiles.active:}")
+	private String activeProfiles;
+
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		
@@ -47,8 +55,11 @@ public class ConsumerFileRecreatorProcessor implements Processor {
 		Map<String, Object> multipartMessageParts = new HashMap();
 		
 		//  Receive and recreate Multipart message
+		Optional<String> profile = Arrays.stream(activeProfiles.split(",")).findFirst();
+		CommunicationRole communicationRole = CommunicationRole.valueOf(profile.get());
 		FileRecreatorBeanServer fileRecreatorBean = webSocketServerConfiguration.fileRecreatorBeanWebSocket();
-		this.initializeIdscpServer(message, fileRecreatorBean);
+		fileRecreatorBean.setCommunicationRole(communicationRole);
+		this.initializeServer(message, fileRecreatorBean);
 		Thread fileRecreatorBeanThread = new Thread(fileRecreatorBean, "FileRecreator");
 		fileRecreatorBeanThread.start();
 		String recreatedMultipartMessage = webSocketServerConfiguration.recreatedMultipartMessageBeanWebSocket().remove();
@@ -68,10 +79,11 @@ public class ConsumerFileRecreatorProcessor implements Processor {
 		}
 		
 		// Return exchange
+		multipartMessageParts.put(CommunicationRole.class.getSimpleName(), profile.get());
 		exchange.getOut().setHeaders(multipartMessageParts);
 	}
 
-	private void initializeIdscpServer(Message message, FileRecreatorBeanServer fileRecreatorBean) {
+	private void initializeServer(Message message, FileRecreatorBeanServer fileRecreatorBean) {
 		try {
 			fileRecreatorBean.setup();
 		} catch(Exception e) {

@@ -30,12 +30,16 @@ public class ConsumerMultiPartMessageProcessor implements Processor {
 	@Value("${application.isEnabledDapsInteraction}")
 	private boolean isEnabledDapsInteraction;
 
+	@Value("${application.websocket.isEnabled}")
+	private boolean isEnabledWebSocket;
+
 	@Autowired
 	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
 	
 	@Autowired
 	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
-	
+
+
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		
@@ -78,7 +82,8 @@ public class ConsumerMultiPartMessageProcessor implements Processor {
 				multipartMessageParts.put("header", header);
 				message=multiPartMessageServiceImpl.getMessage(multipartMessageParts.get("header"));
 			}
-						
+
+			headesParts.put("Is-Enabled-WebSocket", isEnabledWebSocket);
 			// Return exchange
 			exchange.getOut().setHeaders(headesParts);
 			exchange.getOut().setBody(multipartMessageParts);
