@@ -1,6 +1,7 @@
 package it.eng.idsa.businesslogic.processor.consumer.websocket.server;
 
 import it.eng.idsa.businesslogic.configuration.CommunicationRole;
+import it.eng.idsa.businesslogic.configuration.CommunicationRoleConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.http.HttpVersion;

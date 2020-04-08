@@ -1,6 +1,7 @@
 package it.eng.idsa.businesslogic.processor.producer;
 
 import de.fraunhofer.iais.eis.Message;
+import it.eng.idsa.businesslogic.configuration.CommunicationRoleConfiguration;
 import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
 import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -25,8 +27,6 @@ import java.util.Map;
 public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Processor {
 
 	private static final Logger logger = LogManager.getLogger(ProducerParseReceivedDataFromDAppProcessorBodyBinary.class);
-	public static final String WS_URI = "wss://localhost:8086";
-
 	@Value("${application.isEnabledDapsInteraction}")
 	private boolean isEnabledDapsInteraction;
 
@@ -35,6 +35,9 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 	
 	@Autowired
 	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
+
+	@Autowired
+	private CommunicationRoleConfiguration communicationRoleConfiguration;
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -56,6 +59,8 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 			headesParts.put("Is-Enabled-Daps-Interaction", isEnabledDapsInteraction);
 			contentType = null != receivedDataHeader.get("Content-Type")? receivedDataHeader.get("Content-Type").toString() : null;
 			headesParts.put("Content-Type", contentType);
+
+			String WS_URI = "wss://localhost:"+communicationRoleConfiguration.getConsumerPort();
 
 			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : WS_URI;
 			headesParts.put("Forward-To", forwardTo);

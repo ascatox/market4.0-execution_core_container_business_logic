@@ -4,6 +4,7 @@ package it.eng.idsa.businesslogic.routes;
 
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
 import it.eng.idsa.businesslogic.configuration.CommunicationRole;
+import it.eng.idsa.businesslogic.configuration.CommunicationRoleConfiguration;
 import it.eng.idsa.businesslogic.processor.consumer.*;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorProducer;
@@ -87,7 +88,8 @@ public class CamelRouteWebSocket extends RouteBuilder {
         from("timer://simpleTimer?repeatCount=-1")
                 .process(fileRecreatorProcessor)
                 .choice()
-                .when(header(CommunicationRole.class.getSimpleName()).isEqualToIgnoreCase(CommunicationRole.CONSUMER.name()))
+                .when(header(CommunicationRole.class.getSimpleName())
+                        .isEqualToIgnoreCase(CommunicationRole.CONSUMER.name()))
                     .process(multiPartMessageProcessor)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
@@ -125,7 +127,8 @@ public class CamelRouteWebSocket extends RouteBuilder {
                 .endChoice()
 
                 .endChoice()
-                .when(header(CommunicationRole.class.getSimpleName()).isEqualToIgnoreCase(CommunicationRole.PRODUCER.name()))
+                .when(header(CommunicationRole.class.getSimpleName())
+                        .isEqualToIgnoreCase(CommunicationRole.PRODUCER.name()))
                     .process(producerParseReceivedDataFromDAppProcessorBodyBinary)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))

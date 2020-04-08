@@ -28,10 +28,12 @@ import java.util.Map;
 public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
 
 	private static final Logger logger = LogManager.getLogger(ConsumerWebSocketSendDataToDataAppProcessor.class);
-	public static final String WS_URI = "wss://localhost:9000";
 
 	@Value("${application.openDataAppReceiverRouter}")
     private String openDataAppReceiverRouter;
+
+    @Value("${application.dataApp.websocket.port}")
+    private int dataAppWebSocketPort;
 
     @Autowired
     private ApplicationConfiguration configuration;
@@ -57,6 +59,7 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
             payload = multipartMessageParts.get("payload").toString();
         }
         Message message = multiPartMessageServiceImpl.getMessage(multipartMessageParts.get("header"));
+       String WS_URI = "wss://localhost:" + dataAppWebSocketPort;
         String response = messageWebSocketOverHttpSender.sendMultipartMessageWebSocketOverHttps(header, payload, WS_URI);
         // Handle response
         handleResponse(exchange, message, response, configuration.getOpenDataAppReceiver());

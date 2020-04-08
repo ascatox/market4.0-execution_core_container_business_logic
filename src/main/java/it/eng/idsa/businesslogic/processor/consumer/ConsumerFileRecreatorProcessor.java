@@ -1,25 +1,22 @@
 package it.eng.idsa.businesslogic.processor.consumer;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import it.eng.idsa.businesslogic.configuration.CommunicationRole;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import de.fraunhofer.iais.eis.Message;
+import it.eng.idsa.businesslogic.configuration.CommunicationRole;
+import it.eng.idsa.businesslogic.configuration.CommunicationRoleConfiguration;
 import it.eng.idsa.businesslogic.configuration.WebSocketServerConfiguration;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.FileRecreatorBeanServer;
 import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
 import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -41,9 +38,8 @@ public class ConsumerFileRecreatorProcessor implements Processor {
 	@Autowired
 	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
 
-
-	@Value("${spring.profiles.active:}")
-	private String activeProfiles;
+	@Autowired
+	private CommunicationRoleConfiguration communicationRoleConfiguration;
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -55,10 +51,8 @@ public class ConsumerFileRecreatorProcessor implements Processor {
 		Map<String, Object> multipartMessageParts = new HashMap();
 		
 		//  Receive and recreate Multipart message
-		Optional<String> profile = Arrays.stream(activeProfiles.split(",")).findFirst();
-		CommunicationRole communicationRole = CommunicationRole.valueOf(profile.get());
 		FileRecreatorBeanServer fileRecreatorBean = webSocketServerConfiguration.fileRecreatorBeanWebSocket();
-		fileRecreatorBean.setCommunicationRole(communicationRole);
+		fileRecreatorBean.setCommunicationRole(communicationRoleConfiguration.getCommunicationRole());
 		this.initializeServer(message, fileRecreatorBean);
 		Thread fileRecreatorBeanThread = new Thread(fileRecreatorBean, "FileRecreator");
 		fileRecreatorBeanThread.start();
@@ -79,7 +73,8 @@ public class ConsumerFileRecreatorProcessor implements Processor {
 		}
 		
 		// Return exchange
-		multipartMessageParts.put(CommunicationRole.class.getSimpleName(), profile.get());
+		multipartMessageParts.put(CommunicationRole.class.getSimpleName(),
+				communicationRoleConfiguration.getEnabled());
 		exchange.getOut().setHeaders(multipartMessageParts);
 	}
 
