@@ -1,5 +1,13 @@
 package it.eng.idsa.businesslogic.processor.consumer.websocket.server;
 
+import de.fhg.aisec.ids.comm.server.IdscpServer;
+import it.eng.idsa.businesslogic.configuration.CommunicationRole;
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfiguration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -8,16 +16,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-
-import it.eng.idsa.businesslogic.configuration.CommunicationRole;
-import it.eng.idsa.businesslogic.configuration.CommunicationRoleConfiguration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import de.fhg.aisec.ids.comm.server.IdscpServer;
-import it.eng.idsa.businesslogic.configuration.WebSocketServerConfiguration;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author Milan Karajovic and Gabriele De Luca

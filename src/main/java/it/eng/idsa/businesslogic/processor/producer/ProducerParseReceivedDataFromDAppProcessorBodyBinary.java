@@ -60,9 +60,9 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 			contentType = null != receivedDataHeader.get("Content-Type")? receivedDataHeader.get("Content-Type").toString() : null;
 			headesParts.put("Content-Type", contentType);
 
-			String WS_URI = "wss://localhost:"+communicationRoleConfiguration.getConsumerPort();
+			String wsURI = "wss://"+communicationRoleConfiguration.getConsumerHost()+ ":" +communicationRoleConfiguration.getConsumerPort();
 
-			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : WS_URI;
+			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : wsURI;
 			headesParts.put("Forward-To", forwardTo);
 
 			// Create multipart message parts

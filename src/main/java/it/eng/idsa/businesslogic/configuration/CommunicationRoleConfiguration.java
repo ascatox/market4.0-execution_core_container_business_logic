@@ -12,11 +12,15 @@ import org.springframework.stereotype.Component;
 public class CommunicationRoleConfiguration {
 
     /*
+    communication.role.producer.host=localhost
+    communication.role.consumer.host=localhost
     communication.role.consumer.port=8086
     communication.role.producer.port=8098
     communication.role.enabled=CONSUMER
     */
 
+    private String consumerHost;
+    private String producerHost;
     private int consumerPort;
     private int producerPort;
 
@@ -29,6 +33,24 @@ public class CommunicationRoleConfiguration {
     public void setConsumerPort(int consumerPort) {
         this.consumerPort = consumerPort;
         CommunicationRole.CONSUMER.setPort(consumerPort);
+    }
+
+    public String getConsumerHost() {
+        return consumerHost;
+    }
+
+    public void setConsumerHost(String consumerHost) {
+        this.consumerHost = consumerHost;
+        CommunicationRole.CONSUMER.setHost(consumerHost);
+    }
+
+    public String getProducerHost() {
+        return producerHost;
+    }
+
+    public void setProducerHost(String producerHost) {
+        this.producerHost = producerHost;
+        CommunicationRole.PRODUCER.setHost(producerHost);
     }
 
     public int getProducerPort() {
@@ -49,8 +71,7 @@ public class CommunicationRoleConfiguration {
     }
 
     public CommunicationRole getCommunicationRole() {
-        final String enabledR = getEnabled();
-        return CommunicationRole.valueOf(enabledR);
+        return CommunicationRole.valueOf(getEnabled());
     }
 
 }

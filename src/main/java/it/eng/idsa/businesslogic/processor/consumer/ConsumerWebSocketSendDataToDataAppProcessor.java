@@ -32,8 +32,8 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
 	@Value("${application.openDataAppReceiverRouter}")
     private String openDataAppReceiverRouter;
 
-    @Value("${application.dataApp.websocket.port}")
-    private int dataAppWebSocketPort;
+    @Value("${application.dataApp.websocket.url}")
+    private String dataAppWebSocketUrl;
 
     @Autowired
     private ApplicationConfiguration configuration;
@@ -59,8 +59,7 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
             payload = multipartMessageParts.get("payload").toString();
         }
         Message message = multiPartMessageServiceImpl.getMessage(multipartMessageParts.get("header"));
-       String WS_URI = "wss://localhost:" + dataAppWebSocketPort;
-        String response = messageWebSocketOverHttpSender.sendMultipartMessageWebSocketOverHttps(header, payload, WS_URI);
+        String response = messageWebSocketOverHttpSender.sendMultipartMessageWebSocketOverHttps(header, payload, dataAppWebSocketUrl);
         // Handle response
         handleResponse(exchange, message, response, configuration.getOpenDataAppReceiver());
 

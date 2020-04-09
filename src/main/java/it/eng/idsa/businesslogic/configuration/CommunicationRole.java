@@ -5,13 +5,23 @@ package it.eng.idsa.businesslogic.configuration;
  */
 
 public enum CommunicationRole {
-    PRODUCER(8098),
-    CONSUMER(8086);
+    PRODUCER("localhost", 8098),
+    CONSUMER("localhost",8086);
 
+    String host;
     int port;
 
-    CommunicationRole(int port) {
+    CommunicationRole(String host, int port) {
+        this.host = host;
         this.port = port;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public int getPort() {

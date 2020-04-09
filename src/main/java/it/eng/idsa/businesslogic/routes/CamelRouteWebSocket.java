@@ -4,7 +4,6 @@ package it.eng.idsa.businesslogic.routes;
 
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
 import it.eng.idsa.businesslogic.configuration.CommunicationRole;
-import it.eng.idsa.businesslogic.configuration.CommunicationRoleConfiguration;
 import it.eng.idsa.businesslogic.processor.consumer.*;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorProducer;
