@@ -42,8 +42,8 @@ public class ConsumerExceptionMultiPartMessageProcessor implements Processor {
 		String header;
 		String payload;
 		Message message=null;
-		Map<String, Object> headesParts = new HashMap();
-		Map<String, Object> multipartMessageParts = new HashMap();
+		Map<String, Object> headesParts = new HashMap<String, Object>();
+		Map<String, Object> multipartMessageParts = new HashMap<String, Object>();
 		
 		if(
 			exchange.getIn().getHeaders().containsKey("header")==false
@@ -61,7 +61,7 @@ public class ConsumerExceptionMultiPartMessageProcessor implements Processor {
 			// Put in the header value of the application.property: application.isEnabledDapsInteraction
 			headesParts.put("Is-Enabled-Daps-Interaction", isEnabledDapsInteraction);
 			
-			header= multiPartMessageServiceImpl.getHeader(exchange.getIn().getHeader("header").toString());
+			header= multiPartMessageServiceImpl.getHeaderContentString(exchange.getIn().getHeader("header").toString());
 			multipartMessageParts.put("header", header);
 			if(exchange.getIn().getHeaders().containsKey("payload")) {
 				payload=exchange.getIn().getHeader("payload").toString();

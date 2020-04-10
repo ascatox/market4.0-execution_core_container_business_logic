@@ -1,13 +1,5 @@
 package it.eng.idsa.businesslogic.processor.consumer.websocket.server;
 
-import de.fhg.aisec.ids.comm.server.IdscpServer;
-import it.eng.idsa.businesslogic.configuration.CommunicationRole;
-import it.eng.idsa.businesslogic.configuration.WebSocketServerConfiguration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -16,6 +8,14 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import de.fhg.aisec.ids.comm.server.IdscpServer;
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfiguration;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author Milan Karajovic and Gabriele De Luca
@@ -45,26 +45,30 @@ public class FileRecreatorBeanServer implements Runnable {
     private ArrayList<byte[]> fileByteArray = new ArrayList<byte[]>();
     private ByteBuffer byteBuffer = null;
     private RecreatedMultipartMessageBean recreatedmultipartMessage;
-    private CommunicationRole communicationRole;
 
     public FileRecreatorBeanServer() {
 
     }
 
-    public void setup() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, URISyntaxException {
-        this.frameBuffer = webSocketServerConfiguration.frameBufferWebSocket();
-        this.recreatedmultipartMessage = webSocketServerConfiguration.recreatedMultipartMessageBeanWebSocket();
-        if (isEnabledIdscp) {
-            this.inputStreamSocketListener = webSocketServerConfiguration.inputStreamSocketListenerWebSocketServer();
-            this.inputStreamSocketListener.setFrameBuffer(this.frameBuffer);
-            this.idscpServer = webSocketServerConfiguration.idscpServerWebSocket();
-            this.idscpServer.setSocketListener(this.inputStreamSocketListener);
-            this.idscpServer.createIdscpServer();
-            this.setServer(this.idscpServer.getIdscpServer());
-        } else if (isEnabledWebSocket) {
-            HttpWebSocketServerBean httpWebSocketServerBean = webSocketServerConfiguration.httpsServerWebSocket();
-            httpWebSocketServerBean.createServer(getCommunicationRole());
-        }
+    public void setup() throws Exception  {
+    	try {
+    		this.frameBuffer = webSocketServerConfiguration.frameBufferWebSocket();
+    		this.recreatedmultipartMessage = webSocketServerConfiguration.recreatedMultipartMessageBeanWebSocket();
+    		if (isEnabledIdscp) {
+    			this.inputStreamSocketListener = webSocketServerConfiguration.inputStreamSocketListenerWebSocketServer();
+    			this.inputStreamSocketListener.setFrameBuffer(this.frameBuffer);
+    			this.idscpServer = webSocketServerConfiguration.idscpServerWebSocket();
+    			this.idscpServer.setSocketListener(this.inputStreamSocketListener);
+    			this.idscpServer.createIdscpServer();
+    			this.setServer(this.idscpServer.getIdscpServer());
+    		} else if (isEnabledWebSocket) {
+    			HttpWebSocketServerBean httpWebSocketServerBean = webSocketServerConfiguration.httpsServerWebSocket();
+    			httpWebSocketServerBean.createServer();
+    		}
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    		throw e;
+    	}
     }
 
 
@@ -137,13 +141,5 @@ public class FileRecreatorBeanServer implements Runnable {
 	public void setByteBuffer(ByteBuffer byteBuffer) {
 		this.byteBuffer = byteBuffer;
 	}
-
-    public CommunicationRole getCommunicationRole() {
-        return communicationRole;
-    }
-
-    public void setCommunicationRole(CommunicationRole communicationRole) {
-        this.communicationRole = communicationRole;
-    }
 
 }

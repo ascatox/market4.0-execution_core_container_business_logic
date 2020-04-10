@@ -46,8 +46,8 @@ public class ConsumerMultiPartMessageProcessor implements Processor {
 		String header;
 		String payload;
 		Message message=null;
-		Map<String, Object> headesParts = new HashMap();
-		Map<String, Object> multipartMessageParts = new HashMap();
+		Map<String, Object> headesParts = new HashMap<String, Object>();
+		Map<String, Object> multipartMessageParts = new HashMap<String, Object>();
 		
 		if(!exchange.getIn().getHeaders().containsKey("header"))
 		{
@@ -66,7 +66,7 @@ public class ConsumerMultiPartMessageProcessor implements Processor {
 				payload=exchange.getIn().getHeader("payload").toString();
 				if(payload.equals("RejectionMessage")) {
 					// Create multipart message for the RejectionMessage
-					header= multiPartMessageServiceImpl.getHeader(exchange.getIn().getHeader("header").toString());
+					header= multiPartMessageServiceImpl.getHeaderContentString(exchange.getIn().getHeader("header").toString());
 					multipartMessageParts.put("header", header);
 				} else {
 					// Create multipart message with payload

@@ -5,15 +5,14 @@ import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.http.HttpEntity;
-import org.apache.http.util.EntityUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
@@ -68,6 +67,12 @@ public class ProducerSendResponseToDataAppProcessor implements Processor {
 		String responseMultipartMessageString = MultiPart.toString(responseMultipartMessage, false);
 		String contentType = responseMultipartMessage.getHttpHeaders().getOrDefault("Content-Type", "multipart/mixed");
 		headesParts.put("Content-Type", contentType);
+		
+		if(!isEnabledClearingHouse) {
+			// clear from Headers multipartMessageBody (it is not unusable for the Open Data App)
+			Map<String, Object> headers = exchange.getIn().getHeaders();
+			headers.remove("multipartMessageBody");
+		}
 		
 		exchange.getOut().setHeaders(headesParts);
 		exchange.getOut().setBody(responseMultipartMessageString);
