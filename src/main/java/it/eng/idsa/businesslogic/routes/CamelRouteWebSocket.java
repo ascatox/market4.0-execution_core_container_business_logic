@@ -37,12 +37,6 @@ public class CamelRouteWebSocket extends RouteBuilder {
     ProducerGetTokenFromDapsProcessor getTokenFromDapsProcessor;
 
     @Autowired
-    ProducerSendToActiveMQ sendToActiveMQ;
-
-    @Autowired
-    ProducerReceiveFromActiveMQ receiveFromActiveMQ;
-
-    @Autowired
     ProducerSendTransactionToCHProcessor sendTransactionToCHProcessor;
 
     @Autowired
@@ -86,15 +80,13 @@ public class CamelRouteWebSocket extends RouteBuilder {
     public void configure() throws Exception {
         from("timer://simpleTimer?repeatCount=-1")
                 .process(fileRecreatorProcessor)
-                .choice()
+                .choice() //CONSUMER SIDE
                 .when(header(CommunicationRole.class.getSimpleName())
                         .isEqualToIgnoreCase(CommunicationRole.CONSUMER.name()))
                     .process(multiPartMessageProcessor)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
                         .process(validateTokenProcessor)
-        //					.process(sendToActiveMQ)
-        //					.process(receiveFromActiveMQ)
                         // Send to the Endpoint: F
                         .choice()
                         .when(header("Is-Enabled-WebSocket").isEqualTo(true))
@@ -125,15 +117,13 @@ public class CamelRouteWebSocket extends RouteBuilder {
                  .endChoice()
                 .endChoice()
 
-                .endChoice()
+                .endChoice() //PRODUCER SIDE
                 .when(header(CommunicationRole.class.getSimpleName())
                         .isEqualToIgnoreCase(CommunicationRole.PRODUCER.name()))
                     .process(producerParseReceivedDataFromDAppProcessorBodyBinary)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
                         .process(getTokenFromDapsProcessor)
-        //						.process(sendToActiveMQ)
-        //						.process(receiveFromActiveMQ)
                         // Send data to Endpoint B
                         .process(producerSendDataToBusinessLogicProcessor)
                         .process(parseReceivedResponseMessage)
@@ -144,8 +134,6 @@ public class CamelRouteWebSocket extends RouteBuilder {
                         .process(sendTransactionToCHProcessor)
                     .endChoice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-    //						.process(sendToActiveMQ)
-    //						.process(receiveFromActiveMQ)
                     // Send data to Endpoint B
                         .process(producerSendDataToBusinessLogicProcessor)
                         .process(parseReceivedResponseMessage)

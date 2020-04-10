@@ -1,5 +1,6 @@
 package it.eng.idsa.businesslogic.processor.consumer.websocket.server;
 
+import it.eng.idsa.businesslogic.configuration.CommunicationRole;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.http.HttpVersion;
@@ -48,10 +49,10 @@ public class HttpWebSocketServerBean {
     @Autowired
     private ResourceLoader resourceLoader;
 
-    public Server createServer() {
+    public Server createServer(CommunicationRole communicationRole) {
         if (null == server || !server.isStarted() || !server.isRunning()) {
             try {
-                setup();
+                setup(communicationRole.getPort());
                 start();
             } catch (Exception e) {
                 logger.error("Error on starting JETTY Server with stack: " + e.getMessage());
@@ -60,7 +61,7 @@ public class HttpWebSocketServerBean {
         return server;
     }
 
-    public void setup() throws IOException {
+    public void setup(int port) throws IOException {
     	// Prepare keystore
     	InputStream keyStore=null;
     	try {
@@ -77,8 +78,6 @@ public class HttpWebSocketServerBean {
 
 
     		String password = keyStorePassword;
-
-    		int port = idscpServerPort; //SECURE_PORT;
 
     		HttpConfiguration http_config = getHttpConfiguration(port);
     		SslContextFactory sslContextFactory = getSslContextFactory (ks, password);

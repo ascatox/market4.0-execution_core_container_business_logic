@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 
+import it.eng.idsa.businesslogic.configuration.CommunicationRole;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class FileRecreatorBeanServer implements Runnable {
     @Value("${application.websocket.isEnabled}")
     private boolean isEnabledWebSocket;
 
+    private CommunicationRole communicationRole;
+
 
     private FrameBufferBean frameBuffer;
     private InputStreamSocketListenerServer inputStreamSocketListener;
@@ -63,7 +66,7 @@ public class FileRecreatorBeanServer implements Runnable {
     			this.setServer(this.idscpServer.getIdscpServer());
     		} else if (isEnabledWebSocket) {
     			HttpWebSocketServerBean httpWebSocketServerBean = webSocketServerConfiguration.httpsServerWebSocket();
-    			httpWebSocketServerBean.createServer();
+    			httpWebSocketServerBean.createServer(getCommunicationRole());
     		}
     	}catch (Exception e) {
     		e.printStackTrace();
@@ -142,4 +145,12 @@ public class FileRecreatorBeanServer implements Runnable {
 		this.byteBuffer = byteBuffer;
 	}
 
+
+    public CommunicationRole getCommunicationRole() {
+        return communicationRole;
+    }
+
+    public void setCommunicationRole(CommunicationRole communicationRole) {
+        this.communicationRole = communicationRole;
+    }
 }

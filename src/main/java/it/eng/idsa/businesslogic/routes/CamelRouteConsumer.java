@@ -120,7 +120,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 		// TODO: Improve this initialization
 		// Camel WebSocket - Endpoint B
 		//boolean startupRoute = true;
-		from("timer://simpleTimer?repeatCount=-1")
+		/*from("timer://simpleTimer?repeatCount=-1")
 			.process(fileRecreatorProcessor)
 			.process(multiPartMessageProcessor)
 			.choice()
@@ -146,6 +146,6 @@ public class CamelRouteConsumer extends RouteBuilder {
 						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
 							//.process(sendTransactionToCHProcessor)
 					.endChoice()
-			.endChoice();			
+			.endChoice();*/
 	}
 }
