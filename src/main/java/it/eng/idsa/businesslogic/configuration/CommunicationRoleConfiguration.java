@@ -11,14 +11,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("communication.role")
 public class CommunicationRoleConfiguration {
 
-    /*
-    communication.role.producer.host=localhost
-    communication.role.consumer.host=localhost
-    communication.role.consumer.port=8086
-    communication.role.producer.port=8098
-    communication.role.enabled=CONSUMER
-    */
-
     private String consumerHost;
     private String producerHost;
     private int consumerPort;
