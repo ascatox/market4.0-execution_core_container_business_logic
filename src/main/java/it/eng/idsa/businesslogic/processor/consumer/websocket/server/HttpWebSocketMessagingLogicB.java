@@ -12,18 +12,18 @@ import java.nio.charset.StandardCharsets;
  *
  * @author Antonio Scatoloni
  */
-public class HttpWebSocketMessagingLogic {
-    private static final Logger logger = LogManager.getLogger(HttpWebSocketMessagingLogic.class);
+public class HttpWebSocketMessagingLogicB {
+    private static final Logger logger = LogManager.getLogger(HttpWebSocketMessagingLogicB.class);
 
     private WebSocketServerConfiguration webSocketServerConfiguration;
-    private static HttpWebSocketMessagingLogic instance;
+    private static HttpWebSocketMessagingLogicB instance;
 
-    private HttpWebSocketMessagingLogic() {
+    private HttpWebSocketMessagingLogicB() {
     }
 
-    public static HttpWebSocketMessagingLogic getInstance() {
+    public static HttpWebSocketMessagingLogicB getInstance() {
         if (instance == null) {
-            instance = new HttpWebSocketMessagingLogic();
+            instance = new HttpWebSocketMessagingLogicB();
         }
         return instance;
     }
@@ -43,7 +43,7 @@ public class HttpWebSocketMessagingLogic {
                 Thread fileRecreatorBeanThread = new Thread(responseMessageSendPartialServer, "ResponseMessageSendPartialServer");
                 fileRecreatorBeanThread.start();
             }
-           logger.debug(HttpWebSocketMessagingLogic.class.getSimpleName() +" DATA RECEIVED FROM SOCKET -> " + receivedMessage);
+           logger.debug(HttpWebSocketMessagingLogicB.class.getSimpleName() +" DATA RECEIVED FROM SOCKET -> " + receivedMessage);
 
        }
     }

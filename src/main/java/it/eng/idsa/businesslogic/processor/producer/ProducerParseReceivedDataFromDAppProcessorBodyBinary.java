@@ -1,7 +1,7 @@
 package it.eng.idsa.businesslogic.processor.producer;
 
 import de.fraunhofer.iais.eis.Message;
-import it.eng.idsa.businesslogic.configuration.CommunicationRoleConfiguration;
+import it.eng.idsa.businesslogic.processor.consumer.websocket.server.HttpWebSocketServerBean;
 import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
 import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -30,14 +29,14 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 	@Value("${application.isEnabledDapsInteraction}")
 	private boolean isEnabledDapsInteraction;
 
+	@Value("${application.websocket.endpointB.url}")
+	private String wssEndpointBurl;
+
 	@Autowired
 	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
 	
 	@Autowired
 	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
-
-	@Autowired
-	private CommunicationRoleConfiguration communicationRoleConfiguration;
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -60,9 +59,9 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 			contentType = null != receivedDataHeader.get("Content-Type")? receivedDataHeader.get("Content-Type").toString() : null;
 			headesParts.put("Content-Type", contentType);
 
-			String wsURI = "wss://"+communicationRoleConfiguration.getConsumerHost()+ ":" +communicationRoleConfiguration.getConsumerPort();
+			//String wsURI = "wss://0.0.0.0:8086"+ HttpWebSocketServerBean.WS_URL;
 
-			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : wsURI;
+			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : wssEndpointBurl;
 			headesParts.put("Forward-To", forwardTo);
 
 			// Create multipart message parts

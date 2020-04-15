@@ -1,8 +1,10 @@
-package it.eng.idsa.businesslogic.processor.consumer;
+package it.eng.idsa.businesslogic.processor.producer;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationA;
+import it.eng.idsa.businesslogic.processor.consumer.websocket.server.ResponseMessageBufferBean;
+import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
+import nl.tno.ids.common.multipart.MultiPart;
+import nl.tno.ids.common.multipart.MultiPartMessage;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.http.HttpEntity;
@@ -11,12 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-
-import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationB;
-import it.eng.idsa.businesslogic.processor.consumer.websocket.server.ResponseMessageBufferBean;
-import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
-import nl.tno.ids.common.multipart.MultiPart;
-import nl.tno.ids.common.multipart.MultiPartMessage;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -25,11 +23,11 @@ import nl.tno.ids.common.multipart.MultiPartMessage;
  */
 
 @Component
-public class ConsumerSendDataToBusinessLogicProcessor implements Processor {
+public class ProducerSendResponseToCallerProcessor implements Processor {
 
 	@Value("${application.isEnabledClearingHouse}")
 	private boolean isEnabledClearingHouse;
-	
+
 	@Value("${application.idscp.isEnabled}")
 	private boolean isEnabledIdscp;
 
@@ -40,7 +38,7 @@ public class ConsumerSendDataToBusinessLogicProcessor implements Processor {
 	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
 	
 	@Autowired
-	private WebSocketServerConfigurationB webSocketServerConfiguration;
+	private WebSocketServerConfigurationA webSocketServerConfiguration;
 	
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -48,9 +46,6 @@ public class ConsumerSendDataToBusinessLogicProcessor implements Processor {
 		Map<String, Object> headesParts = new HashMap<String, Object>();
 		
 		Map<String, Object> multipartMessagePartsReceived = exchange.getIn().getBody(HashMap.class);
-		
-		// Put in the header value of the application.property: application.isEnabledClearingHouse
-		headesParts.put("Is-Enabled-Clearing-House", isEnabledClearingHouse);
 		
 		// Get header, payload and message
 		String header = multipartMessagePartsReceived.get("header").toString();
@@ -70,10 +65,10 @@ public class ConsumerSendDataToBusinessLogicProcessor implements Processor {
 		headesParts.put("Content-Type", contentType);
 		
 		// TODO: Send The MultipartMessage message to the WebaSocket
-		if(isEnabledIdscp || isEnabledWebSocket) { //TODO Try to remove this config property
+	//	if(isEnabledIdscp || isEnabledWebSocket) { //TODO Try to remove this config property
 			ResponseMessageBufferBean responseMessageServerBean = webSocketServerConfiguration.responseMessageBufferWebSocket();
 			responseMessageServerBean.add(multipartMessageString.getBytes());
-		}
+	//	}
 		
 		exchange.getOut().setHeaders(headesParts);
 		exchange.getOut().setBody(multipartMessageString);

@@ -3,7 +3,6 @@
 package it.eng.idsa.businesslogic.routes;
 
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
-import it.eng.idsa.businesslogic.configuration.CommunicationRole;
 import it.eng.idsa.businesslogic.processor.consumer.*;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorProducer;
@@ -61,7 +60,10 @@ public class CamelRouteWebSocket extends RouteBuilder {
     ConsumerMultiPartMessageProcessor multiPartMessageProcessor;
 
     @Autowired
-    ConsumerFileRecreatorProcessor fileRecreatorProcessor;
+    ConsumerFileRecreatorProcessor consumerFileRecreatorProcessor;
+
+    @Autowired
+    ProducerFileRecreatorProcessor producerFileRecreatorProcessor;
 
     @Autowired
     ConsumerSendDataToDataAppProcessor sendDataToDataAppProcessor;
@@ -75,15 +77,14 @@ public class CamelRouteWebSocket extends RouteBuilder {
     @Autowired
     ConsumerWebSocketSendDataToDataAppProcessor sendDataToDataAppProcessorOverWS;
 
+    @Autowired
+    ProducerSendResponseToCallerProcessor producerSendResponseToCallerProcessor;
 
     @Override
     public void configure() throws Exception {
-        from("timer://simpleTimer?repeatCount=-1")
-                .process(fileRecreatorProcessor)
-                .choice() //CONSUMER SIDE
-                .when(header(CommunicationRole.class.getSimpleName())
-                        .isEqualToIgnoreCase(CommunicationRole.CONSUMER.name()))
-                    .process(multiPartMessageProcessor)
+            from("timer://simpleTimer?fixedRate=true&period=10s")
+                .process(consumerFileRecreatorProcessor)
+                .process(multiPartMessageProcessor)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
                         .process(validateTokenProcessor)
@@ -115,12 +116,11 @@ public class CamelRouteWebSocket extends RouteBuilder {
                     .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
                         .process(sendTransactionToCHProcessor)
                  .endChoice()
-                .endChoice()
-
-                .endChoice() //PRODUCER SIDE
-                .when(header(CommunicationRole.class.getSimpleName())
-                        .isEqualToIgnoreCase(CommunicationRole.PRODUCER.name()))
-                    .process(producerParseReceivedDataFromDAppProcessorBodyBinary)
+                .endChoice();
+          //      .endChoice() //CONSUMER SIDE
+        from("timer://simpleTimerB?fixedRate=true&period=10s")
+                .process(producerFileRecreatorProcessor)
+                .process(producerParseReceivedDataFromDAppProcessorBodyBinary)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
                         .process(getTokenFromDapsProcessor)
@@ -138,13 +138,13 @@ public class CamelRouteWebSocket extends RouteBuilder {
                         .process(producerSendDataToBusinessLogicProcessor)
                         .process(parseReceivedResponseMessage)
                         //.process(sendResponseToDataAppProcessor)
-                        .process(consumerSendDataToBusinessLogicProcessor) //TODO
+                        .process(producerSendResponseToCallerProcessor) //TODO
                     .choice()
                     .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
                         .process(sendTransactionToCHProcessor)
                     .endChoice()
-                    .endChoice()
-                .endChoice();
+                    .endChoice();
+//                .endChoice(); //PRODUCER SIDE
     }
 }
 

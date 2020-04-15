@@ -1,7 +1,7 @@
-package it.eng.idsa.businesslogic.processor.consumer;
+package it.eng.idsa.businesslogic.processor.producer;
 
 import de.fraunhofer.iais.eis.Message;
-import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationB;
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationA;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.FileRecreatorBeanServer;
 import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
 import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
@@ -23,19 +23,18 @@ import java.util.Map;
  */
 
 @Component
-public class ConsumerFileRecreatorProcessor implements Processor {
+public class ProducerFileRecreatorProcessor implements Processor {
 	
-	private static final Logger logger = LogManager.getLogger(ConsumerFileRecreatorProcessor.class);
+	private static final Logger logger = LogManager.getLogger(ProducerFileRecreatorProcessor.class);
 	
 	@Autowired
-	private WebSocketServerConfigurationB webSocketServerConfiguration;
+	private WebSocketServerConfigurationA webSocketServerConfiguration;
 	
 	@Autowired
 	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
 	
 	@Autowired
 	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
-
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -65,7 +64,6 @@ public class ConsumerFileRecreatorProcessor implements Processor {
 			// TODO: Send WebSocket rejection message
 			
 		}
-		
 		// Return exchange
 		exchange.getOut().setHeaders(multipartMessageParts);
 	}
