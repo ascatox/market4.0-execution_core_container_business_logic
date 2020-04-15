@@ -82,7 +82,7 @@ public class CamelRouteWebSocket extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-            from("timer://simpleTimer?fixedRate=true&period=10s")
+            from("timer://timerEndPointB?fixedRate=true&period=10s") //EndPoint B
                 .process(consumerFileRecreatorProcessor)
                 .process(multiPartMessageProcessor)
                     .choice()
@@ -117,8 +117,7 @@ public class CamelRouteWebSocket extends RouteBuilder {
                         .process(sendTransactionToCHProcessor)
                  .endChoice()
                 .endChoice();
-          //      .endChoice() //CONSUMER SIDE
-        from("timer://simpleTimerB?fixedRate=true&period=10s")
+        from("timer://timerEndPointA?fixedRate=true&period=10s") //EndPoint A
                 .process(producerFileRecreatorProcessor)
                 .process(producerParseReceivedDataFromDAppProcessorBodyBinary)
                     .choice()
@@ -144,7 +143,6 @@ public class CamelRouteWebSocket extends RouteBuilder {
                         .process(sendTransactionToCHProcessor)
                     .endChoice()
                     .endChoice();
-//                .endChoice(); //PRODUCER SIDE
     }
 }
 
