@@ -5,14 +5,13 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import it.eng.idsa.businesslogic.configuration.IdscpServerConfiguration;
-import it.eng.idsa.businesslogic.configuration.WebSocketServerConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import de.fhg.aisec.ids.comm.server.IdscpServer;
-import org.springframework.beans.factory.annotation.Value;
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfiguration;
 
 /**
  * @author Milan Karajovic and Gabriele De Luca
@@ -25,17 +24,15 @@ public class FileRecreatorBeanServer implements Runnable {
     private static final int DEFAULT_STREAM_BUFFER_SIZE = 127;
     private static final String END_BINARY_FRAME_SEPARATOR = "�normal-IDS-ENG-SEPARATOR the-last-frame";
 
-    //@Autowired
-    private WebSocketServerConfiguration webSocketServerConfiguration;
-
     @Autowired
-    private IdscpServerConfiguration idscpServerConfiguration;
+    private WebSocketServerConfiguration webSocketServerConfiguration;
 
     @Value("${application.idscp.isEnabled}")
     private boolean isEnabledIdscp;
 
     @Value("${application.websocket.isEnabled}")
     private boolean isEnabledWebSocket;
+
 
     private FrameBufferBean frameBuffer;
     private InputStreamSocketListenerServer inputStreamSocketListener;
@@ -54,9 +51,9 @@ public class FileRecreatorBeanServer implements Runnable {
     		this.frameBuffer = webSocketServerConfiguration.frameBufferWebSocket();
     		this.recreatedmultipartMessage = webSocketServerConfiguration.recreatedMultipartMessageBeanWebSocket();
     		if (isEnabledIdscp) {
-    			this.inputStreamSocketListener = idscpServerConfiguration.inputStreamSocketListenerWebSocketServer();
+    			this.inputStreamSocketListener = webSocketServerConfiguration.inputStreamSocketListenerWebSocketServer();
     			this.inputStreamSocketListener.setFrameBuffer(this.frameBuffer);
-    			this.idscpServer = idscpServerConfiguration.idscpServerWebSocket();
+    			this.idscpServer = webSocketServerConfiguration.idscpServerWebSocket();
     			this.idscpServer.setSocketListener(this.inputStreamSocketListener);
     			this.idscpServer.createIdscpServer();
     			this.setServer(this.idscpServer.getIdscpServer());
@@ -141,11 +138,4 @@ public class FileRecreatorBeanServer implements Runnable {
 		this.byteBuffer = byteBuffer;
 	}
 
-    public WebSocketServerConfiguration getWebSocketServerConfiguration() {
-        return webSocketServerConfiguration;
-    }
-
-    public void setWebSocketServerConfiguration(WebSocketServerConfiguration webSocketServerConfiguration) {
-        this.webSocketServerConfiguration = webSocketServerConfiguration;
-    }
 }
