@@ -1,4 +1,5 @@
-package it.eng.idsa.businesslogic.configuration; /* Created by ascatox on 15/04/2020 */
+package it.eng.idsa.businesslogic.configuration;
+/* Created by ascatox on 15/04/2020 */
 
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.IdscpServerBean;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.InputStreamSocketListenerServer;

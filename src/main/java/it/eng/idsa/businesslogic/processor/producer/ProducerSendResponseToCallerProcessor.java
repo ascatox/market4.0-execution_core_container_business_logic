@@ -64,11 +64,11 @@ public class ProducerSendResponseToCallerProcessor implements Processor {
 		String contentType = multiPartMessage.getHttpHeaders().getOrDefault("Content-Type", "multipart/mixed");
 		headesParts.put("Content-Type", contentType);
 		
-		// TODO: Send The MultipartMessage message to the WebaSocket
-	//	if(isEnabledIdscp || isEnabledWebSocket) { //TODO Try to remove this config property
+		// TODO: Send The MultipartMessage message to the WebSocket
+		if(isEnabledIdscp || isEnabledWebSocket) { //TODO Try to remove this config property
 			ResponseMessageBufferBean responseMessageServerBean = webSocketServerConfiguration.responseMessageBufferWebSocket();
 			responseMessageServerBean.add(multipartMessageString.getBytes());
-	//	}
+		}
 		
 		exchange.getOut().setHeaders(headesParts);
 		exchange.getOut().setBody(multipartMessageString);
