@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Scope;
 @Configuration
 public class WebSocketServerConfigurationB implements WebSocketServerConfiguration {
 
-    @Value("${communication.ws.endpointB.port}") //TODO
+    @Value("${communication.ws.endpointB.port}")
     private int port;
 
     @Bean(name="frameBufferWebSocketB")
