@@ -32,6 +32,12 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 	@Value("${application.websocket.endpointB.url}")
 	private String wssEndpointBurl;
 
+	@Value("${application.idscp.endpointB.url}")
+	private String idscpEndpointBurl;
+
+	@Value("${application.idscp.isEnabled}")
+	private boolean isEnabledIdscp;
+
 	@Autowired
 	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
 	
@@ -60,8 +66,9 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 			headesParts.put("Content-Type", contentType);
 
 			//String wsURI = "wss://0.0.0.0:8086"+ HttpWebSocketServerBean.WS_URL;
+			String uri = isEnabledIdscp ?idscpEndpointBurl: wssEndpointBurl;
 
-			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : wssEndpointBurl;
+			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : uri;
 			headesParts.put("Forward-To", forwardTo);
 
 			// Create multipart message parts

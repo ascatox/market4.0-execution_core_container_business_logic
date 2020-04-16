@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import it.eng.idsa.businesslogic.configuration.IdscpServerConfiguration;
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,14 +55,15 @@ public class FileRecreatorBeanServer implements Runnable {
     	try {
     		this.frameBuffer = webSocketServerConfiguration.frameBufferWebSocket();
     		this.recreatedmultipartMessage = webSocketServerConfiguration.recreatedMultipartMessageBeanWebSocket();
-    		if (isEnabledIdscp) {
+            //TODO!!! ONLY for EndPoint B enables Idscp
+    		if (isEnabledIdscp && webSocketServerConfiguration instanceof WebSocketServerConfigurationB) {
     			this.inputStreamSocketListener = idscpServerConfiguration.inputStreamSocketListenerWebSocketServer();
     			this.inputStreamSocketListener.setFrameBuffer(this.frameBuffer);
     			this.idscpServer = idscpServerConfiguration.idscpServerWebSocket();
     			this.idscpServer.setSocketListener(this.inputStreamSocketListener);
     			this.idscpServer.createIdscpServer();
     			this.setServer(this.idscpServer.getIdscpServer());
-    		} else if (isEnabledWebSocket) {
+    		} else {
     			HttpWebSocketServerBean httpWebSocketServerBean = webSocketServerConfiguration.httpsServerWebSocket();
     			httpWebSocketServerBean.createServer();
     		}
