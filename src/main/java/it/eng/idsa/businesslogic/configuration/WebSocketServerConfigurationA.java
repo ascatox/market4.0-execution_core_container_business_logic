@@ -17,6 +17,7 @@ public class WebSocketServerConfigurationA implements WebSocketServerConfigurati
     @Value("${communication.ws.endpointA.port}")
     private int port;
 
+    @Override
     @Bean(name="frameBufferWebSocketA")
     @Scope("singleton")
     @Qualifier(value="FrameBufferBeanA")
@@ -24,6 +25,7 @@ public class WebSocketServerConfigurationA implements WebSocketServerConfigurati
         return new FrameBufferBean();
     }
 
+    @Override
     @Bean(name="httpsServerWebSocketA")
     @Scope("singleton")
     @Qualifier(value="HttpWebSocketServerBeanA")
@@ -43,6 +45,7 @@ public class WebSocketServerConfigurationA implements WebSocketServerConfigurati
         return httpWebSocketMessagingLogic;
     }
 
+    @Override
     @Bean(name="fileRecreatorBeanWebSocketA")
     @Scope("singleton")
     @Qualifier(value="FileRecreatorBeanServerA")
@@ -52,6 +55,7 @@ public class WebSocketServerConfigurationA implements WebSocketServerConfigurati
         return fileRecreatorBeanServer;
     }
 
+    @Override
     @Bean(name="recreatedMultipartMessageBeanWebSocketA")
     @Scope("singleton")
     @Qualifier(value="RecreatedMultipartMessageBeanA")
@@ -59,6 +63,7 @@ public class WebSocketServerConfigurationA implements WebSocketServerConfigurati
         return new RecreatedMultipartMessageBean();
     }
 
+    @Override
     @Bean(name="responseMessageBufferWebSocketA")
     @Scope("singleton")
     @Qualifier(value="ResponseMessageBufferBeanA")
@@ -66,6 +71,7 @@ public class WebSocketServerConfigurationA implements WebSocketServerConfigurati
         return new ResponseMessageBufferBean();
     }
 
+    @Override
     @Bean(name="responseMessageSendPartialWebSocketA")
     @Scope("singleton")
     @Qualifier(value="ResponseMessageSendPartialServerA")

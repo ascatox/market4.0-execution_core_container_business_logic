@@ -17,6 +17,7 @@ public class WebSocketServerConfigurationB implements WebSocketServerConfigurati
     @Value("${communication.ws.endpointB.port}")
     private int port;
 
+    @Override
     @Bean(name="frameBufferWebSocketB")
     @Scope("singleton")
     @Qualifier(value="FrameBufferBeanB")
@@ -29,6 +30,8 @@ public class WebSocketServerConfigurationB implements WebSocketServerConfigurati
      * @author Antonio Scatoloni
      * @return
      */
+
+    @Override
     @Bean(name="httpsServerWebSocketB")
     @Scope("singleton")
     @Qualifier(value="HttpWebSocketServerBeanB")
@@ -43,6 +46,7 @@ public class WebSocketServerConfigurationB implements WebSocketServerConfigurati
      * @author Antonio Scatoloni
      * @return
      */
+
     @Bean(name="messagingLogicB")
     @Scope("singleton")
     @Qualifier(value="MessagingLogicB")
@@ -52,6 +56,7 @@ public class WebSocketServerConfigurationB implements WebSocketServerConfigurati
         return httpWebSocketMessagingLogic;
     }
 
+    @Override
     @Bean(name="fileRecreatorBeanWebSocketB")
     @Scope("singleton")
     @Qualifier(value="FileRecreatorBeanServerB")
@@ -61,6 +66,7 @@ public class WebSocketServerConfigurationB implements WebSocketServerConfigurati
         return fileRecreatorBeanServer;
     }
 
+    @Override
     @Bean(name="recreatedMultipartMessageBeanWebSocketB")
     @Scope("singleton")
     @Qualifier(value="RecreatedMultipartMessageBeanB")
@@ -68,6 +74,7 @@ public class WebSocketServerConfigurationB implements WebSocketServerConfigurati
         return new RecreatedMultipartMessageBean();
     }
 
+    @Override
     @Bean(name="responseMessageBufferWebSocketB")
     @Scope("singleton")
     @Qualifier(value="ResponseMessageBufferBeanB")
@@ -75,6 +82,8 @@ public class WebSocketServerConfigurationB implements WebSocketServerConfigurati
         return new ResponseMessageBufferBean();
     }
 
+
+    @Override
     @Bean(name="responseMessageSendPartialWebSocketB")
     @Scope("singleton")
     @Qualifier(value="ResponseMessageSendPartialServerB")
