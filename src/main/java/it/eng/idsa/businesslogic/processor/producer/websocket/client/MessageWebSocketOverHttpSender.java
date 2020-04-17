@@ -45,7 +45,7 @@ import it.eng.idsa.businesslogic.util.RejectionMessageType;
 
 @Component
 public class MessageWebSocketOverHttpSender {
-    private static final Logger logger = LogManager.getLogger(ProducerSendDataToBusinessLogicProcessor.class);
+    private static final Logger logger = LogManager.getLogger(MessageWebSocketOverHttpSender.class);
     public static final String REGEX_WSS = "(wss://)([^:^/]*)(:)(\\d*)";
 
 
@@ -120,7 +120,7 @@ public class MessageWebSocketOverHttpSender {
                     .get();
             return wsClient;
         } catch (Exception e) {
-            logger.info("... can not create the WebSocket connection HTTP");
+            logger.error("... can not create the WebSocket connection HTTP with stack: "+e.getMessage());
             if (null != message)
                 rejectionMessageServiceImpl.sendRejectionMessage(
                         RejectionMessageType.REJECTION_COMMUNICATION_LOCAL_ISSUES,
@@ -178,7 +178,7 @@ public class MessageWebSocketOverHttpSender {
             webSocketHost = senderURL.getHost();
         } catch (MalformedURLException e) {
             //Example of Forward-to : wss://localhost:8086
-            logger.info("Use IDSCP port for WS over https!");
+            logger.info("Use IDSCP port for WS over https! Forward To: "+forwardTo);
             Pattern pattern = Pattern.compile(REGEX_WSS);
             Matcher matcher = pattern.matcher(forwardTo);
             matcher.find();

@@ -58,7 +58,7 @@ public class HttpWebSocketServerBean {
                 setup();
                 start();
             } catch (Exception e) {
-                logger.error("Error on starting JETTY Server with stack: " + e.getMessage());
+                logger.error("Error on executing JETTY Server with stack: " + e.getMessage());
             }
         }
         return server;
@@ -115,7 +115,7 @@ public class HttpWebSocketServerBean {
             logger.warn("IDSCP Server should be 'OFF' in order to use WS over HTTPS!");
             logger.warn(e.getMessage());
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("ERROR on starting server JETTY with error: "+e.getMessage());
         }
     }
 

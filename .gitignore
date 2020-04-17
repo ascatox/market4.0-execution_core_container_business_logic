@@ -30,3 +30,9 @@ build/
 ### VS Code ###
 .vscode/
 /certs/
+/src/main/resources/application-CONSUMER_DOCKER.properties
+/src/main/resources/application-PRODUCER_DOCKER.properties
+
+/docker-compose.yaml
+/Dockerfile
+/dockerize.sh
