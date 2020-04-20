@@ -3,6 +3,7 @@ package it.eng.idsa.businesslogic.processor.consumer;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationB;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.http.HttpEntity;
@@ -47,7 +48,7 @@ public class ConsumerSendDataToBusinessLogicProcessor implements Processor {
 	private MultipartMessageService multiPartMessageService;
 	
 	@Autowired
-	private WebSocketServerConfiguration webSocketServerConfiguration;
+	private WebSocketServerConfigurationB webSocketServerConfiguration;
 	
 	@Override
 	public void process(Exchange exchange) throws Exception {
