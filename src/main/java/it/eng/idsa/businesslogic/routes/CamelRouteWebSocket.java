@@ -33,10 +33,16 @@ public class CamelRouteWebSocket extends RouteBuilder {
     ProducerParseReceivedDataFromDAppProcessorBodyBinary producerParseReceivedDataFromDAppProcessorBodyBinary;
 
     @Autowired
-    ProducerGetTokenFromDapsProcessor getTokenFromDapsProcessor;
+    ProducerGetTokenFromDapsProcessor producerGetTokenFromDapsProcessor;
 
     @Autowired
-    ProducerSendTransactionToCHProcessor sendTransactionToCHProcessor;
+    ConsumerGetTokenFromDapsProcessor consumerGetTokenFromDapsProcessor;
+
+    @Autowired
+    ProducerSendTransactionToCHProcessor producerSendTransactionToCHProcessor;
+
+    @Autowired
+    ConsumerSendTransactionToCHProcessor consumerSendTransactionToCHProcessor;
 
     @Autowired
     ConsumerSendDataToBusinessLogicProcessor consumerSendDataToBusinessLogicProcessor;
@@ -48,7 +54,10 @@ public class CamelRouteWebSocket extends RouteBuilder {
     ProducerParseReceivedResponseMessage parseReceivedResponseMessage;
 
     @Autowired
-    ProducerValidateTokenProcessor validateTokenProcessor;
+    ProducerValidateTokenProcessor producerValidateTokenProcessor;
+
+    @Autowired
+    ConsumerValidateTokenProcessor consumerValidateTokenProcessor;
 
     @Autowired
     ProducerSendResponseToDataAppProcessor sendResponseToDataAppProcessor;
@@ -87,7 +96,7 @@ public class CamelRouteWebSocket extends RouteBuilder {
                 .process(multiPartMessageProcessor)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
-                        .process(validateTokenProcessor)
+                        .process(consumerValidateTokenProcessor)
                         // Send to the Endpoint: F
                         .choice()
                         .when(header("Is-Enabled-WebSocket").isEqualTo(true))
@@ -96,53 +105,53 @@ public class CamelRouteWebSocket extends RouteBuilder {
                             .process(sendDataToDataAppProcessor)
                         .endChoice()
                         .process(multiPartMessageProcessor)
-                        .process(getTokenFromDapsProcessor)
+                        .process(consumerGetTokenFromDapsProcessor)
                         .process(consumerSendDataToBusinessLogicProcessor)
-                    .choice()
-                    .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                        .process(sendTransactionToCHProcessor)
-                    .endChoice()
+                        .choice()
+                        .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+                            .process(consumerSendTransactionToCHProcessor)
+                        .endChoice()
                      .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
                         // Send to the Endpoint: F
-                    .choice()
-                    .when(header("Is-Enabled-WebSocket").isEqualTo(true))
-                        .process(sendDataToDataAppProcessorOverWS)
-                    .when(header("Is-Enabled-WebSocket").isEqualTo(false))
-                        .process(sendDataToDataAppProcessor)
-                    .endChoice()
-                        .process(multiPartMessageProcessor)
-                        .process(consumerSendDataToBusinessLogicProcessor)
-                    .choice()
+                        .choice()
+                        .when(header("Is-Enabled-WebSocket").isEqualTo(true))
+                            .process(sendDataToDataAppProcessorOverWS)
+                        .when(header("Is-Enabled-WebSocket").isEqualTo(false))
+                            .process(sendDataToDataAppProcessor)
+                        .endChoice()
+                            .process(multiPartMessageProcessor)
+                            .process(consumerSendDataToBusinessLogicProcessor)
+                        .choice()
                     .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                        .process(sendTransactionToCHProcessor)
-                 .endChoice()
+                       // .process(consumerSendTransactionToCHProcessor)
+                    .endChoice()
                 .endChoice();
         from("timer://timerEndpointA?fixedRate=true&period=10s") //EndPoint A
                 .process(producerFileRecreatorProcessor)
                 .process(producerParseReceivedDataFromDAppProcessorBodyBinary)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
-                        .process(getTokenFromDapsProcessor)
+                        .process(producerGetTokenFromDapsProcessor)
                         // Send data to Endpoint B
                         .process(producerSendDataToBusinessLogicProcessor)
                         .process(parseReceivedResponseMessage)
-                        .process(validateTokenProcessor)
+                        .process(producerValidateTokenProcessor)
                         //.process(sendResponseToDataAppProcessor)
                         .process(producerSendResponseToCallerProcessor)
-                .choice()
-                    .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                        .process(sendTransactionToCHProcessor)
-                    .endChoice()
+                        .choice()
+                            .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+                                .process(producerSendTransactionToCHProcessor)
+                        .endChoice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
                     // Send data to Endpoint B
                         .process(producerSendDataToBusinessLogicProcessor)
                         .process(parseReceivedResponseMessage)
                         //.process(sendResponseToDataAppProcessor)
                         .process(producerSendResponseToCallerProcessor)
-                    .choice()
-                    .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                        .process(sendTransactionToCHProcessor)
-                    .endChoice()
+                        .choice()
+                        .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+                            .process(producerSendTransactionToCHProcessor)
+                        .endChoice()
                     .endChoice();
     }
 }
