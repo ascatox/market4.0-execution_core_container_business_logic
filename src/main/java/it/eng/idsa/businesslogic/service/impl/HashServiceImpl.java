@@ -234,6 +234,7 @@ public class HashServiceImpl implements HashService {
             hashService.recordHash(hashPayload, payload, notificationContent);
             System.out.println("Recording finished successful!! Open File at: " + hashServiceImpl.getClearingHouseHashDir()
                     + File.separator + hashServiceImpl.getClearingHouseHashFile());
+            System.out.println("The Recorded Payload is: " + hashService.getContent(hashPayload));
         } catch (Exception e) {
             e.printStackTrace();
         }
