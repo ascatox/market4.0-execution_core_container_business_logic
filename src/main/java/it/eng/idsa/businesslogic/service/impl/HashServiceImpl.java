@@ -56,7 +56,7 @@ public class HashServiceImpl implements HashService {
         this.clearingHouseHashFile = clearingHouseHashFile;
         this.clearingHouseHashDir = clearingHouseHashDir;
         this.pathFile = Paths.get(getClearingHouseHashDir() + File.separator + getClearingHouseHashFile());
-        this.records = createRecords();
+        this.records = initRecords();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class HashServiceImpl implements HashService {
     }
 
     @Override
-    public String getContent(String hash) throws Exception {
+    public String getContent(String hash) {
         return getRecords().get(hash);
     }
 
@@ -145,7 +145,7 @@ public class HashServiceImpl implements HashService {
         return null;
     }
 
-    private Map<String, String> createRecords() {
+    private Map<String, String> initRecords() {
         Map<String, String> records = new HashMap<>();
         if (StringUtils.isBlank(getClearingHouseHashDir()) || StringUtils.isBlank(getClearingHouseHashFile())) {
             logger.error("No File PATH to record hash was found! application.clearingHouseHashFile" +
