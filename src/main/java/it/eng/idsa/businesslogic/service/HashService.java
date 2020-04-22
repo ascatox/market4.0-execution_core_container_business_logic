@@ -10,4 +10,5 @@ public interface HashService {
 
     String hash(String payload);
     void recordHash(String hash, String payload, NotificationContent notificationContent);
+    String getContent(String hash) throws Exception;
 }
