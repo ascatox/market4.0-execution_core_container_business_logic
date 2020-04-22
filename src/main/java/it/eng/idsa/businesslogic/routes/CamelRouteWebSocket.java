@@ -75,7 +75,10 @@ public class CamelRouteWebSocket extends RouteBuilder {
     ProducerFileRecreatorProcessor producerFileRecreatorProcessor;
 
     @Autowired
-    ConsumerSendDataToDataAppProcessor sendDataToDataAppProcessor;
+    ConsumerSendDataToDataAppProcessor consumerSendDataToDataAppProcessor;
+
+   @Autowired
+   ProducerSendResponseToDataAppProcessor producerSendResponseToDataAppProcessor;
 
     @Autowired
     ExceptionProcessorConsumer exceptionProcessorConsumer;
@@ -85,9 +88,6 @@ public class CamelRouteWebSocket extends RouteBuilder {
 
     @Autowired
     ConsumerWebSocketSendDataToDataAppProcessor sendDataToDataAppProcessorOverWS;
-
-    @Autowired
-    ProducerSendResponseToCallerProcessor producerSendResponseToCallerProcessor;
 
     @Override
     public void configure() throws Exception {
@@ -102,7 +102,7 @@ public class CamelRouteWebSocket extends RouteBuilder {
                         .when(header("Is-Enabled-WebSocket").isEqualTo(true))
                             .process(sendDataToDataAppProcessorOverWS)
                         .when(header("Is-Enabled-WebSocket").isEqualTo(false))
-                            .process(sendDataToDataAppProcessor)
+                            .process(consumerSendDataToDataAppProcessor)
                         .endChoice()
                         .process(multiPartMessageProcessor)
                         .process(consumerGetTokenFromDapsProcessor)
@@ -117,7 +117,7 @@ public class CamelRouteWebSocket extends RouteBuilder {
                         .when(header("Is-Enabled-WebSocket").isEqualTo(true))
                             .process(sendDataToDataAppProcessorOverWS)
                         .when(header("Is-Enabled-WebSocket").isEqualTo(false))
-                            .process(sendDataToDataAppProcessor)
+                            .process(consumerSendDataToDataAppProcessor)
                         .endChoice()
                             .process(multiPartMessageProcessor)
                             .process(consumerSendDataToBusinessLogicProcessor)
@@ -137,7 +137,7 @@ public class CamelRouteWebSocket extends RouteBuilder {
                         .process(parseReceivedResponseMessage)
                         .process(producerValidateTokenProcessor)
                         //.process(sendResponseToDataAppProcessor)
-                        .process(producerSendResponseToCallerProcessor)
+                        .process(producerSendResponseToDataAppProcessor)
                         .choice()
                             .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
                                 .process(producerSendTransactionToCHProcessor)
@@ -147,7 +147,7 @@ public class CamelRouteWebSocket extends RouteBuilder {
                         .process(producerSendDataToBusinessLogicProcessor)
                         .process(parseReceivedResponseMessage)
                         //.process(sendResponseToDataAppProcessor)
-                        .process(producerSendResponseToCallerProcessor)
+                        .process(producerSendResponseToDataAppProcessor)
                         .choice()
                         .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
                             .process(producerSendTransactionToCHProcessor)

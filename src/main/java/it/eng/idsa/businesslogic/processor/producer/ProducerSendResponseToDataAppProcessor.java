@@ -3,6 +3,8 @@ package it.eng.idsa.businesslogic.processor.producer;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationA;
+import it.eng.idsa.businesslogic.processor.consumer.websocket.server.ResponseMessageBufferBean;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,14 @@ public class ProducerSendResponseToDataAppProcessor implements Processor {
 	
 	@Autowired
     private MultipartMessageService multipartMessageService;
-	
+
+	@Value("${application.websocket.isEnabled}")
+	private boolean isEnabledWebSocket;
+
+	@Autowired
+	private WebSocketServerConfigurationA webSocketServerConfiguration;
+
+
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		
@@ -75,6 +84,12 @@ public class ProducerSendResponseToDataAppProcessor implements Processor {
 			// clear from Headers multipartMessageBody (it is not unusable for the Open Data App)
 			Map<String, Object> headers = exchange.getIn().getHeaders();
 			headers.remove("multipartMessageBody");
+		}
+
+		// TODO: Send The MultipartMessage message to the WebSocket
+		if(isEnabledWebSocket) {
+			ResponseMessageBufferBean responseMessageServerBean = webSocketServerConfiguration.responseMessageBufferWebSocket();
+			responseMessageServerBean.add(responseMultipartMessageString.getBytes());
 		}
 		
 		exchange.getOut().setHeaders(headesParts);
