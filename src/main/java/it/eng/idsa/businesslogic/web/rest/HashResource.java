@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @EnableAutoConfiguration
-@RequestMapping({"/content" })
+@RequestMapping({"/notification" })
 public class HashResource {
 
     @Autowired
     private HashService hashService;
 
-    @GetMapping("/payload/{hash}")
+    @GetMapping("/content/{hash}")
     @ResponseBody
     public String getPayload(@PathVariable String hash) throws Exception {
         return hashService.getContent(hash);
