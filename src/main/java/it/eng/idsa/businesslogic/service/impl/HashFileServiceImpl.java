@@ -133,15 +133,12 @@ public class HashFileServiceImpl implements HashService {
     }
 
 
-    private String getRecordFromFile(Path path) {
-        try {
-            Optional<String> data = Files.readAllLines(path).stream().findFirst();
-            if (data.isPresent())
-                return data.get();
-        } catch (Exception e) {
-            logger.error("Retrieval of HASH RECORD in FileSystem encountered an error: " + e.getMessage());
-        }
-        return null;
+    private String getRecordFromFile(Path path) throws Exception {
+        Optional<String> data = Files.readAllLines(path).stream().findFirst();
+        if (data.isPresent())
+            return data.get();
+        else
+            throw new Exception("Data not retrieved in Files!");
     }
 
     public String getClearingHouseHashDir() {
