@@ -27,13 +27,16 @@ import java.util.Map;
 @Component
 public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
 
-	private static final Logger logger = LogManager.getLogger(ConsumerWebSocketSendDataToDataAppProcessor.class);
+    private static final Logger logger = LogManager.getLogger(ConsumerWebSocketSendDataToDataAppProcessor.class);
 
-	@Value("${application.openDataAppReceiverRouter}")
+    @Value("${application.openDataAppReceiverRouter}")
     private String openDataAppReceiverRouter;
 
-    @Value("${application.dataApp.websocket.url}")
-    private String dataAppWebSocketUrl;
+    @Value("${application.dataApp.websocket.host}")
+    private String dataAppWebSocketHost;
+
+    @Value("${application.dataApp.websocket.port}")
+    private Integer dataAppWebSocketPort;
 
     @Autowired
     private ApplicationConfiguration configuration;
@@ -59,7 +62,8 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
             payload = multipartMessageParts.get("payload").toString();
         }
         Message message = multiPartMessageServiceImpl.getMessage(multipartMessageParts.get("header"));
-        String response = messageWebSocketOverHttpSender.sendMultipartMessageWebSocketOverHttps(header, payload, dataAppWebSocketUrl);
+        String response = messageWebSocketOverHttpSender
+                .sendMultipartMessageWebSocketOverHttps(dataAppWebSocketHost, dataAppWebSocketPort, header, payload);
         // Handle response
         handleResponse(exchange, message, response, configuration.getOpenDataAppReceiver());
 
@@ -81,7 +85,7 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
             logger.info("content type response received from the DataAPP=" + response);
             logger.info("response received from the DataAPP=" + response);
             logger.info("Successful response: " + response);
-            String	header = multiPartMessageServiceImpl.getHeaderContentString(response);
+            String header = multiPartMessageServiceImpl.getHeaderContentString(response);
             String payload = multiPartMessageServiceImpl.getPayloadContent(response);
             exchange.getOut().setHeader("header", header);
             if (payload != null) {
