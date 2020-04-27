@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package it.eng.idsa.businesslogic.service.impl;
 
@@ -14,7 +14,6 @@ import java.util.UUID;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import it.eng.idsa.businesslogic.service.HashService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.model.Model;
@@ -36,6 +35,7 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
 import it.eng.idsa.businesslogic.service.ClearingHouseService;
+import it.eng.idsa.businesslogic.service.HashService;
 import it.eng.idsa.clearinghouse.model.Body;
 import it.eng.idsa.clearinghouse.model.NotificationContent;
 
@@ -55,56 +55,9 @@ public class ClearingHouseServiceImpl implements ClearingHouseService {
 	private final static String informationModelVersion = getInformationModelVersion();
 
 	private static URI connectorURI;
-
 	@Autowired
 	private HashService hashService;
 
-	/*
-	 * ORBITER IMPLEMENTATION
-	 * @Deprecated
-	 *
-	 * @Override public boolean registerTransaction(Message correlatedMessage) { //
-	 * TODO Auto-generated method stub try { logger.debug("registerTransaction...");
-	 * try { System.out.println("configuration old="+configuration.getDapsUrl());
-	 * System.out.println("configuration uri="+configuration.getUriSchema());
-	 * connectorURI=new
-	 * URI(configuration.getUriSchema()+configuration.getUriAuthority()+
-	 * configuration.getUriConnector()+UUID.randomUUID().toString()); } catch
-	 * (URISyntaxException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); } String endpoint=configuration.getClearingHouseUrl();
-	 * RestTemplate restTemplate=new RestTemplate(); //Create Message for Clearing
-	 * House GregorianCalendar gcal = new GregorianCalendar(); XMLGregorianCalendar
-	 * xgcal = DatatypeFactory.newInstance() .newXMLGregorianCalendar(gcal); gcal =
-	 * new GregorianCalendar(); xgcal = DatatypeFactory.newInstance()
-	 * .newXMLGregorianCalendar(gcal); ArrayList<URI> recipientConnectors = new
-	 * ArrayList<URI>(); recipientConnectors.add(connectorURI); Message message=new
-	 * MessageBuilder() ._modelVersion_("1.0.3") ._issued_(xgcal)
-	 * ._correlationMessage_(correlatedMessage.getId())
-	 * ._issuerConnector_(connectorURI) ._recipientConnector_(recipientConnectors)
-	 * ._senderAgent_(null) ._recipientAgent_(null) ._transferContract_(null)
-	 * .build();
-	 *
-	 *
-	 *
-	 *
-	 * HttpHeaders headers = new HttpHeaders();
-	 * headers.setContentType(MediaType.APPLICATION_JSON); String msgSerialized =
-	 * new Serializer().serializePlainJson(message); JSONObject jsonObject =
-	 * (JSONObject) Jsoner.deserialize(msgSerialized); //JSONParser parser = new
-	 * JSONParser(); //JSONObject jsonObject = (JSONObject)
-	 * parser.parse(msgSerialized);
-	 *
-	 *
-	 * HttpEntity<JSONObject> entity = new HttpEntity<>(jsonObject, headers);
-	 *
-	 *
-	 * logger.info("Sending Data to the Clearing House "+endpoint+" ...");
-	 * restTemplate.postForObject(endpoint, entity, String.class);
-	 * logger.info("Data sent to the Clearing House "+endpoint);
-	 *
-	 *
-	 * }catch(Exception e) { e.printStackTrace(); } return false; }
-	 */
 
 	@Override
 	public boolean registerTransaction(Message correlatedMessage, String payload) {
@@ -128,20 +81,21 @@ public class ClearingHouseServiceImpl implements ClearingHouseService {
 					.newXMLGregorianCalendar(gcal);
 			ArrayList<URI> recipientConnectors = new ArrayList<URI>();
 			recipientConnectors.add(connectorURI);
-
+			
 			LogNotification logNotification=new LogNotificationBuilder()
-					._modelVersion_(informationModelVersion)
-					._issuerConnector_(whoIAm())
-					._issued_(xgcal) .build();
-
+			 ._modelVersion_(informationModelVersion) 
+			 ._issuerConnector_(whoIAm())
+			 ._issued_(xgcal) .build();
+			
 			NotificationContent notificationContent=new NotificationContent();
 			notificationContent.setHeader(logNotification);
 			Body body=new Body();
 			body.setHeader(correlatedMessage);
 			String hash = hashService.hash(payload);
 			body.setPayload(hash);
-			notificationContent.setBody(body);
 
+			notificationContent.setBody(body);
+			
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			String msgSerialized = new Serializer().serializePlainJson(notificationContent);
@@ -152,12 +106,11 @@ public class ClearingHouseServiceImpl implements ClearingHouseService {
 			//JSONObject jsonObject = (JSONObject) parser.parse(msgSerialized);
 
 			HttpEntity<JsonObject> entity = new HttpEntity<>(jsonObject, headers);
-
+			
 			logger.info("Sending Data to the Clearing House "+endpoint+" ...");
 			restTemplate.postForObject(endpoint, entity, String.class);
-			logger.info("Data sent to the Clearing House "+endpoint);
+			logger.info("Data [LogNotitication.id="+logNotification.getId()+"] sent to the Clearing House "+endpoint);
 			hashService.recordHash(hash, payload, notificationContent);
-
 
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -167,12 +120,12 @@ public class ClearingHouseServiceImpl implements ClearingHouseService {
 	private static String getInformationModelVersion() {
 		String currnetInformationModelVersion = null;
 		try {
-
+	
 			InputStream is = RejectionMessageServiceImpl.class.getClassLoader().getResourceAsStream("META-INF/maven/it.eng.idsa/market4.0-execution_core_container_business_logic/pom.xml");
 			MavenXpp3Reader reader = new MavenXpp3Reader();
 			Model model = reader.read(is);
 			MavenProject project = new MavenProject(model);
-			Properties props = project.getProperties();
+			Properties props = project.getProperties(); 
 			if (props.get("information.model.version")!=null) {
 				return props.get("information.model.version").toString();
 			}
@@ -191,9 +144,9 @@ public class ClearingHouseServiceImpl implements ClearingHouseService {
 		}
 		return currnetInformationModelVersion;
 	}
-
+	
 	private URI whoIAm() {
-		//TODO
+		//TODO 
 		return URI.create("auto-generated");
 	}
 
