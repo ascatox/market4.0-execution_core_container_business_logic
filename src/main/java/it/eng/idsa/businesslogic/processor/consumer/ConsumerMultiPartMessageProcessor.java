@@ -30,7 +30,7 @@ public class ConsumerMultiPartMessageProcessor implements Processor {
 	@Value("${application.isEnabledDapsInteraction}")
 	private boolean isEnabledDapsInteraction;
 
-	@Value("${application.websocket.isEnabled}")
+	@Value("${application.dataApp.websocket.isEnabled}")
 	private boolean isEnabledWebSocket;
 
 	@Autowired

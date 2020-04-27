@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,14 +30,8 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
 
     private static final Logger logger = LogManager.getLogger(ConsumerWebSocketSendDataToDataAppProcessor.class);
 
-    @Value("${application.openDataAppReceiverRouter}")
-    private String openDataAppReceiverRouter;
-
-    @Value("${application.dataApp.websocket.host}")
-    private String dataAppWebSocketHost;
-
-    @Value("${application.dataApp.websocket.port}")
-    private Integer dataAppWebSocketPort;
+    @Value("${application.openDataAppReceiver}")
+    private String openDataAppReceiver;
 
     @Autowired
     private ApplicationConfiguration configuration;
@@ -62,8 +57,10 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
             payload = multipartMessageParts.get("payload").toString();
         }
         Message message = multiPartMessageServiceImpl.getMessage(multipartMessageParts.get("header"));
+        URL openDataAppReceiverRouterUrl = new URL(openDataAppReceiver);
         String response = messageWebSocketOverHttpSender
-                .sendMultipartMessageWebSocketOverHttps(dataAppWebSocketHost, dataAppWebSocketPort, header, payload);
+                .sendMultipartMessageWebSocketOverHttps(openDataAppReceiverRouterUrl.getHost(), openDataAppReceiverRouterUrl.getPort(),
+                        openDataAppReceiverRouterUrl.getPath(), header, payload);
         // Handle response
         handleResponse(exchange, message, response, configuration.getOpenDataAppReceiver());
 

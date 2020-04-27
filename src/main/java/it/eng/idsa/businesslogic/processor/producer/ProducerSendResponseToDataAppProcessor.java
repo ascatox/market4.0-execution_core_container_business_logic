@@ -9,6 +9,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,10 +39,10 @@ public class ProducerSendResponseToDataAppProcessor implements Processor {
 	@Autowired
     private MultipartMessageService multipartMessageService;
 
-	@Value("${application.websocket.isEnabled}")
+	@Value("${application.dataApp.websocket.isEnabled}")
 	private boolean isEnabledWebSocket;
 
-	@Autowired
+	@Autowired(required = false)
 	private WebSocketServerConfigurationA webSocketServerConfiguration;
 
 

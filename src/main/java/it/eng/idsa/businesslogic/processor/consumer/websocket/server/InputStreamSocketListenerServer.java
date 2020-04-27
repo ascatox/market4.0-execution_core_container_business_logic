@@ -22,7 +22,7 @@ public class InputStreamSocketListenerServer implements SocketListener {
 	
 	private FrameBufferBean frameBuffer;
 	
-	@Autowired
+	@Autowired(required = false)
 	private WebSocketServerConfigurationB webSocketServerConfiguration;
 	
 	public InputStreamSocketListenerServer() {

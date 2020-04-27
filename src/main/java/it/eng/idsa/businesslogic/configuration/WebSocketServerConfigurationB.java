@@ -3,6 +3,8 @@ package it.eng.idsa.businesslogic.configuration;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -12,9 +14,12 @@ import org.springframework.context.annotation.Scope;
  */
 
 @Configuration
+@ConditionalOnExpression(
+        "${application.websocket.isEnabled:true} or ${application.idscp.isEnabled:true}"
+)
 public class WebSocketServerConfigurationB implements WebSocketServerConfiguration {
 
-    @Value("${communication.ws.endpointB.port}")
+    @Value("${application.camelConsumerPort}")
     private int port;
 
     @Override

@@ -1,6 +1,7 @@
 package it.eng.idsa.businesslogic.processor.producer;
 
 import de.fraunhofer.iais.eis.Message;
+import it.eng.idsa.businesslogic.processor.consumer.websocket.server.HttpWebSocketMessagingLogicA;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.HttpWebSocketServerBean;
 import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
 import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
@@ -28,12 +29,6 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 	private static final Logger logger = LogManager.getLogger(ProducerParseReceivedDataFromDAppProcessorBodyBinary.class);
 	@Value("${application.isEnabledDapsInteraction}")
 	private boolean isEnabledDapsInteraction;
-
-	@Value("${application.websocket.endpointB.url}")
-	private String wssEndpointBurl;
-
-	@Value("${application.idscp.endpointB.url}")
-	private String idscpEndpointBurl;
 
 	@Value("${application.idscp.isEnabled}")
 	private boolean isEnabledIdscp;
@@ -66,9 +61,8 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 			headesParts.put("Content-Type", contentType);
 
 			//String wsURI = "wss://0.0.0.0:8086"+ HttpWebSocketServerBean.WS_URL;
-			String uri = isEnabledIdscp ?idscpEndpointBurl: wssEndpointBurl;
-
-			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : uri;
+			String url = HttpWebSocketMessagingLogicA.getInstance().getForwardTo();
+			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : url;
 			headesParts.put("Forward-To", forwardTo);
 
 			// Create multipart message parts

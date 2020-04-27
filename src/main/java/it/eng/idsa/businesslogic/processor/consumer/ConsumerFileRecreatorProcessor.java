@@ -11,10 +11,14 @@ import org.apache.camel.Processor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * 
@@ -23,6 +27,9 @@ import java.util.Map;
  */
 
 @Component
+@ConditionalOnExpression(
+		"${application.websocket.isEnabled:true} or ${application.idscp.isEnabled:true}"
+)
 public class ConsumerFileRecreatorProcessor implements Processor {
 	
 	private static final Logger logger = LogManager.getLogger(ConsumerFileRecreatorProcessor.class);

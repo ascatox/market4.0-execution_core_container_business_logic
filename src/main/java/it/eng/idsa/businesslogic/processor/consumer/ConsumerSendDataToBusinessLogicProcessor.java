@@ -41,7 +41,7 @@ public class ConsumerSendDataToBusinessLogicProcessor implements Processor {
 	@Autowired
 	private MultipartMessageService multiPartMessageService;
 	
-	@Autowired
+	@Autowired(required = false)
 	private WebSocketServerConfigurationB webSocketServerConfiguration;
 	
 	@Override

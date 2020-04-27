@@ -14,9 +14,12 @@ import java.nio.charset.StandardCharsets;
  */
 public class HttpWebSocketMessagingLogicA {
     private static final Logger logger = LogManager.getLogger(HttpWebSocketMessagingLogicA.class);
+    private static final String FORWARD_TO_HEADER = "Forward-To:";
 
     private WebSocketServerConfiguration webSocketServerConfiguration;
     private static HttpWebSocketMessagingLogicA instance;
+
+    private String forwardTo;
 
     private HttpWebSocketMessagingLogicA() {
     }
@@ -31,7 +34,10 @@ public class HttpWebSocketMessagingLogicA {
     // TODO Duplicate code fragment @See InputStreamSocketListenerServer onMessage()
     public void onMessage(Session session, byte[] message) {
         String receivedMessage = new String(message, StandardCharsets.UTF_8);
-       if (receivedMessage.equals(InputStreamSocketListenerServer.CLOSURE_FRAME)) {
+        if(receivedMessage.contains(FORWARD_TO_HEADER)) {
+              forwardTo = receivedMessage.substring(FORWARD_TO_HEADER.length());
+        }
+        else if (receivedMessage.equals(InputStreamSocketListenerServer.CLOSURE_FRAME)) {
             // The last frame is received - skip this frame
             // This indicate that Client WebSocket now is closed
         } else {
@@ -51,4 +57,9 @@ public class HttpWebSocketMessagingLogicA {
     public void setWebSocketServerConfiguration(WebSocketServerConfiguration webSocketServerConfiguration) {
         this.webSocketServerConfiguration = webSocketServerConfiguration;
     }
+
+    public String getForwardTo() {
+        return forwardTo;
+    }
+
 }

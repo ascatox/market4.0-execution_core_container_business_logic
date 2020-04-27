@@ -5,6 +5,9 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
@@ -57,12 +60,15 @@ public class CamelRouteConsumer extends RouteBuilder {
 	@Autowired
 	ConsumerExceptionMultiPartMessageProcessor exceptionMultiPartMessageProcessor;
 	
-	@Autowired
-	ConsumerFileRecreatorProcessor fileRecreatorProcessor;
-	
     @Autowired
     CamelContext camelContext;
-	
+
+	@Value("${application.idscp.isEnabled}")
+	private boolean isEnabledIdscp;
+
+	@Value("${application.websocket.isEnabled}")
+	private boolean isEnabledWebSocket;
+
 	@Override
 	public void configure() throws Exception {
 		logger.debug("Starting Camel Routes...consumer side");
@@ -89,33 +95,34 @@ public class CamelRouteConsumer extends RouteBuilder {
 					.endChoice()
 			.endChoice();
 
-		// Camel SSL - Endpoint: B		
-		from("jetty://https4://0.0.0.0:"+configuration.getCamelConsumerPort()+"/incoming-data-channel/receivedMessage")
-			.process(multiPartMessageProcessor)
-			.choice()
-				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
-					.process(validateTokenProcessor)
-//					.process(sendToActiveMQ)
-//					.process(receiveFromActiveMQ)
-					// Send to the Endpoint: F
-					.process(sendDataToDataAppProcessor)
-					.process(multiPartMessageProcessor)
-					.process(getTokenFromDapsProcessor)
-					.process(sendDataToBusinessLogicProcessor)
-					.choice()
-						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-							.process(sendTransactionToCHProcessor)
-					.endChoice()
-				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-					// Send to the Endpoint: F
-					.process(sendDataToDataAppProcessor)
-					.process(multiPartMessageProcessor)
-					.process(sendDataToBusinessLogicProcessor)
-					.choice()
-						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-							//.process(sendTransactionToCHProcessor)
-					.endChoice()
-			.endChoice();
+		// Camel SSL - Endpoint: B
+		if(!isEnabledIdscp && !isEnabledWebSocket)
+			from("jetty://https4://0.0.0.0:"+configuration.getCamelConsumerPort()+"/incoming-data-channel/receivedMessage")
+				.process(multiPartMessageProcessor)
+				.choice()
+					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
+						.process(validateTokenProcessor)
+	//					.process(sendToActiveMQ)
+	//					.process(receiveFromActiveMQ)
+						// Send to the Endpoint: F
+						.process(sendDataToDataAppProcessor)
+						.process(multiPartMessageProcessor)
+						.process(getTokenFromDapsProcessor)
+						.process(sendDataToBusinessLogicProcessor)
+						.choice()
+							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+								.process(sendTransactionToCHProcessor)
+						.endChoice()
+					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
+						// Send to the Endpoint: F
+						.process(sendDataToDataAppProcessor)
+						.process(multiPartMessageProcessor)
+						.process(sendDataToBusinessLogicProcessor)
+						.choice()
+							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+								//.process(sendTransactionToCHProcessor)
+						.endChoice()
+				.endChoice();
 		
 		// TODO: Improve this initialization
 		// Camel WebSocket - Endpoint B

@@ -52,20 +52,28 @@ public class MessageWebSocketOverHttpSender {
     @Autowired
     MultipartMessageService multipartMessageService;
 
-    @Value("${application.idscp.server.port}")
-    private int idscpServerPort;
-
     public String sendMultipartMessageWebSocketOverHttps(String webSocketHost, Integer webSocketPort, String header, String payload)
             throws ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
-        return doSendMultipartMessageWebSocketOverHttps(webSocketHost, webSocketPort, header, payload, null);
+        return doSendMultipartMessageWebSocketOverHttps(webSocketHost, webSocketPort, null, header, payload, null);
     }
 
     public String sendMultipartMessageWebSocketOverHttps(String webSocketHost, Integer webSocketPort, String header, String payload, Message message)
             throws ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
-        return doSendMultipartMessageWebSocketOverHttps(webSocketHost, webSocketPort, header, payload, message);
+        return doSendMultipartMessageWebSocketOverHttps(webSocketHost, webSocketPort,null, header, payload, message);
     }
 
-    private String doSendMultipartMessageWebSocketOverHttps(String webSocketHost, Integer webSocketPort, String header, String payload, Message message)
+    public String sendMultipartMessageWebSocketOverHttps(String webSocketHost, Integer webSocketPort, String webSocketPath, String header, String payload)
+            throws ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
+        return doSendMultipartMessageWebSocketOverHttps(webSocketHost, webSocketPort, webSocketPath, header, payload, null);
+    }
+
+    public String sendMultipartMessageWebSocketOverHttps(String webSocketHost, Integer webSocketPort, String webSocketPath, String header, String payload, Message message)
+            throws ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
+        return doSendMultipartMessageWebSocketOverHttps(webSocketHost, webSocketPort, header, webSocketPath,  payload, message);
+    }
+
+
+    private String doSendMultipartMessageWebSocketOverHttps(String webSocketHost, Integer webSocketPort, String webSocketPath, String header, String payload, Message message)
             throws ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
     	
     	MultipartMessage multipartMessage = new MultipartMessageBuilder()
@@ -75,7 +83,7 @@ public class MessageWebSocketOverHttpSender {
     	String multipartMessageString = multipartMessageService.multipartMessagetoString(multipartMessage);
     													                                                        
         FileStreamingBean fileStreamingBean = webSocketClientConfiguration.fileStreamingWebSocket();
-        WebSocket wsClient = createWebSocketClient(webSocketHost, webSocketPort, message);
+        WebSocket wsClient = createWebSocketClient(webSocketHost, webSocketPort, webSocketPath, message);
         // Try to connect to the Server. Wait until you are not connected to the server.
         fileStreamingBean.setup(wsClient);
         fileStreamingBean.sendMultipartMessage(multipartMessageString);
@@ -88,8 +96,8 @@ public class MessageWebSocketOverHttpSender {
     }
 
     @NotNull
-    private WebSocket createWebSocketClient(String webSocketHost, Integer webSocketPort, Message message) {
-        String WS_URL = "wss://" + webSocketHost + ":" + webSocketPort + HttpWebSocketServerBean.WS_URL;
+    private WebSocket createWebSocketClient(String webSocketHost, Integer webSocketPort, String webSocketPath, Message message) {
+        String WS_URL = "wss://" + webSocketHost + ":" + webSocketPort + ( webSocketPath == null ? HttpWebSocketServerBean.WS_URL : webSocketPath );
         WebSocket wsClient = null;
         try {
             final SslEngineFactory ssl = getSslEngineFactory();
@@ -110,7 +118,7 @@ public class MessageWebSocketOverHttpSender {
                     .get();
             return wsClient;
         } catch (Exception e) {
-            logger.info("... can not create the WebSocket connection HTTP");
+            logger.info("... can not create the WebSocket connection HTTP at: " + WS_URL);
             if (null != message)
                 rejectionMessageServiceImpl.sendRejectionMessage(
                         RejectionMessageType.REJECTION_COMMUNICATION_LOCAL_ISSUES,
