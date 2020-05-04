@@ -1,25 +1,30 @@
 package it.eng.idsa.businesslogic.processor.consumer.websocket.server;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.jetty.http.HttpVersion;
-import org.eclipse.jetty.server.*;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-
-import javax.annotation.PreDestroy;
-import javax.validation.constraints.NotNull;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.BindException;
 import java.security.KeyStore;
+
+import javax.annotation.PreDestroy;
+import javax.validation.constraints.NotNull;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.http.HttpVersion;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 /**
  * Jetty Server instantiation with WebSocket over SSL
@@ -29,8 +34,6 @@ import java.security.KeyStore;
 public class HttpWebSocketServerBean {
     private static final Logger logger = LogManager.getLogger(HttpWebSocketServerBean.class);
     public static final String WS_URL = "/incoming-data-channel-received-message";
-    private int port;
-    private Class messagingServlet;
 
     @Value("${application.idscp.server.port}")
     private int idscpServerPort;
@@ -49,16 +52,13 @@ public class HttpWebSocketServerBean {
     @Autowired
     private ResourceLoader resourceLoader;
 
-    public synchronized Server createServer() {
-        if (null == server
-                || !server.isStarted()
-                || !server.isRunning()
-                 ){
+    public Server createServer() {
+        if (null == server || !server.isStarted() || !server.isRunning()) {
             try {
                 setup();
                 start();
             } catch (Exception e) {
-                logger.error("Error on executing JETTY Server with stack: " + e.getMessage());
+                logger.error("Error on starting JETTY Server with stack: " + e.getMessage());
             }
         }
         return server;
@@ -78,9 +78,11 @@ public class HttpWebSocketServerBean {
     		final KeyStore ks = KeyStore.getInstance(keyStoreType);
     		ks.load(keyStore, keyStorePassword.toCharArray());
 
-            int port = getPort();
+
 
     		String password = keyStorePassword;
+
+    		int port = idscpServerPort; //SECURE_PORT;
 
     		HttpConfiguration http_config = getHttpConfiguration(port);
     		SslContextFactory sslContextFactory = getSslContextFactory (ks, password);
@@ -94,14 +96,10 @@ public class HttpWebSocketServerBean {
     		//connector.setReuseAddress(true);
     		server.addConnector(connector);
 
-            HandlerCollection handlerCollection = new HandlerCollection();
-
-            ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-            handler.setContextPath("/");
-            handler.addServlet(getMessagingServlet(), WS_URL);
-            handlerCollection.setHandlers(new Handler[]{handler});
-
-            server.setHandler(handlerCollection);
+    		ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+    		handler.setContextPath("/");
+    		handler.addServlet(HttpWebSocketMessagingServlet.class, WS_URL);
+    		server.setHandler(handler);
     	}catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -115,7 +113,7 @@ public class HttpWebSocketServerBean {
             logger.warn("IDSCP Server should be 'OFF' in order to use WS over HTTPS!");
             logger.warn(e.getMessage());
         } catch (Exception e) {
-            logger.error("ERROR on starting server JETTY with error: "+e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 
@@ -152,19 +150,4 @@ public class HttpWebSocketServerBean {
         }
     }
 
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public Class getMessagingServlet() {
-        return messagingServlet;
-    }
-
-    public void setMessagingServlet(Class messagingServlet) {
-        this.messagingServlet = messagingServlet;
-    }
 }
