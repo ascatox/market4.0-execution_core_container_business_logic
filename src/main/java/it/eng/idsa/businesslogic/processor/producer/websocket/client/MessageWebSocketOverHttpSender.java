@@ -29,10 +29,10 @@ import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.businesslogic.configuration.WebSocketClientConfiguration;
 import it.eng.idsa.businesslogic.multipart.MultipartMessage;
 import it.eng.idsa.businesslogic.multipart.MultipartMessageBuilder;
-import it.eng.idsa.businesslogic.multipart.service.MultipartMessageService;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.HttpWebSocketServerBean;
 import it.eng.idsa.businesslogic.processor.producer.ProducerSendDataToBusinessLogicProcessor;
-import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
+import it.eng.idsa.businesslogic.service.MultipartMessageTransformerService;
+import it.eng.idsa.businesslogic.service.RejectionMessageService;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
 
 /**
@@ -47,10 +47,10 @@ public class MessageWebSocketOverHttpSender {
     private WebSocketClientConfiguration webSocketClientConfiguration;
 
     @Autowired
-    private RejectionMessageServiceImpl rejectionMessageServiceImpl;
+    private RejectionMessageService rejectionMessageService;
     
     @Autowired
-    MultipartMessageService multipartMessageService;
+    MultipartMessageTransformerService multipartMessageTransformerService;
 
     public String sendMultipartMessageWebSocketOverHttps(String webSocketHost, Integer webSocketPort, String header, String payload)
             throws ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
@@ -80,7 +80,7 @@ public class MessageWebSocketOverHttpSender {
     			.withHeaderContent(header)
     			.withPayloadContent(payload)
     			.build();
-    	String multipartMessageString = multipartMessageService.multipartMessagetoString(multipartMessage);
+    	String multipartMessageString = multipartMessageTransformerService.multipartMessagetoString(multipartMessage);
     													                                                        
         FileStreamingBean fileStreamingBean = webSocketClientConfiguration.fileStreamingWebSocket();
         WebSocket wsClient = createWebSocketClient(webSocketHost, webSocketPort, webSocketPath, message);
@@ -120,7 +120,7 @@ public class MessageWebSocketOverHttpSender {
         } catch (Exception e) {
             logger.info("... can not create the WebSocket connection HTTP at: " + WS_URL);
             if (null != message)
-                rejectionMessageServiceImpl.sendRejectionMessage(
+                rejectionMessageService.sendRejectionMessage(
                         RejectionMessageType.REJECTION_COMMUNICATION_LOCAL_ISSUES,
                         message);
         }
@@ -161,7 +161,7 @@ public class MessageWebSocketOverHttpSender {
         } catch (Exception e) {
             logger.error("Problems encountered during Client Shutdown with error: " + e.getMessage());
             if (null != message)
-                rejectionMessageServiceImpl.sendRejectionMessage(
+                rejectionMessageService.sendRejectionMessage(
                         RejectionMessageType.REJECTION_COMMUNICATION_LOCAL_ISSUES,
                         message);
         }

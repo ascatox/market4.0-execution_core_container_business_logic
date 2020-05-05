@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 import it.eng.idsa.businesslogic.multipart.MultipartMessage;
 import it.eng.idsa.businesslogic.multipart.MultipartMessageBuilder;
-import it.eng.idsa.businesslogic.multipart.service.MultipartMessageService;
-import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
+import it.eng.idsa.businesslogic.service.MultipartMessageService;
+import it.eng.idsa.businesslogic.service.MultipartMessageTransformerService;
 
 /**
  * 
@@ -20,22 +20,22 @@ import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
 public class ExceptionProcessorProducer implements Processor {
 	
 	@Autowired
-	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
+	private MultipartMessageService multipartMessageService;
 	
 	@Autowired
-    private MultipartMessageService multipartMessageService;
+    private MultipartMessageTransformerService multipartMessageTransformerService;
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		
 		Exception exception = (Exception) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
 		exchange.getOut().setBody(exception.getMessage());
-		String message = multiPartMessageServiceImpl.getHeaderContentString(exception.getMessage());
+		String message = multipartMessageService.getHeaderContentString(exception.getMessage());
 		
 		MultipartMessage multipartMessage = new MultipartMessageBuilder()
     			.withHeaderContent(message)
     			.build();
-    	String multipartMessageString = multipartMessageService.multipartMessagetoString(multipartMessage, false);
+    	String multipartMessageString = multipartMessageTransformerService.multipartMessagetoString(multipartMessage, false);
 		
 		exchange.getOut().setBody(multipartMessageString);
 		String contentType = multipartMessage.getHttpHeaders().getOrDefault("Content-Type", "multipart/mixed");

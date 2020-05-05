@@ -3,13 +3,10 @@ package it.eng.idsa.businesslogic.processor.producer;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationA;
-import it.eng.idsa.businesslogic.processor.consumer.websocket.server.ResponseMessageBufferBean;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,8 +15,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.businesslogic.multipart.MultipartMessage;
 import it.eng.idsa.businesslogic.multipart.MultipartMessageBuilder;
-import it.eng.idsa.businesslogic.multipart.service.MultipartMessageService;
-import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
+import it.eng.idsa.businesslogic.service.MultipartMessageService;
+import it.eng.idsa.businesslogic.service.MultipartMessageTransformerService;
 
 /**
  * 
@@ -34,18 +31,11 @@ public class ProducerSendResponseToDataAppProcessor implements Processor {
 	private boolean isEnabledClearingHouse;
 	
 	@Autowired
-	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
+	private MultipartMessageService multipartMessageService;
 	
 	@Autowired
-    private MultipartMessageService multipartMessageService;
-
-	@Value("${application.dataApp.websocket.isEnabled}")
-	private boolean isEnabledWebSocket;
-
-	@Autowired(required = false)
-	private WebSocketServerConfigurationA webSocketServerConfiguration;
-
-
+    private MultipartMessageTransformerService multipartMessageTransformerService;
+	
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		
@@ -76,7 +66,7 @@ public class ProducerSendResponseToDataAppProcessor implements Processor {
     			.withHeaderContent(header)
     			.withPayloadContent(payload)
     			.build();
-		String responseMultipartMessageString = multipartMessageService.multipartMessagetoString(multipartMessage, false);
+		String responseMultipartMessageString = multipartMessageTransformerService.multipartMessagetoString(multipartMessage, false);
 		
 		String contentType = multipartMessage.getHttpHeaders().getOrDefault("Content-Type", "multipart/mixed");
 		headesParts.put("Content-Type", contentType);
@@ -86,25 +76,19 @@ public class ProducerSendResponseToDataAppProcessor implements Processor {
 			Map<String, Object> headers = exchange.getIn().getHeaders();
 			headers.remove("multipartMessageBody");
 		}
-
-		// TODO: Send The MultipartMessage message to the WebSocket
-		if(isEnabledWebSocket) {
-			ResponseMessageBufferBean responseMessageServerBean = webSocketServerConfiguration.responseMessageBufferWebSocket();
-			responseMessageServerBean.add(responseMultipartMessageString.getBytes());
-		}
 		
 		exchange.getOut().setHeaders(headesParts);
 		exchange.getOut().setBody(responseMultipartMessageString);
 	}	
 
 	private String filterHeader(String header) throws JsonMappingException, JsonProcessingException {
-		Message message = multiPartMessageServiceImpl.getMessage(header);
-		return multiPartMessageServiceImpl.removeToken(message);
+		Message message = multipartMessageService.getMessage(header);
+		return multipartMessageService.removeToken(message);
 	}
 	
 	private String filterRejectionMessageHeader(String header) throws JsonMappingException, JsonProcessingException {
-		Message message = multiPartMessageServiceImpl.getMessage(header);
-		return multiPartMessageServiceImpl.removeToken(message);
+		Message message = multipartMessageService.getMessage(header);
+		return multipartMessageService.removeToken(message);
 	}
 	
 }

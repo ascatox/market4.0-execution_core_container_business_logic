@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
-import it.eng.idsa.businesslogic.service.impl.CommunicationServiceImpl;
-import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
-import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
+import it.eng.idsa.businesslogic.service.CommunicationService;
+import it.eng.idsa.businesslogic.service.MultipartMessageService;
+import it.eng.idsa.businesslogic.service.RejectionMessageService;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
 
 /**
@@ -33,13 +33,13 @@ public class ProducerSendDataToDestinationProcessor implements Processor {
 	private ApplicationConfiguration configuration;
 	
 	@Autowired
-	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
+	private MultipartMessageService multipartMessageService;
 	
 	@Autowired
-	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
+	private RejectionMessageService rejectionMessageService;
 	
 	@Autowired
-	private CommunicationServiceImpl communicationServiceImpl;
+	private CommunicationService communicationService;
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -51,14 +51,14 @@ public class ProducerSendDataToDestinationProcessor implements Processor {
 		String header = multipartMessageParts.get("header").toString();
 		String payload = multipartMessageParts.get("payload").toString();
 		String forwardTo = headesParts.get("Forward-To").toString();
-		Message message = multiPartMessageServiceImpl.getMessage(header);
+		Message message = multipartMessageService.getMessage(header);
 
-		HttpEntity entity = multiPartMessageServiceImpl.createMultipartMessage(messageWithToken, payload, forwardTo);
-		String response = communicationServiceImpl.sendData("http://"+configuration.getActivemqAddress()+"/api/message/incoming?type=queue", entity);
+		HttpEntity entity = multipartMessageService.createMultipartMessage(messageWithToken, payload, forwardTo);
+		String response = communicationService.sendData("http://"+configuration.getActivemqAddress()+"/api/message/incoming?type=queue", entity);
 		
 		if (response==null) {
 			logger.info("...communication error");
-			rejectionMessageServiceImpl.sendRejectionMessage(
+			rejectionMessageService.sendRejectionMessage(
 					RejectionMessageType.REJECTION_COMMUNICATION_LOCAL_ISSUES, 
 					message);
 		}

@@ -27,7 +27,9 @@ import de.fraunhofer.iais.eis.TokenBuilder;
 import de.fraunhofer.iais.eis.TokenFormat;
 import de.fraunhofer.iais.eis.ids.jsonld.Serializer;
 import it.eng.idsa.businesslogic.multipart.MultipartMessage;
-import it.eng.idsa.businesslogic.multipart.service.MultipartMessageService;
+import it.eng.idsa.businesslogic.service.MultipartMessageService;
+import it.eng.idsa.businesslogic.service.MultipartMessageTransformerService;
+import it.eng.idsa.businesslogic.service.RejectionMessageService;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
 
 
@@ -39,29 +41,32 @@ import it.eng.idsa.businesslogic.util.RejectionMessageType;
 
 
 /**
- * Service Implementation for managing MultiPartMessage.
+ * Service Implementation for managing MultipartMessageServiceImpl.
  */
 @Service
 @Transactional
-public class MultiPartMessageServiceImpl{
-	private static final Logger logger = LogManager.getLogger(MultiPartMessageServiceImpl.class);
+public class MultipartMessageServiceImpl implements MultipartMessageService {
+	private static final Logger logger = LogManager.getLogger(MultipartMessageServiceImpl.class);
 	
 	@Autowired
-	MultipartMessageService multipartMessageService;
+	MultipartMessageTransformerService multipartMessageTransformerService;
 	
 	@Autowired
-	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
+	private RejectionMessageService rejectionMessageService;
 	
+	@Override
 	public String getHeaderContentString(String body) {
-		MultipartMessage deserializedMultipartMessage = multipartMessageService.parseMultipartMessage(body);
+		MultipartMessage deserializedMultipartMessage = multipartMessageTransformerService.parseMultipartMessage(body);
 		return deserializedMultipartMessage.getHeaderContentString();
 	}
 
+	@Override
 	public String getPayloadContent(String body) {
-		MultipartMessage deserializedMultipartMessage = multipartMessageService.parseMultipartMessage(body);
+		MultipartMessage deserializedMultipartMessage = multipartMessageTransformerService.parseMultipartMessage(body);
 		return deserializedMultipartMessage.getPayloadContent();
 	}
 	
+	@Override
 	public Message getMessage(String header) {
 		Message message = null;
 		try {
@@ -71,9 +76,8 @@ public class MultiPartMessageServiceImpl{
 		}
 		return message;
 	} 
-	 
-
 	
+	@Override
 	public String addToken(Message message, String token) {
 		String output = null;
 		try {
@@ -94,6 +98,7 @@ public class MultiPartMessageServiceImpl{
 		return output;
 	}
 
+	@Override
 	public String removeToken(Message message) {
 		String output = null;
 		try {
@@ -109,6 +114,7 @@ public class MultiPartMessageServiceImpl{
 		return output;
 	}
 
+	@Override
 	public Message getMessage(Object header) {
 		Message message = null;
 		try {
@@ -120,6 +126,7 @@ public class MultiPartMessageServiceImpl{
 
 	}
 	
+	@Override
 	public HttpEntity createMultipartMessage(String header, String payload, String frowardTo) {
 		MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
 		multipartEntityBuilder.addTextBody("header", header);
@@ -185,6 +192,7 @@ public class MultiPartMessageServiceImpl{
 		return multipartEntityBuilder.build();
 	}
 	
+	@Override
 	public String getToken(Message message) throws JsonProcessingException {
 		String token = null;
 		try {
@@ -194,14 +202,14 @@ public class MultiPartMessageServiceImpl{
 			jsonObject=(JSONObject) jsonObject.get("authorizationToken");
 			if(jsonObject == null) {
 				logger.error("Token is not set: authorizationToken is not set in the part of the header in the multipart message");
-				rejectionMessageServiceImpl.sendRejectionMessage(
+				rejectionMessageService.sendRejectionMessage(
 						RejectionMessageType.REJECTION_TOKEN, 
 						message);
 			} else {
 				token= (String) jsonObject.get("tokenValue");
 				if(token == null) {
 					logger.error("Token is not set: tokenValue is not set in the part of the header in the multipart message");
-					rejectionMessageServiceImpl.sendRejectionMessage(
+					rejectionMessageService.sendRejectionMessage(
 							RejectionMessageType.REJECTION_TOKEN, 
 							message);
 				}

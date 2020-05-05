@@ -13,9 +13,8 @@ import org.springframework.stereotype.Component;
 import it.eng.idsa.businesslogic.configuration.WebSocketServerConfiguration;
 import it.eng.idsa.businesslogic.multipart.MultipartMessage;
 import it.eng.idsa.businesslogic.multipart.MultipartMessageBuilder;
-import it.eng.idsa.businesslogic.multipart.service.MultipartMessageService;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.ResponseMessageBufferBean;
-import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
+import it.eng.idsa.businesslogic.service.MultipartMessageTransformerService;
 
 /**
  * 
@@ -36,10 +35,7 @@ public class ConsumerSendDataToBusinessLogicProcessor implements Processor {
 	private boolean isEnabledWebSocket;
 	
 	@Autowired
-	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
-	
-	@Autowired
-	private MultipartMessageService multiPartMessageService;
+	private MultipartMessageTransformerService multipartMessageTransformerService;
 	
 	@Autowired(required = false)
 	private WebSocketServerConfigurationB webSocketServerConfiguration;
@@ -65,7 +61,7 @@ public class ConsumerSendDataToBusinessLogicProcessor implements Processor {
 				.withHeaderContent(header)
 				.withPayloadContent(payload)
 				.build();
-		String responseString = multiPartMessageService.multipartMessagetoString(responseMessage, false);
+		String responseString = multipartMessageTransformerService.multipartMessagetoString(responseMessage, false);
 		
 		String contentType = responseMessage.getHttpHeaders().getOrDefault("Content-Type", "multipart/mixed");
 		headesParts.put("Content-Type", contentType);
