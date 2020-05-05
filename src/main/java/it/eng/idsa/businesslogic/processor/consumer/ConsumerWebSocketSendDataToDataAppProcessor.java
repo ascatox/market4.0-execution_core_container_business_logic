@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
 import it.eng.idsa.businesslogic.processor.producer.websocket.client.MessageWebSocketOverHttpSender;
-import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
-import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
+import it.eng.idsa.businesslogic.service.MultipartMessageService;
+import it.eng.idsa.businesslogic.service.RejectionMessageService;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -37,10 +37,10 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
     private ApplicationConfiguration configuration;
 
     @Autowired
-    private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
+    private MultipartMessageService multipartMessageService;
 
     @Autowired
-    private RejectionMessageServiceImpl rejectionMessageServiceImpl;
+    private RejectionMessageService rejectionMessageService;
 
     @Autowired
     private MessageWebSocketOverHttpSender messageWebSocketOverHttpSender;
@@ -56,7 +56,7 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
         if (multipartMessageParts.containsKey("payload")) {
             payload = multipartMessageParts.get("payload").toString();
         }
-        Message message = multiPartMessageServiceImpl.getMessage(multipartMessageParts.get("header"));
+        Message message = multipartMessageService.getMessage(multipartMessageParts.get("header"));
         URL openDataAppReceiverRouterUrl = new URL(openDataAppReceiver);
         String response = messageWebSocketOverHttpSender
                 .sendMultipartMessageWebSocketOverHttps(openDataAppReceiverRouterUrl.getHost(), openDataAppReceiverRouterUrl.getPort(),
@@ -68,22 +68,22 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
 
 
     private String filterHeader(String header) throws JsonMappingException, JsonProcessingException {
-        Message message = multiPartMessageServiceImpl.getMessage(header);
-        return multiPartMessageServiceImpl.removeToken(message);
+        Message message = multipartMessageService.getMessage(header);
+        return multipartMessageService.removeToken(message);
     }
 
     private void handleResponse(Exchange exchange, Message message, String response, String openApiDataAppAddress) throws UnsupportedOperationException, IOException {
         if (response == null) {
             logger.info("...communication error with: " + openApiDataAppAddress);
-            rejectionMessageServiceImpl.sendRejectionMessage(
+            rejectionMessageService.sendRejectionMessage(
                     RejectionMessageType.REJECTION_COMMUNICATION_LOCAL_ISSUES,
                     message);
         } else {
             logger.info("content type response received from the DataAPP=" + response);
             logger.info("response received from the DataAPP=" + response);
             logger.info("Successful response: " + response);
-            String header = multiPartMessageServiceImpl.getHeaderContentString(response);
-            String payload = multiPartMessageServiceImpl.getPayloadContent(response);
+            String header = multipartMessageService.getHeaderContentString(response);
+            String payload = multipartMessageService.getPayloadContent(response);
             exchange.getOut().setHeader("header", header);
             if (payload != null) {
                 exchange.getOut().setHeader("payload", payload);

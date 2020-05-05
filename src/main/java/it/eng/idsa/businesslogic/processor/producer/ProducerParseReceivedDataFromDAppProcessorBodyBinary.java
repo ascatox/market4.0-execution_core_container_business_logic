@@ -2,9 +2,8 @@ package it.eng.idsa.businesslogic.processor.producer;
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.HttpWebSocketMessagingLogicA;
-import it.eng.idsa.businesslogic.processor.consumer.websocket.server.HttpWebSocketServerBean;
-import it.eng.idsa.businesslogic.service.impl.MultiPartMessageServiceImpl;
-import it.eng.idsa.businesslogic.service.impl.RejectionMessageServiceImpl;
+import it.eng.idsa.businesslogic.service.MultipartMessageService;
+import it.eng.idsa.businesslogic.service.RejectionMessageService;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -34,10 +33,10 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 	private boolean isEnabledIdscp;
 
 	@Autowired
-	private MultiPartMessageServiceImpl multiPartMessageServiceImpl;
+	private MultipartMessageService multipartMessageService;
 	
 	@Autowired
-	private RejectionMessageServiceImpl rejectionMessageServiceImpl;
+	private RejectionMessageService rejectionMessageService;
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -72,7 +71,7 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 			if(payload!=null) {
 				multipartMessageParts.put("payload", payload);
 			}
-			message = multiPartMessageServiceImpl.getMessage(multipartMessageParts.get("header"));
+			message = multipartMessageService.getMessage(multipartMessageParts.get("header"));
 			
 			// Return exchange
 			exchange.getOut().setHeaders(headesParts);
@@ -80,7 +79,7 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 
 		} catch (Exception e) {
 			logger.error("Error parsing multipart message:" + e);
-			rejectionMessageServiceImpl.sendRejectionMessage(
+			rejectionMessageService.sendRejectionMessage(
 					RejectionMessageType.REJECTION_MESSAGE_LOCAL_ISSUES,
 					message);
 		}
