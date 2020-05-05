@@ -41,7 +41,7 @@ public class ProducerSendResponseToDataAppProcessor implements Processor {
 	@Autowired
     private MultipartMessageTransformerService multipartMessageTransformerService;
 
-	@Autowired
+	@Autowired(required = false)
 	WebSocketServerConfigurationA webSocketServerConfiguration;
 
 	@Override
