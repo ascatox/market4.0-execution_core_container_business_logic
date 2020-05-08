@@ -15,8 +15,10 @@ import it.eng.idsa.businesslogic.processor.producer.ProducerGetTokenFromDapsProc
 import it.eng.idsa.businesslogic.processor.producer.ProducerParseReceivedDataProcessorBodyBinary;
 import it.eng.idsa.businesslogic.processor.producer.ProducerParseReceivedDataProcessorBodyFormData;
 import it.eng.idsa.businesslogic.processor.producer.ProducerParseReceivedResponseMessage;
+import it.eng.idsa.businesslogic.processor.producer.ProducerReceiveFromActiveMQ;
 import it.eng.idsa.businesslogic.processor.producer.ProducerSendDataToBusinessLogicProcessor;
 import it.eng.idsa.businesslogic.processor.producer.ProducerSendResponseToDataAppProcessor;
+import it.eng.idsa.businesslogic.processor.producer.ProducerSendToActiveMQ;
 import it.eng.idsa.businesslogic.processor.producer.ProducerSendTransactionToCHProcessor;
 import it.eng.idsa.businesslogic.processor.producer.ProducerValidateTokenProcessor;
 
@@ -46,6 +48,12 @@ public class CamelRouteProducer extends RouteBuilder {
 
 	@Autowired
 	ProducerGetTokenFromDapsProcessor getTokenFromDapsProcessor;
+	
+	@Autowired
+	ProducerSendToActiveMQ sendToActiveMQ;
+	
+	@Autowired
+	ProducerReceiveFromActiveMQ receiveFromActiveMQ;
 	
 	@Autowired
 	ProducerSendTransactionToCHProcessor sendTransactionToCHProcessor;
@@ -89,8 +97,8 @@ public class CamelRouteProducer extends RouteBuilder {
 				.choice()
 					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 						.process(getTokenFromDapsProcessor)
-//						.process(sendToActiveMQ)
-//						.process(receiveFromActiveMQ)
+						.process(sendToActiveMQ)
+						.process(receiveFromActiveMQ)
 						// Send data to Endpoint B
 						.process(sendDataToBusinessLogicProcessor)
 						.process(parseReceivedResponseMessage)
@@ -101,8 +109,8 @@ public class CamelRouteProducer extends RouteBuilder {
 							.process(sendTransactionToCHProcessor)
 						.endChoice()
 					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-//						.process(sendToActiveMQ)
-//						.process(receiveFromActiveMQ)
+						.process(sendToActiveMQ)
+						.process(receiveFromActiveMQ)
 						// Send data to Endpoint B
 						.process(sendDataToBusinessLogicProcessor)
 						.process(parseReceivedResponseMessage)
@@ -119,8 +127,8 @@ public class CamelRouteProducer extends RouteBuilder {
 				.choice()
 					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 						.process(getTokenFromDapsProcessor)
-//						.process(sendToActiveMQ)
-//						.process(receiveFromActiveMQ)
+						.process(sendToActiveMQ)
+						.process(receiveFromActiveMQ)
 						// Send data to Endpoint B
 						.process(sendDataToBusinessLogicProcessor)
 						.process(parseReceivedResponseMessage)
@@ -131,8 +139,8 @@ public class CamelRouteProducer extends RouteBuilder {
 								.process(sendTransactionToCHProcessor)
 						.endChoice()
 					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-	//					.process(sendToActiveMQ)
-	//					.process(receiveFromActiveMQ)
+						.process(sendToActiveMQ)
+						.process(receiveFromActiveMQ)
 						// Send data to Endpoint B
 						.process(sendDataToBusinessLogicProcessor)
 						.process(parseReceivedResponseMessage)
