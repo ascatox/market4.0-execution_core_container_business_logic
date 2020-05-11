@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Scope;
 )
 public class WebSocketServerConfigurationB implements WebSocketServerConfiguration {
 
-    @Value("${application.camelConsumerPort}")
+    @Value("${application.idscp.server.port}")
     private int port;
 
     @Override
