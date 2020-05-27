@@ -15,7 +15,7 @@ git clone https://github.com/ascatox/websocket-message-streamer.git
 cd websocket-message-streamer
 mvn clean install -DskipTests
 cd ..
-echo "Installed websocket-message-streamer-lib!"
+echo "Installed websocket-message-streamer-lib"
 
 echo "Cloning and Dockerizing Data-App repo..."
 git clone https://github.com/ascatox/market4.0-data_app_test_BE.git
