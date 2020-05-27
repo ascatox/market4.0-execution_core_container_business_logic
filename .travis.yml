@@ -1,4 +1,4 @@
-language: java
+language: java, node_js
 
 cache:
   directories:
@@ -10,8 +10,8 @@ services:
   - docker
 
 install:
-  - sh travis.sh
+  - bash travis.sh
 
 
 #script:
-#  - bundle exec rake test
+#  - bash test.sh

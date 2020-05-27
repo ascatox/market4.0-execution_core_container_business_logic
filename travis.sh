@@ -28,7 +28,7 @@ echo "Downloading and installing Clearing-House Model"
 git clone https://gitlab.com/eng-siena-ri/market4.0/clearing-house.git
 cd clearing-house
 mkdir chaincode-libs
-mvn clean install -DskipTests
+mvn install -DskipTests
 cd ..
 
 echo "Dockerizing ECCs..."
@@ -39,3 +39,6 @@ echo "Starting services..."
 docker-compose up -d
 
 echo "Services started"
+
+echo "Installing Newman CLI..."
+npm install -g newman
