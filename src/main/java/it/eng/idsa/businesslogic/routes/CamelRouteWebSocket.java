@@ -3,6 +3,7 @@
 package it.eng.idsa.businesslogic.routes;
 
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
+import it.eng.idsa.businesslogic.processor.CHConsensusProcessor;
 import it.eng.idsa.businesslogic.processor.consumer.*;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorProducer;
@@ -91,6 +92,24 @@ public class CamelRouteWebSocket extends RouteBuilder {
     @Autowired
     ConsumerWebSocketSendDataToDataAppProcessor sendDataToDataAppProcessorOverWS;
 
+    @Autowired
+    ConsumerValidateDataByCHProcessor consumerValidateDataByCHProcessor;
+
+    //@Autowired
+    //ConsumerReceiveFromActiveMQ consumerReceiveFromActiveMQ;
+
+    @Autowired
+    ConsumerSendToActiveMQ consumerSendToActiveMQ;
+
+    @Autowired
+    ProducerSendToActiveMQ producerSendToActiveMQ;
+
+    @Autowired
+    ProducerReceiveFromActiveMQ producerReceiveFromActiveMQ;
+
+    @Autowired
+    CHConsensusProcessor chConsensusProcessor;
+
     @Value("${application.idscp.isEnabled}")
     private boolean isEnabledIdscp;
 
@@ -100,7 +119,6 @@ public class CamelRouteWebSocket extends RouteBuilder {
     @Value("${application.dataApp.websocket.isEnabled}")
     private boolean isEnabledDataAppWebSocket;
 
-
     @Override
     public void configure() throws Exception {
         if (isEnabledIdscp || isEnabledWebSocket)
@@ -109,34 +127,54 @@ public class CamelRouteWebSocket extends RouteBuilder {
                     .process(multiPartMessageProcessor)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
-                    .process(consumerValidateTokenProcessor)
-                    // Send to the Endpoint: F
-                    .choice()
-                    .when(header("Is-Enabled-WebSocket").isEqualTo(true))
-                    .process(sendDataToDataAppProcessorOverWS)
-                    .when(header("Is-Enabled-WebSocket").isEqualTo(false))
-                    .process(consumerSendDataToDataAppProcessor)
-                    .endChoice()
-                    .process(multiPartMessageProcessor)
-                    .process(consumerGetTokenFromDapsProcessor)
-                    .process(consumerSendDataToBusinessLogicProcessor)
-                    .choice()
-                    .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                    .process(consumerSendTransactionToCHProcessor)
+                             .process(consumerValidateTokenProcessor)
+                             //.process(consumerSendToActiveMQ)
+                             //.process(consumerReceiveFromActiveMQ)
+                            .process(chConsensusProcessor)
+                            .choice()
+                            .when(header("Is-Message-Processed-Notification").isEqualTo(false))
+                            .choice()
+                            .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+                                .process(consumerValidateDataByCHProcessor)
+                            .endChoice()
+                            // Send to the Endpoint: F
+                            .choice()
+                            .when(header("Is-Enabled-WebSocket").isEqualTo(true))
+                                 .process(sendDataToDataAppProcessorOverWS)
+                            .when(header("Is-Enabled-WebSocket").isEqualTo(false))
+                                 .process(consumerSendDataToDataAppProcessor)
+                            .endChoice()
+                            .process(multiPartMessageProcessor)
+                            .process(consumerGetTokenFromDapsProcessor)
+                            .process(consumerSendDataToBusinessLogicProcessor)
+//                    .choice()
+//                    .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+//                         //.process(consumerSendTransactionToCHProcessor)
+//                    .endChoice()
                     .endChoice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-                    // Send to the Endpoint: F
-                    .choice()
-                    .when(header("Is-Enabled-WebSocket").isEqualTo(true))
-                    .process(sendDataToDataAppProcessorOverWS)
-                    .when(header("Is-Enabled-WebSocket").isEqualTo(false))
-                    .process(consumerSendDataToDataAppProcessor)
-                    .endChoice()
-                    .process(multiPartMessageProcessor)
-                    .process(consumerSendDataToBusinessLogicProcessor)
-                    .choice()
-                    .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                    // .process(consumerSendTransactionToCHProcessor)
+                            //.process(consumerSendToActiveMQ)
+                            //.process(consumerReceiveFromActiveMQ)
+                            .process(chConsensusProcessor)
+                            .choice()
+                            .when(header("Is-Message-Processed-Notification").isEqualTo(false))
+                            .choice()
+                            .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+                                .process(consumerValidateDataByCHProcessor)
+                            .endChoice()
+                            .choice()
+                            // Send to the Endpoint: F
+                            .when(header("Is-Enabled-WebSocket").isEqualTo(true))
+                                .process(sendDataToDataAppProcessorOverWS)
+                            .when(header("Is-Enabled-WebSocket").isEqualTo(false))
+                                .process(consumerSendDataToDataAppProcessor)
+                            .endChoice()
+                            .process(multiPartMessageProcessor)
+                            .process(consumerSendDataToBusinessLogicProcessor)
+//                    .choice()
+//                    .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+//                        // .process(consumerSendTransactionToCHProcessor)
+//                    .endChoice()
                     .endChoice()
                     .endChoice();
         if (isEnabledDataAppWebSocket)
@@ -145,27 +183,31 @@ public class CamelRouteWebSocket extends RouteBuilder {
                     .process(producerParseReceivedDataFromDAppProcessorBodyBinary)
                     .choice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
-                    .process(producerGetTokenFromDapsProcessor)
-                    // Send data to Endpoint B
-                    .process(producerSendDataToBusinessLogicProcessor)
-                    .process(parseReceivedResponseMessage)
-                    .process(producerValidateTokenProcessor)
-                    //.process(sendResponseToDataAppProcessor)
-                    .process(producerSendResponseToDataAppProcessor)
+                            .process(producerGetTokenFromDapsProcessor)
+                            .process(producerSendToActiveMQ)
+                            .process(producerReceiveFromActiveMQ)
+                            // Send data to Endpoint B
+                            .process(producerSendDataToBusinessLogicProcessor)
+                            .process(parseReceivedResponseMessage)
+                            .process(producerValidateTokenProcessor)
+                        //.process(sendResponseToDataAppProcessor)
+                             .process(producerSendResponseToDataAppProcessor)
                     .choice()
                     .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                    .process(producerSendTransactionToCHProcessor)
+                        .process(producerSendTransactionToCHProcessor)
                     .endChoice()
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-                    // Send data to Endpoint B
-                    .process(producerSendDataToBusinessLogicProcessor)
-                    .process(parseReceivedResponseMessage)
-                    //.process(sendResponseToDataAppProcessor)
-                    .process(producerSendResponseToDataAppProcessor)
-                    .choice()
-                    .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                    .process(producerSendTransactionToCHProcessor)
-                    .endChoice()
+                            .process(producerSendToActiveMQ)
+                            .process(producerReceiveFromActiveMQ)
+                            // Send data to Endpoint B
+                            .process(producerSendDataToBusinessLogicProcessor)
+                            .process(parseReceivedResponseMessage)
+                        //.process(sendResponseToDataAppProcessor)
+                            .process(producerSendResponseToDataAppProcessor)
+//                        .choice()
+//                        .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+//                             //.process(producerSendTransactionToCHProcessor)
+//                    .endChoice()
                     .endChoice();
     }
 }

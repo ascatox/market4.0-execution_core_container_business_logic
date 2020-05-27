@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import it.eng.idsa.businesslogic.processor.CHConsensusProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.http.HttpEntity;
@@ -106,6 +107,9 @@ public class ProducerSendDataToBusinessLogicProcessor implements Processor {
     			.build();
         String multipartMessageString = multipartMessageTransformerService.multipartMessagetoString(multipartMessage);
 
+        if(!payload.contains(CHConsensusProcessor.CH_CONSENSUS_PREFIX)) {
+            ProducerMessageBufferBean.getInstance().addMessageBuffer(header, payload);
+        }
         if (isEnabledIdscp) {
             // check & exstract IDSCP WebSocket IP and Port
             try {
@@ -181,9 +185,8 @@ public class ProducerSendDataToBusinessLogicProcessor implements Processor {
         return response;
     }
 
-    private CloseableHttpResponse forwardMessageBinary(String address, String header, String payload) throws UnsupportedEncodingException {
+    public CloseableHttpResponse forwardMessageBinary(String address, String header, String payload) throws UnsupportedEncodingException {
         logger.info("Forwarding Message: Body: form-data");
-
         // Covert to ContentBody
         ContentBody cbHeader = this.convertToContentBody(header, ContentType.DEFAULT_TEXT, "header");
         ContentBody cbPayload = null;
@@ -237,7 +240,7 @@ public class ProducerSendDataToBusinessLogicProcessor implements Processor {
         return httpClient;
     }
 
-    private void handleResponse(Exchange exchange, Message message, CloseableHttpResponse response, String forwardTo, String multipartMessageBody) throws UnsupportedOperationException, IOException {
+    public void handleResponse(Exchange exchange, Message message, CloseableHttpResponse response, String forwardTo, String multipartMessageBody) throws UnsupportedOperationException, IOException {
         if (response == null) {
             logger.info("...communication error");
             rejectionMessageService.sendRejectionMessage(
@@ -271,7 +274,7 @@ public class ProducerSendDataToBusinessLogicProcessor implements Processor {
         }
     }
 
-    private void handleResponseWebSocket(Exchange exchange, Message message, String responseString, String forwardTo, String multipartMessageBody) {
+    public void handleResponseWebSocket(Exchange exchange, Message message, String responseString, String forwardTo, String multipartMessageBody) {
         if (responseString == null) {
             logger.info("...communication error");
             rejectionMessageService.sendRejectionMessage(
@@ -288,7 +291,7 @@ public class ProducerSendDataToBusinessLogicProcessor implements Processor {
         }
     }
 
-    private String sendMultipartMessageWebSocket(String webSocketHost, Integer webSocketPort, String header, String payload, Message message) throws Exception, ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
+    public String sendMultipartMessageWebSocket(String webSocketHost, Integer webSocketPort, String header, String payload, Message message) throws Exception, ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
         // Create idscpClient
         IdscpClientBean idscpClientBean = webSocketClientConfiguration.idscpClientServiceWebSocket();
         this.initializeIdscpClient(message, idscpClientBean);

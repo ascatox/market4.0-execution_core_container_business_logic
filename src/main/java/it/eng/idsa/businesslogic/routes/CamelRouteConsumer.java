@@ -1,25 +1,17 @@
 package it.eng.idsa.businesslogic.routes;
 
+import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
+import it.eng.idsa.businesslogic.processor.CHConsensusProcessor;
+import it.eng.idsa.businesslogic.processor.consumer.*;
+import it.eng.idsa.businesslogic.processor.exception.ExceptionForProcessor;
+import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerExceptionMultiPartMessageProcessor;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerFileRecreatorProcessor;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerGetTokenFromDapsProcessor;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerMultiPartMessageProcessor;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerReceiveFromActiveMQ;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerSendDataToBusinessLogicProcessor;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerSendDataToDataAppProcessor;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerSendToActiveMQ;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerSendTransactionToCHProcessor;
-import it.eng.idsa.businesslogic.processor.consumer.ConsumerValidateTokenProcessor;
-import it.eng.idsa.businesslogic.processor.exception.ExceptionForProcessor;
-import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
 
 /**
  * 
@@ -37,13 +29,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 	
 	@Autowired
 	ConsumerValidateTokenProcessor validateTokenProcessor;
-	
-	@Autowired
-	ConsumerSendToActiveMQ sendToActiveMQ;
-	
-	@Autowired
-	ConsumerReceiveFromActiveMQ receiveFromActiveMQ;
-	
+
 	@Autowired
 	ConsumerMultiPartMessageProcessor multiPartMessageProcessor;
 	
@@ -66,11 +52,26 @@ public class CamelRouteConsumer extends RouteBuilder {
 	ConsumerExceptionMultiPartMessageProcessor exceptionMultiPartMessageProcessor;
 	
 	@Autowired
-	ConsumerFileRecreatorProcessor fileRecreatorProcessor;
-	
+	CHConsensusProcessor chConsensusProcessor;
+
+	@Autowired
+	ConsumerValidateDataByCHProcessor consumerValidateDataByCHProcessor;
+
+	@Autowired
+	ConsumerSendToActiveMQ sendToActiveMQ;
+
+	@Autowired
+	ConsumerReceiveFromActiveMQ receiveFromActiveMQ;
+
     @Autowired
     CamelContext camelContext;
-	
+
+	@Value("${application.idscp.isEnabled}")
+	private boolean isEnabledIdscp;
+
+	@Value("${application.websocket.isEnabled}")
+	private boolean isEnabledWebSocket;
+
 	@Override
 	public void configure() throws Exception {
 		logger.debug("Starting Camel Routes...consumer side");
@@ -97,40 +98,57 @@ public class CamelRouteConsumer extends RouteBuilder {
 					.endChoice()
 			.endChoice();
 
-		// Camel SSL - Endpoint: B		
-		from("jetty://https4://0.0.0.0:"+configuration.getCamelConsumerPort()+"/incoming-data-channel/receivedMessage")
+		// Camel SSL - Endpoint: B
+		if(!isEnabledIdscp && !isEnabledWebSocket)
+			from("jetty://https4://0.0.0.0:"+configuration.getCamelConsumerPort()+"/incoming-data-channel/receivedMessage")
 			.process(multiPartMessageProcessor)
 			.choice()
 				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 					.process(validateTokenProcessor)
-					.process(sendToActiveMQ)
-					.process(receiveFromActiveMQ)
-					// Send to the Endpoint: F
-					.process(sendDataToDataAppProcessor)
-					.process(multiPartMessageProcessor)
-					.process(getTokenFromDapsProcessor)
-					.process(sendDataToBusinessLogicProcessor)
+					//.process(sendToActiveMQ)
+					.process(chConsensusProcessor)
 					.choice()
+					.when(header("Is-Message-Processed-Notification").isEqualTo(false))
+						//.process(receiveFromActiveMQ)
+						.choice()
 						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-							.process(sendTransactionToCHProcessor)
+							.process(consumerValidateDataByCHProcessor)
+						.endChoice()
+						// Send to the Endpoint: F
+						.process(sendDataToDataAppProcessor)
+						.process(multiPartMessageProcessor)
+						.process(getTokenFromDapsProcessor)
+						.process(sendDataToBusinessLogicProcessor)
+//						.choice()
+//							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+//								//.process(sendTransactionToCHProcessor)
+//						.endChoice()
 					.endChoice()
 				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-					.process(sendToActiveMQ)
-					.process(receiveFromActiveMQ)
-					// Send to the Endpoint: F
-					.process(sendDataToDataAppProcessor)
-					.process(multiPartMessageProcessor)
-					.process(sendDataToBusinessLogicProcessor)
+					.process(chConsensusProcessor)
 					.choice()
+					.when(header("Is-Message-Processed-Notification").isEqualTo(false))
+						//.process(sendToActiveMQ)
+						//.process(sendToActiveMQ)
+						.choice()
 						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-							//.process(sendTransactionToCHProcessor)
-					.endChoice()
-			.endChoice();
+							.process(consumerValidateDataByCHProcessor)
+						.endChoice()
+						// Send to the Endpoint: F
+						.process(sendDataToDataAppProcessor)
+						.process(multiPartMessageProcessor)
+						.process(sendDataToBusinessLogicProcessor)
+//						.choice()
+//							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+//								//.process(sendTransactionToCHProcessor)
+//						.endChoice()
+			.endChoice()
+		.endChoice();
 		
 		// TODO: Improve this initialization
 		// Camel WebSocket - Endpoint B
 		//boolean startupRoute = true;
-		from("timer://simpleTimer?repeatCount=-1")
+		/*from("timer://simpleTimer?repeatCount=-1")
 			.process(fileRecreatorProcessor)
 			.process(multiPartMessageProcessor)
 			.choice()
@@ -158,6 +176,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
 							//.process(sendTransactionToCHProcessor)
 					.endChoice()
-			.endChoice();			
+			.endChoice();
+		 */
 	}
 }

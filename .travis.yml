@@ -1,0 +1,9 @@
+language: java
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.25.5
+
+install:
+  - sh dockerize_travis.sh
+#script:
+#  - bundle exec rake test
