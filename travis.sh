@@ -6,8 +6,8 @@ chmod +x docker-compose
 sudo mv docker-compose /usr/local/bin
 echo "docker-compose correctly installed"
 
-echo "Settings.xml copy on Travis Home_M2 at: "$HOME
-cp -f settings.xml $HOME/.m2/settings.xml
+echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
+cp -f .m2/settings.xml $HOME/.m2/settings.xml
 cp -rf .m2/nl  $HOME/.m2/repository
 
 echo "Installing websocket-message-streamer-lib..."
@@ -23,6 +23,14 @@ cd market4.0-data_app_test_BE
 git checkout master
 sh dockerize.sh
 cd ..
+
+echo "Downloading and installing Clearing-House Model"
+git clone https://gitlab.com/eng-siena-ri/market4.0/clearing-house.git
+cd clearing-house
+mkdir chaincode-libs
+cd clearing-house-model
+mvn clean install -DskipTests
+cd ../..
 
 echo "Dockerizing ECCs..."
 mvn clean package -DskipTests
