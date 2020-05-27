@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Feb 28 09:49:10 CET 2020
+ids-comm-1.0.1.jar>central=
+ids-comm-1.0.1.pom>central=
+ids-comm-1.0.1.pom>nexus=
+ids-comm-1.0.1.jar>nexus=
+ids-comm-1.0.1-sources.jar>nexus=

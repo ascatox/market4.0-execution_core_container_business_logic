@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Feb 13 11:50:11 CET 2020
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.error=Could not transfer artifact de.fraunhofer.iais.eis.ids.infomodel\:spi\:jar\:sources\:2.0.1-SNAPSHOT from/to snapshots (http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public)\: maven.iais.fraunhofer.de
+https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.error=Could not transfer artifact de.fraunhofer.iais.eis.ids.infomodel\:spi\:jar\:sources\:2.0.1-SNAPSHOT from/to nl.tno.ids (https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/)\: ci.ids.smart-connected.nl
+5315ae0c432aa912708cf22ab23ce301f536c20e@default-nl.tno.ids-https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.lastUpdated=1581591011716
+@default-snapshots-http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.lastUpdated=1581591011723

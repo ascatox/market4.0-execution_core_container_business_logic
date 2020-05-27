@@ -1,0 +1,8 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Mar 16 09:33:11 CET 2020
+https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.error=
+https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.lastUpdated=1584347590738
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.lastUpdated=1584347590823
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1584347591023
+https\://repo.maven.apache.org/maven2/.error=

@@ -1,0 +1,10 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Sep 23 10:59:09 CEST 2019
+http\://www.openlr.org/nexus/content/repositories/releases/.error=
+https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.lastUpdated=1569229149439
+https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.error=
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.lastUpdated=1560353924915
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.error=
+http\://www.openlr.org/nexus/content/repositories/releases/.lastUpdated=1560845807555
+http\://www.openlr.org/nexus/content/repositories/snapshots/.lastUpdated=1560845634459
+http\://www.openlr.org/nexus/content/repositories/snapshots/.error=

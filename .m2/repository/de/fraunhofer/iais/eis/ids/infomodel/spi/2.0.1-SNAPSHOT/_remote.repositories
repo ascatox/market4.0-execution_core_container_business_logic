@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Mar 18 10:20:21 CET 2020
+spi-2.0.1-20191115.103148-2.pom>snapshots=
+spi-2.0.1-20191115.101702-1.jar>eis-snapshot-repo=
+spi-2.0.1-20191115.103148-2.jar>snapshots=
+spi-2.0.1-20191115.103148-2.jar>eis-public-repo=
+spi-2.0.1-20191115.101702-1.pom>eis-snapshot-repo=
