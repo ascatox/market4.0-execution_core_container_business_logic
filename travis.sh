@@ -6,6 +6,7 @@ chmod +x docker-compose
 sudo mv docker-compose /usr/local/bin
 echo "docker-compose correctly installed"
 
+echo "Settings.xml copy on Travis Home_M2 at: "$HOME
 cp -f settings.xml $HOME/.m2/settings.xml
 
 echo "Installing websocket-message-streamer-lib..."
