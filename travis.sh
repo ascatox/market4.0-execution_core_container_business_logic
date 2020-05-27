@@ -13,7 +13,7 @@ cp -rf .m2/nl  $HOME/.m2/repository
 echo "Installing websocket-message-streamer-lib..."
 git clone https://github.com/ascatox/websocket-message-streamer.git
 cd websocket-message-streamer
-mvn clean install
+mvn clean install-DskipTests
 cd ..
 echo "Installed websocket-message-streamer-lib!"
 
