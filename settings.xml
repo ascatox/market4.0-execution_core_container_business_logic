@@ -100,7 +100,9 @@ under the License.
       <port>8680</port>
       <nonProxyHosts>local.net|some.host.com</nonProxyHosts>
     </proxy>
+    -->
   </proxies>
+
 
   <!-- servers
    | This is a list of authentication profiles, keyed by the server-id used within the system.
