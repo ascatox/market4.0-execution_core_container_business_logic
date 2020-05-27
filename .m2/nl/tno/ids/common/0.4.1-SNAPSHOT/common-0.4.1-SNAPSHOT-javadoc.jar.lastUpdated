@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Fri Apr 17 08:21:47 CEST 2020
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.lastUpdated=1587104507437
+@default-nl.tno.ids-https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.lastUpdated=1587104507336
+https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.error=Could not transfer artifact nl.tno.ids\:common\:jar\:javadoc\:0.4.1-SNAPSHOT from/to nl.tno.ids (https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/)\: Access denied to https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/nl/tno/ids/common/0.4.1-SNAPSHOT/common-0.4.1-SNAPSHOT-javadoc.jar. Error code 401, 
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.error=
