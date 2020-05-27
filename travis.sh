@@ -8,7 +8,7 @@ echo "docker-compose correctly installed"
 
 echo "Settings.xml copy on Travis Home_M2 at: "$HOME
 cp -f settings.xml $HOME/.m2/settings.xml
-cp -rf .m2/nl  $HOME/.m2
+cp -rf .m2/nl  $HOME/.m2/repository
 
 echo "Installing websocket-message-streamer-lib..."
 git clone https://github.com/ascatox/websocket-message-streamer.git
