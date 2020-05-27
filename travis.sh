@@ -28,9 +28,8 @@ echo "Downloading and installing Clearing-House Model"
 git clone https://gitlab.com/eng-siena-ri/market4.0/clearing-house.git
 cd clearing-house
 mkdir chaincode-libs
-cd clearing-house-model
 mvn clean install -DskipTests
-cd ../..
+cd ..
 
 echo "Dockerizing ECCs..."
 mvn clean package -DskipTests
