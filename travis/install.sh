@@ -50,7 +50,4 @@ echo "Services started"
 
 echo "Installing Newman CLI..."
 npm install -g newman
-node --version
-npm --version
-node_modules/.bin/newman --version
 echo "Newman installed, READY TO TEST..."
