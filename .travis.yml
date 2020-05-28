@@ -18,6 +18,7 @@ install:
 before_script:
   - node --version
   - npm --version
+  - docker ps -a
 
 script:
  - bash ./travis/test.sh
