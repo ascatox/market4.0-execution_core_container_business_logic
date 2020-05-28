@@ -35,7 +35,8 @@ echo "Cloning and Dockerizing Data-App repo..."
 git clone https://github.com/ascatox/market4.0-data_app_test_BE.git
 cd market4.0-data_app_test_BE
 git checkout master
-sh dockerize.sh
+mvn clean package -DskipTests
+docker build -f Dockerfile -t market4.0/data-app .
 cd ..
 echo "Data-App is ready to start"
 
