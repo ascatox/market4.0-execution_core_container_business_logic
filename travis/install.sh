@@ -54,4 +54,4 @@ docker build -f Dockerfile -t market4.0/execution_core_container_business .
 
 echo "Starting services..."
 pwd
-docker-compose -f travis/docker/docker-compose_${NETWORK}.yaml up -d
+docker-compose -f travis/docker/docker-compose-${NETWORK}.yaml up -d

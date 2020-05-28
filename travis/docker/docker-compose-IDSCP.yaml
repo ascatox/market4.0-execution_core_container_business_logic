@@ -1,0 +1,43 @@
+version: '2.2'
+services:
+  ecc-consumer:
+    image: market4.0/execution_core_container_business
+    ports:
+      - 8086:8086
+      - 8888:8888
+      - 8890:8890
+    environment:
+      - SPRING_PROFILES_ACTIVE=CONSUMER_DOCKER
+      - CH=false
+      - DAPS=false
+      - WSS=false
+      - IDSCP=true
+      - WSSE=true
+    command: --spring.profiles.active=CONSUMER_DOCKER
+    volumes:
+      - /home/travis/cert:/cert
+      - /home/travis/hash:/hash
+
+  ecc-provider:
+    image: market4.0/execution_core_container_business
+    ports:
+      - 8097:8097
+      - 8887:8887
+      - 8889:8889
+    environment:
+      - SPRING_PROFILES_ACTIVE=PRODUCER_DOCKER
+      - CH=false
+      - DAPS=false
+      - WSS=false
+      - IDSCP=true
+      - WSSE=true
+    command: --spring.profiles.active=PRODUCER_DOCKER
+    volumes:
+      - /home/travis/cert:/cert
+      - /home/travis/hash:/hash
+
+  data-app:
+   image: market4.0/data-app
+   ports:
+    - 8083:8083
+    - 9000:9000
