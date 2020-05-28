@@ -21,3 +21,6 @@ before_script:
 
 script:
  - bash ./travis/test.sh
+
+after_script:
+  - docker-compose down

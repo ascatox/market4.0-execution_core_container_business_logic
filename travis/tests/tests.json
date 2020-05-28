@@ -79,10 +79,10 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:9000/sendFile",
+					"raw": "https://127.0.0.1:9000/sendFile",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"127.0.0.1"
 					],
 					"port": "9000",
 					"path": [
@@ -175,10 +175,10 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:9000/sendFile",
+					"raw": "https://127.0.0.1:9000/sendFile",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"127.0.0.1"
 					],
 					"port": "9000",
 					"path": [
