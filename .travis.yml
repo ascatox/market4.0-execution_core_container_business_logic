@@ -1,7 +1,7 @@
 language: java, node_js
 
-node_js:
-  - "10"
+#node_js:
+#  - "10"
 
 cache:
   directories:
@@ -17,11 +17,13 @@ install:
 
 before_script:
   - docker ps -a
-  - sleep 60
+  - sleep 60 #seconds
 
 script:
  - bash ./travis/test.sh
 
 after_script:
   - docker logs  market40-execution_core_container_business_logic_data-app_1
+  - docker logs market40-execution_core_container_business_logic_ecc-consumer_1
+  - docker logs market40-execution_core_container_business_logic_ecc-provider_1
   - docker-compose down

@@ -52,5 +52,3 @@ docker build -f Dockerfile -t market4.0/execution_core_container_business .
 
 echo "Starting services..."
 docker-compose up -d
-
-echo "SERVICES STARTED :-)"
