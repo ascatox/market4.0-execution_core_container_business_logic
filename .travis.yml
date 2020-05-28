@@ -16,9 +16,8 @@ install:
   - bash ./travis/install.sh
 
 before_script:
-  - node --version
-  - npm --version
   - docker ps -a
+  - sleep 60
 
 script:
  - bash ./travis/test.sh
