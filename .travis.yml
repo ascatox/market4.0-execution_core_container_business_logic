@@ -5,6 +5,9 @@ cache:
     - "$HOME/.m2"
 env:
   - DOCKER_COMPOSE_VERSION=1.25.5
+  - COMM=WSS
+  - COMM=IDSCP
+  - COMM=HTTPS
 
 services:
   - docker
@@ -26,20 +29,19 @@ after_script:
   - docker-compose down
 
 
-#
-#
+
+
 ##jobs:
 #  include:
-#    - stage: integration tests
-#        install: ./travis/install.sh WSS
-#        before_script: sleep 60
-#        script: ./travis/test.sh WSS
-#      script: "Running unit tests (1)"
-#    - stage: integration tests
+#  - env: WSS
+#      install: ./travis/install.sh WSS
+#      before_script: sleep 60
+#      script: ./travis/test.sh WSS
+#  - env: IDSCP
 #        install: ./travis/install.sh IDSCP
 #        before_script: sleep 60
 #        script: ./travis/test.sh IDSCP
-#    - stage: integration tests
+#    - env: HTTPS
 #        install: ./travis/install.sh HTTPS
 #        before_script: sleep 60
 #        script: ./travis/test.sh HTTPS
