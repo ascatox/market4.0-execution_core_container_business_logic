@@ -1,3 +1,3 @@
 #!/bin/bash
 
-newman run ./travis/tests/tests.json
+node_modules/.bin/newman run ./travis/tests/tests.json
