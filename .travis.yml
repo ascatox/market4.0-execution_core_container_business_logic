@@ -24,4 +24,5 @@ script:
  - bash ./travis/test.sh
 
 after_script:
+  - docker logs  market40-execution_core_container_business_logic_data-app_1
   - docker-compose down
