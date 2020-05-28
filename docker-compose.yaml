@@ -10,8 +10,8 @@ services:
       - SPRING_PROFILES_ACTIVE=CONSUMER_DOCKER
     command: --spring.profiles.active=CONSUMER_DOCKER
     volumes:
-      - /Users/ascatox/Documents/Sviluppo/workspace_idsa2/cert:/cert
-      - /Users/ascatox/Documents/Sviluppo/workspace_idsa2/hash:/hash
+      - /home/travis/cert:/cert
+      - /home/travis/hash:/hash
 
   ecc-provider:
     image: market4.0/execution_core_container_business
@@ -23,8 +23,8 @@ services:
       - SPRING_PROFILES_ACTIVE=PRODUCER_DOCKER
     command: --spring.profiles.active=PRODUCER_DOCKER
     volumes:
-      - /Users/ascatox/Documents/Sviluppo/workspace_idsa2/cert:/cert
-      - /Users/ascatox/Documents/Sviluppo/workspace_idsa2/hash:/hash
+      - /home/travis/cert:/cert
+      - /home/travis/hash:/hash
 
   data-app:
    image: market4.0/data-app
