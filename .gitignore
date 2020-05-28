@@ -34,7 +34,7 @@ build/
 # Miscellanea
 /src/main/resources/application-CONSUMER_DOCKER.properties
 /src/main/resources/application-PRODUCER_DOCKER.properties
-/docker-compose.yaml
+/travis/docker/docker-compose.yaml
 /Dockerfile
 /dockerize.sh
 /src/main/resources/application-CONSUMER_LOCAL.properties
