@@ -9,37 +9,37 @@ env:
 services:
   - docker
 
-#install:
-#  - bash ./travis/install.sh
-#
-#before_script:
-#  - docker ps -a
-#  - sleep 60 #seconds
-#
-#script:
-#  - bash ./travis/test.sh
-#
-#after_script:
-#  #  - docker logs  market40-execution_core_container_business_logic_data-app_1
-#  #  - docker logs market40-execution_core_container_business_logic_ecc-consumer_1
-#  #  - docker logs market40-execution_core_container_business_logic_ecc-provider_1
-#  - docker-compose down
-#
+install:
+  - bash ./travis/install.sh
+
+before_script:
+  - docker ps -a
+  - sleep 60 #seconds
+
+script:
+  - bash ./travis/test.sh
+
+after_script:
+  #  - docker logs  market40-execution_core_container_business_logic_data-app_1
+  #  - docker logs market40-execution_core_container_business_logic_ecc-consumer_1
+  #  - docker logs market40-execution_core_container_business_logic_ecc-provider_1
+  - docker-compose down
 
 
-
-#jobs:
-  include:
-    - stage: integration tests
-        install: ./travis/install.sh WSS
-        before_script: sleep 60
-        script: ./travis/test.sh WSS
-      script: "Running unit tests (1)"
-    - stage: integration tests
-        install: ./travis/install.sh IDSCP
-        before_script: sleep 60
-        script: ./travis/test.sh IDSCP
-    - stage: integration tests
-        install: ./travis/install.sh HTTPS
-        before_script: sleep 60
-        script: ./travis/test.sh HTTPS
+#
+#
+##jobs:
+#  include:
+#    - stage: integration tests
+#        install: ./travis/install.sh WSS
+#        before_script: sleep 60
+#        script: ./travis/test.sh WSS
+#      script: "Running unit tests (1)"
+#    - stage: integration tests
+#        install: ./travis/install.sh IDSCP
+#        before_script: sleep 60
+#        script: ./travis/test.sh IDSCP
+#    - stage: integration tests
+#        install: ./travis/install.sh HTTPS
+#        before_script: sleep 60
+#        script: ./travis/test.sh HTTPS
