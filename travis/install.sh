@@ -1,7 +1,8 @@
 #!/bin/bash
 
 mkdir $HOME/hash
-mkdir $HOME/cert
+cp -rf ./travis/cert $HOME
+
 
 echo "Installing Newman CLI..."
 npm install -g newman@4.5.1
