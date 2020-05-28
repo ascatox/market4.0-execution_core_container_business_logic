@@ -13,5 +13,5 @@ install:
   - bash ./travis/install.sh
 
 
-#script:
-#  - bash ./travis/test.sh
+script:
+ - bash ./travis/test.sh

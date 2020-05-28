@@ -1,4 +1,8 @@
 #!/bin/bash
+
+mkdir $HOME/hash
+mkdir $HOME/cert
+
 echo "Downloading and Installing docker-compose..."
 sudo rm /usr/local/bin/docker-compose
 curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
