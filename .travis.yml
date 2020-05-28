@@ -10,8 +10,8 @@ services:
   - docker
 
 install:
-  - bash travis.sh
+  - bash ./travis/install.sh
 
 
 #script:
-#  - bash test.sh
+#  - bash ./travis/test.sh

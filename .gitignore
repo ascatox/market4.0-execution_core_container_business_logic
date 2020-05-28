@@ -39,4 +39,4 @@ build/
 /dockerize.sh
 /src/main/resources/application-CONSUMER_LOCAL.properties
 /src/main/resources/application-PRODUCER_LOCAL.properties
-/travis.sh
+/travis/install.sh

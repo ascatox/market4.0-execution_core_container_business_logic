@@ -7,8 +7,9 @@ sudo mv docker-compose /usr/local/bin
 echo "docker-compose correctly installed"
 
 echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
-cp -f .m2/settings.xml $HOME/.m2/settings.xml
-cp -rf .m2/repository  $HOME/.m2/
+cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
+cp -rf ./travis/.m2/repository  $HOME/.m2/
+echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 
 echo "Installing websocket-message-streamer-lib..."
 git clone https://github.com/ascatox/websocket-message-streamer.git
@@ -23,13 +24,16 @@ cd market4.0-data_app_test_BE
 git checkout master
 sh dockerize.sh
 cd ..
+echo "Data-App is ready to start"
 
-echo "Downloading and installing Clearing-House Model"
+
+echo "Downloading and installing Clearing-House Model..."
 git clone https://gitlab.com/eng-siena-ri/market4.0/clearing-house.git
 cd clearing-house
 mkdir chaincode-libs
 mvn install -DskipTests
 cd ..
+echo "Clearing-House Model installed!"
 
 echo "Dockerizing ECCs..."
 mvn clean package -DskipTests
@@ -42,3 +46,4 @@ echo "Services started"
 
 echo "Installing Newman CLI..."
 npm install -g newman
+echo "Newman installed, READY TO TEST..."

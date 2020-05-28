@@ -92,8 +92,8 @@ public class CamelRouteWebSocket extends RouteBuilder {
     @Autowired
     ConsumerWebSocketSendDataToDataAppProcessor sendDataToDataAppProcessorOverWS;
 
-    @Autowired
-    ConsumerValidateDataByCHProcessor consumerValidateDataByCHProcessor;
+    //@Autowired
+    //ConsumerValidateDataByCHProcessor consumerValidateDataByCHProcessor;
 
     //@Autowired
     //ConsumerReceiveFromActiveMQ consumerReceiveFromActiveMQ;
@@ -107,8 +107,8 @@ public class CamelRouteWebSocket extends RouteBuilder {
     @Autowired
     ProducerReceiveFromActiveMQ producerReceiveFromActiveMQ;
 
-    @Autowired
-    CHConsensusProcessor chConsensusProcessor;
+   // @Autowired
+   // CHConsensusProcessor chConsensusProcessor;
 
     @Value("${application.idscp.isEnabled}")
     private boolean isEnabledIdscp;
@@ -130,12 +130,12 @@ public class CamelRouteWebSocket extends RouteBuilder {
                              .process(consumerValidateTokenProcessor)
                              //.process(consumerSendToActiveMQ)
                              //.process(consumerReceiveFromActiveMQ)
-                            .process(chConsensusProcessor)
+                            //.process(chConsensusProcessor)
                             .choice()
                             .when(header("Is-Message-Processed-Notification").isEqualTo(false))
                             .choice()
                             .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                                .process(consumerValidateDataByCHProcessor)
+                                //.process(consumerValidateDataByCHProcessor)
                             .endChoice()
                             // Send to the Endpoint: F
                             .choice()
@@ -155,12 +155,12 @@ public class CamelRouteWebSocket extends RouteBuilder {
                     .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
                             //.process(consumerSendToActiveMQ)
                             //.process(consumerReceiveFromActiveMQ)
-                            .process(chConsensusProcessor)
+                            //.process(chConsensusProcessor)
                             .choice()
                             .when(header("Is-Message-Processed-Notification").isEqualTo(false))
                             .choice()
                             .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                                .process(consumerValidateDataByCHProcessor)
+                               // .process(consumerValidateDataByCHProcessor)
                             .endChoice()
                             .choice()
                             // Send to the Endpoint: F
@@ -204,10 +204,10 @@ public class CamelRouteWebSocket extends RouteBuilder {
                             .process(parseReceivedResponseMessage)
                         //.process(sendResponseToDataAppProcessor)
                             .process(producerSendResponseToDataAppProcessor)
-//                        .choice()
-//                        .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-//                             //.process(producerSendTransactionToCHProcessor)
-//                    .endChoice()
+                        .choice()
+                        .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+                             .process(producerSendTransactionToCHProcessor)
+                    .endChoice()
                     .endChoice();
     }
 }

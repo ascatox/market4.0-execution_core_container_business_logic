@@ -60,8 +60,8 @@ public class ClearingHouseServiceImpl implements ClearingHouseService {
 	@Autowired
 	private RejectionMessageService rejectionMessageService;
 
-	@Autowired
-	private RetryTemplate retryTemplate;
+	//@Autowired
+	//private RetryTemplate retryTemplate;
 
 
 	@Override
@@ -108,8 +108,9 @@ public class ClearingHouseServiceImpl implements ClearingHouseService {
 			notificationContent = createNotificationContent(message, payload);
 			final String id = notificationContent.getBody().getHeader().getId().toString();
 			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<NotificationContent[]> notificationContentResponse = retryTemplate.execute(context ->
-					getNotificationContentByCH(id, restTemplate));
+//			ResponseEntity<NotificationContent[]> notificationContentResponse = retryTemplate.execute(context ->
+//					getNotificationContentByCH(id, restTemplate));
+			ResponseEntity<NotificationContent[]> notificationContentResponse = getNotificationContentByCH(id, restTemplate);
 			if (notificationContentResponse.getStatusCode().isError() ||
 					notificationContentResponse.getBody() == null ||
 					notificationContentResponse.getBody().length == 0) {

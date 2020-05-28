@@ -14,7 +14,7 @@ import org.springframework.retry.support.RetryTemplate;
 public class RetryTemplateConfiguration {
 
 
-    @Bean
+    /*@Bean
     public RetryTemplate retryTemplate() {
         RetryTemplate retryTemplate = new RetryTemplate();
 
@@ -26,5 +26,5 @@ public class RetryTemplateConfiguration {
         retryPolicy.setMaxAttempts(5);
         retryTemplate.setRetryPolicy(retryPolicy);
         return retryTemplate;
-    }
+    }*/
 }

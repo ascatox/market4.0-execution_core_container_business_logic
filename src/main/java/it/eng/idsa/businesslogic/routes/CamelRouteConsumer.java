@@ -51,11 +51,11 @@ public class CamelRouteConsumer extends RouteBuilder {
 	@Autowired
 	ConsumerExceptionMultiPartMessageProcessor exceptionMultiPartMessageProcessor;
 	
-	@Autowired
-	CHConsensusProcessor chConsensusProcessor;
+	//@Autowired
+	//CHConsensusProcessor chConsensusProcessor;
 
-	@Autowired
-	ConsumerValidateDataByCHProcessor consumerValidateDataByCHProcessor;
+	//@Autowired
+	//ConsumerValidateDataByCHProcessor consumerValidateDataByCHProcessor;
 
 	@Autowired
 	ConsumerSendToActiveMQ sendToActiveMQ;
@@ -106,33 +106,33 @@ public class CamelRouteConsumer extends RouteBuilder {
 				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 					.process(validateTokenProcessor)
 					//.process(sendToActiveMQ)
-					.process(chConsensusProcessor)
+					//.process(chConsensusProcessor)
 					.choice()
 					.when(header("Is-Message-Processed-Notification").isEqualTo(false))
 						//.process(receiveFromActiveMQ)
 						.choice()
 						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-							.process(consumerValidateDataByCHProcessor)
+							//.process(consumerValidateDataByCHProcessor)
 						.endChoice()
 						// Send to the Endpoint: F
 						.process(sendDataToDataAppProcessor)
 						.process(multiPartMessageProcessor)
 						.process(getTokenFromDapsProcessor)
 						.process(sendDataToBusinessLogicProcessor)
-//						.choice()
-//							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-//								//.process(sendTransactionToCHProcessor)
-//						.endChoice()
+						.choice()
+							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+								//.process(sendTransactionToCHProcessor)
+						.endChoice()
 					.endChoice()
 				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-					.process(chConsensusProcessor)
+					//.process(chConsensusProcessor)
 					.choice()
 					.when(header("Is-Message-Processed-Notification").isEqualTo(false))
 						//.process(sendToActiveMQ)
 						//.process(sendToActiveMQ)
 						.choice()
 						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-							.process(consumerValidateDataByCHProcessor)
+						//	.process(consumerValidateDataByCHProcessor)
 						.endChoice()
 						// Send to the Endpoint: F
 						.process(sendDataToDataAppProcessor)
