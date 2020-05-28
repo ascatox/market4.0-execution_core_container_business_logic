@@ -22,25 +22,6 @@ script:
   - bash ./travis/test.sh
 
 after_script:
-  #  - docker logs  market40-execution_core_container_business_logic_data-app_1
-  #  - docker logs market40-execution_core_container_business_logic_ecc-consumer_1
-  #  - docker logs market40-execution_core_container_business_logic_ecc-provider_1
-  - docker-compose down
-
-
-
-
-##jobs:
-#  include:
-#  - env: WSS
-#      install: ./travis/install.sh WSS
-#      before_script: sleep 60
-#      script: ./travis/test.sh WSS
-#  - env: IDSCP
-#        install: ./travis/install.sh IDSCP
-#        before_script: sleep 60
-#        script: ./travis/test.sh IDSCP
-#    - env: HTTPS
-#        install: ./travis/install.sh HTTPS
-#        before_script: sleep 60
-#        script: ./travis/test.sh HTTPS
+    - docker logs  market40-execution_core_container_business_logic_data-app_1
+    - docker logs market40-execution_core_container_business_logic_ecc-consumer_1
+    - docker logs market40-execution_core_container_business_logic_ecc-provider_1
