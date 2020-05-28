@@ -49,5 +49,5 @@ docker-compose up -d
 echo "Services started"
 
 echo "Installing Newman CLI..."
-npm install -g newman
+npm install@5.0.1 -g newman
 echo "Newman installed, READY TO TEST..."
