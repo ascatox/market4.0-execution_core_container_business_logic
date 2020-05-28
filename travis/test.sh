@@ -1,3 +1,3 @@
 #!/bin/bash
 
-newman run ./travis/tests/tests.json
+newman run ./travis/tests/tests.json --insecure

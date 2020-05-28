@@ -3,6 +3,12 @@
 mkdir $HOME/hash
 mkdir $HOME/cert
 
+echo "Installing Newman CLI..."
+npm install -g newman@4.5.1
+newman --version
+echo "Newman installed, READY TO TEST..."
+
+
 echo "Downloading and Installing docker-compose..."
 sudo rm /usr/local/bin/docker-compose
 curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -47,7 +53,3 @@ echo "Starting services..."
 docker-compose up -d
 
 echo "Services started"
-
-echo "Installing Newman CLI..."
-npm install@5.0.1 -g newman
-echo "Newman installed, READY TO TEST..."
