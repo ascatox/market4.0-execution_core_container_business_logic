@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DOCKER_COMPOSE_VERSION=1.25.5
+
 mkdir $HOME/hash
 cp -rf ./travis/cert $HOME
 
@@ -51,4 +53,4 @@ mvn clean package -DskipTests
 docker build -f Dockerfile -t market4.0/execution_core_container_business .
 
 echo "Starting services..."
-docker-compose -f ./travis/docker/docker-compose_$COMM.yaml up -d
+docker-compose -f ./travis/docker/docker-compose_${NETWORK}.yaml up -d

@@ -4,10 +4,9 @@ cache:
   directories:
     - "$HOME/.m2"
 env:
-  - DOCKER_COMPOSE_VERSION=1.25.5
-  - COMM=WSS
-  - COMM=IDSCP
-  - COMM=HTTPS
+  - NETWORK=WSS
+  - NETWORK=IDSCP
+  - NETWORK=HTTPS
 
 services:
   - docker
