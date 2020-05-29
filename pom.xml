@@ -74,19 +74,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.retry</groupId>
-			<artifactId>spring-retry</artifactId>
-			<version>1.2.5.RELEASE</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jms</artifactId>
-		</dependency>
-
-
+		
 		<!-- Swagger -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -109,6 +97,13 @@
 			<groupId>de.fraunhofer.iais.eis.ids</groupId>
 			<artifactId>infomodel-serializer</artifactId>
 			<version>${information.model.version}</version>
+		</dependency>
+		
+		<!-- it.eng.idsa -->
+		<dependency>
+			<groupId>it.eng.idsa</groupId>
+			<artifactId>multipart-message-processor</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- CLEARING HOUSE -->
@@ -164,21 +159,12 @@
 			<artifactId>camel-util</artifactId>
 			<version>${camel.version.rc}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-websocket-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
-		<dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-jms</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-activemq</artifactId>
-            <version>${camel.version.rc}</version>
-        </dependency>
 
 		<!-- IDSCP -->
 		<!-- https://mvnrepository.com/artifact/de.fraunhofer.aisec.ids/ids-comm -->
@@ -293,15 +279,12 @@
 			<version>1.8</version>
 		</dependency>
 
-
-
 		<!-- nimbusds-jso-jwt -->
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
 			<version>8.3</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -326,6 +309,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
 		</dependency>
+		
 	</dependencies>
 
 	<build>

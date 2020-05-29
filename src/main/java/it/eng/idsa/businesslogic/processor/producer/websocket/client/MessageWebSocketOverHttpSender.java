@@ -22,18 +22,17 @@ import org.asynchttpclient.netty.ssl.JsseSslEngineFactory;
 import org.asynchttpclient.ws.WebSocket;
 import org.asynchttpclient.ws.WebSocketUpgradeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import de.fraunhofer.iais.eis.Message;
 import it.eng.idsa.businesslogic.configuration.WebSocketClientConfiguration;
-import it.eng.idsa.businesslogic.multipart.MultipartMessage;
-import it.eng.idsa.businesslogic.multipart.MultipartMessageBuilder;
 import it.eng.idsa.businesslogic.processor.consumer.websocket.server.HttpWebSocketServerBean;
 import it.eng.idsa.businesslogic.processor.producer.ProducerSendDataToBusinessLogicProcessor;
-import it.eng.idsa.businesslogic.service.MultipartMessageTransformerService;
 import it.eng.idsa.businesslogic.service.RejectionMessageService;
 import it.eng.idsa.businesslogic.util.RejectionMessageType;
+import it.eng.idsa.multipart.builder.MultipartMessageBuilder;
+import it.eng.idsa.multipart.domain.MultipartMessage;
+import it.eng.idsa.multipart.processor.MultipartMessageProcessor;
 
 /**
  * @author Antonio Scatoloni
@@ -48,9 +47,6 @@ public class MessageWebSocketOverHttpSender {
 
     @Autowired
     private RejectionMessageService rejectionMessageService;
-    
-    @Autowired
-    MultipartMessageTransformerService multipartMessageTransformerService;
 
     public String sendMultipartMessageWebSocketOverHttps(String webSocketHost, Integer webSocketPort, String header, String payload)
             throws ParseException, IOException, KeyManagementException, NoSuchAlgorithmException, InterruptedException, ExecutionException {
@@ -80,7 +76,8 @@ public class MessageWebSocketOverHttpSender {
     			.withHeaderContent(header)
     			.withPayloadContent(payload)
     			.build();
-    	String multipartMessageString = multipartMessageTransformerService.multipartMessagetoString(multipartMessage);
+    	//TODO Use this implementation with includeHttpHeaders set to false, but in future implementations these headers may be mandatory
+    	String multipartMessageString = MultipartMessageProcessor.multipartMessagetoString(multipartMessage, false);
     													                                                        
         FileStreamingBean fileStreamingBean = webSocketClientConfiguration.fileStreamingWebSocket();
         WebSocket wsClient = createWebSocketClient(webSocketHost, webSocketPort, webSocketPath, message);

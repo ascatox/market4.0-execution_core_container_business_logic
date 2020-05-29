@@ -1,10 +1,6 @@
 package it.eng.idsa.businesslogic.routes;
 
-import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
-import it.eng.idsa.businesslogic.processor.CHConsensusProcessor;
 import it.eng.idsa.businesslogic.processor.consumer.*;
-import it.eng.idsa.businesslogic.processor.exception.ExceptionForProcessor;
-import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +8,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
+import it.eng.idsa.businesslogic.processor.exception.ExceptionForProcessor;
+import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 	
 	@Autowired
 	ConsumerValidateTokenProcessor validateTokenProcessor;
-
+	
 	@Autowired
 	ConsumerMultiPartMessageProcessor multiPartMessageProcessor;
 	
@@ -50,19 +50,10 @@ public class CamelRouteConsumer extends RouteBuilder {
 	
 	@Autowired
 	ConsumerExceptionMultiPartMessageProcessor exceptionMultiPartMessageProcessor;
+
+	@Autowired
+	ConsumerWebSocketSendDataToDataAppProcessor sendDataToDataAppProcessorOverWS;
 	
-	//@Autowired
-	//CHConsensusProcessor chConsensusProcessor;
-
-	//@Autowired
-	//ConsumerValidateDataByCHProcessor consumerValidateDataByCHProcessor;
-
-	@Autowired
-	ConsumerSendToActiveMQ sendToActiveMQ;
-
-	@Autowired
-	ConsumerReceiveFromActiveMQ receiveFromActiveMQ;
-
     @Autowired
     CamelContext camelContext;
 
@@ -101,49 +92,41 @@ public class CamelRouteConsumer extends RouteBuilder {
 		// Camel SSL - Endpoint: B
 		if(!isEnabledIdscp && !isEnabledWebSocket)
 			from("jetty://https4://0.0.0.0:"+configuration.getCamelConsumerPort()+"/incoming-data-channel/receivedMessage")
-			.process(multiPartMessageProcessor)
-			.choice()
-				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
-					.process(validateTokenProcessor)
-					//.process(sendToActiveMQ)
-					//.process(chConsensusProcessor)
-//					.choice()
-//					.when(header("Is-Message-Processed-Notification").isEqualTo(false))
-						//.process(receiveFromActiveMQ)
-						.choice()
-						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-							//.process(consumerValidateDataByCHProcessor)
-						.endChoice()
+				.process(multiPartMessageProcessor)
+				.choice()
+					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
+						.process(validateTokenProcessor)
+	//					.process(sendToActiveMQ)
+	//					.process(receiveFromActiveMQ)
 						// Send to the Endpoint: F
-						.process(sendDataToDataAppProcessor)
+			           .choice()
+					  .when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))
+					    	.process(sendDataToDataAppProcessorOverWS)
+					   .when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(false))
+							.process(sendDataToDataAppProcessor)
+						.endChoice()
 						.process(multiPartMessageProcessor)
 						.process(getTokenFromDapsProcessor)
 						.process(sendDataToBusinessLogicProcessor)
 						.choice()
 							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-								//.process(sendTransactionToCHProcessor)
+								.process(sendTransactionToCHProcessor)
 						.endChoice()
-//					.endChoice()
-				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-					//.process(chConsensusProcessor)
-//					.choice()
-//					.when(header("Is-Message-Processed-Notification").isEqualTo(false))
-						//.process(sendToActiveMQ)
-						//.process(sendToActiveMQ)
-						.choice()
-						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-						//	.process(consumerValidateDataByCHProcessor)
-						.endChoice()
+					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
 						// Send to the Endpoint: F
-						.process(sendDataToDataAppProcessor)
+						.choice()
+						.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))
+							.process(sendDataToDataAppProcessorOverWS)
+						.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(false))
+							.process(sendDataToDataAppProcessor)
+						.endChoice()
 						.process(multiPartMessageProcessor)
 						.process(sendDataToBusinessLogicProcessor)
-//						.choice()
-//							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-//								//.process(sendTransactionToCHProcessor)
-//						.endChoice()
-//			.endChoice()
-		.endChoice();
+						.choice()
+							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+								//.process(sendTransactionToCHProcessor)
+						.endChoice()
+				.endChoice();
 		
 		// TODO: Improve this initialization
 		// Camel WebSocket - Endpoint B
@@ -154,8 +137,8 @@ public class CamelRouteConsumer extends RouteBuilder {
 			.choice()
 				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 					.process(validateTokenProcessor)
-					.process(sendToActiveMQ)
-					.process(receiveFromActiveMQ)
+//					.process(sendToActiveMQ)
+//					.process(receiveFromActiveMQ)
 					// Send to the Endpoint: F
 					.process(sendDataToDataAppProcessor)
 					.process(multiPartMessageProcessor)
@@ -166,8 +149,6 @@ public class CamelRouteConsumer extends RouteBuilder {
 							//.process(sendTransactionToCHProcessor)
 					.endChoice()
 				.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-					.process(sendToActiveMQ)
-					.process(receiveFromActiveMQ)
 					// Send to the Endpoint: F
 					.process(sendDataToDataAppProcessor)
 					.process(multiPartMessageProcessor)
@@ -176,7 +157,6 @@ public class CamelRouteConsumer extends RouteBuilder {
 						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
 							//.process(sendTransactionToCHProcessor)
 					.endChoice()
-			.endChoice();
-		 */
+			.endChoice();*/
 	}
 }

@@ -16,7 +16,6 @@ public interface ClearingHouseService {
 	//ORBITER IMPLEMENTATION - DEPRECATED
 	//public boolean registerTransaction(Message message);
 	public boolean registerTransaction(Message message, String payload);
-	boolean validateData(Message message, String payload);
 
 
 }
