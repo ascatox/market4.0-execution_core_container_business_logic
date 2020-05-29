@@ -5,7 +5,7 @@ DOCKER_COMPOSE_VERSION=1.25.5
 mkdir $HOME/hash
 cp -rf ./travis/cert $HOME
 
-echo "NETWORKE is : "${NETWORKE}
+echo "NETWORK EDGE is : "${NETWORK_E}
 
 echo "Installing Newman CLI..."
 npm install -g newman@4.5.1
@@ -55,4 +55,4 @@ mvn clean package -DskipTests
 docker build -f Dockerfile -t market4.0/execution_core_container_business .
 
 echo "Starting services..."
-docker-compose -f travis/docker/docker-compose-${NETWORK}.yaml up -d
+docker-compose -f travis/docker/docker-compose-${NETWORK}-${NETWORK_E}.yaml up -d

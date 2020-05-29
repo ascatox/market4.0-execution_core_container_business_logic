@@ -8,11 +8,13 @@ services:
       - 8890:8890
     environment:
       - SPRING_PROFILES_ACTIVE=CONSUMER_DOCKER
+      - MULTIPART=mixed  #Data APP endpoint multipart/mixed content type
+      - CLEARING_HOUSE=http://109.232.32.193:8280/data
       - CH=false
       - DAPS=false
       - WSS=false
-      - IDSCP=false
-      - WSSE=true
+      - IDSCP=true
+      - WSSE=false
     command: --spring.profiles.active=CONSUMER_DOCKER
     volumes:
       - /home/travis/cert:/cert
@@ -26,18 +28,24 @@ services:
       - 8889:8889
     environment:
       - SPRING_PROFILES_ACTIVE=PRODUCER_DOCKER
+      - MULTIPART=mixed  #Data APP endpoint multipart/mixed content type
+      - CLEARING_HOUSE=http://109.232.32.193:8280/data
       - CH=false
       - DAPS=false
       - WSS=false
-      - IDSCP=false
-      - WSSE=true
+      - IDSCP=true
+      - WSSE=false
     command: --spring.profiles.active=PRODUCER_DOCKER
     volumes:
       - /home/travis/cert:/cert
       - /home/travis/hash:/hash
 
   data-app:
-   image: market4.0/data-app
-   ports:
-    - 8083:8083
-    - 9000:9000
+    image: market4.0/data-app
+    environment:
+      - SPRING_PROFILES_ACTIVE=DOCKER
+      - WSSE=false
+    ports:
+      - 8083:8083
+      - 9000:9000
+    command: --spring.profiles.active=DOCKER
