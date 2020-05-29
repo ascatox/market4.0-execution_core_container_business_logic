@@ -4,35 +4,37 @@ cache:
   directories:
     - "$HOME/.m2"
 env:
-  - NET=WSS NETE=WSSE DAPS=true CH=false
-  - NET=WSS NETE=WSSE DAPS=false CH=false
-  - NET=WSS NETE=WSSE DAPS=true CH=true
-  - NET=WSS NETE=WSSE DAPS=false CH=true
+  global:
+  jobs:
+    - NET=WSS NETE=WSSE DAPS=true CH=false
+    - NET=WSS NETE=WSSE DAPS=false CH=false
+    - NET=WSS NETE=WSSE DAPS=true CH=true
+    - NET=WSS NETE=WSSE DAPS=false CH=true
 
-  - NET=IDSCP NETE=WSSE DAPS=true CH=false
-  - NET=IDSCP NETE=WSSE DAPS=false CH=false
-  - NET=IDSCP NETE=WSSE DAPS=true CH=true
-  - NET=IDSCP NETE=WSSE DAPS=false CH=true
+    - NET=IDSCP NETE=WSSE DAPS=true CH=false
+    - NET=IDSCP NETE=WSSE DAPS=false CH=false
+    - NET=IDSCP NETE=WSSE DAPS=true CH=true
+    - NET=IDSCP NETE=WSSE DAPS=false CH=true
 
-  - NET=HTTPS NETE=WSSE DAPS=true CH=false
-  - NET=HTTPS NETE=WSSE DAPS=false CH=false
-  - NET=HTTPS NETE=WSSE DAPS=true CH=true
-  - NET=HTTPS NETE=WSSE DAPS=false CH=true
+    - NET=HTTPS NETE=WSSE DAPS=true CH=false
+    - NET=HTTPS NETE=WSSE DAPS=false CH=false
+    - NET=HTTPS NETE=WSSE DAPS=true CH=true
+    - NET=HTTPS NETE=WSSE DAPS=false CH=true
 
-  - NET=WSS NETE=HTTPSE DAPS=true CH=false
-  - NET=WSS NETE=HTTPSE DAPS=false CH=false
-  - NET=WSS NETE=HTTPSE DAPS=true CH=true
-  - NET=WSS NETE=HTTPSE DAPS=false CH=true
+    - NET=WSS NETE=HTTPSE DAPS=true CH=false
+    - NET=WSS NETE=HTTPSE DAPS=false CH=false
+    - NET=WSS NETE=HTTPSE DAPS=true CH=true
+    - NET=WSS NETE=HTTPSE DAPS=false CH=true
 
-  - NET=IDSCP NETE=HTTPSE DAPS=true CH=false
-  - NET=IDSCP NETE=HTTPSE DAPS=false CH=false
-  - NET=IDSCP NETE=HTTPSE DAPS=true CH=true
-  - NET=IDSCP NETE=HTTPSE DAPS=false CH=true
+    - NET=IDSCP NETE=HTTPSE DAPS=true CH=false
+    - NET=IDSCP NETE=HTTPSE DAPS=false CH=false
+    - NET=IDSCP NETE=HTTPSE DAPS=true CH=true
+    - NET=IDSCP NETE=HTTPSE DAPS=false CH=true
 
-  - NET=HTTPS NETE=HTTPSE DAPS=true CH=false
-  - NET=HTTPS NETE=HTTPSE DAPS=false CH=false
-  - NET=HTTPS NETE=HTTPSE DAPS=true CH=true
-  - NET=HTTPS NETE=HTTPSE DAPS=false CH=true
+    - NET=HTTPS NETE=HTTPSE DAPS=true CH=false
+    - NET=HTTPS NETE=HTTPSE DAPS=false CH=false
+    - NET=HTTPS NETE=HTTPSE DAPS=true CH=true
+    - NET=HTTPS NETE=HTTPSE DAPS=false CH=true
 
 services:
   - docker
@@ -51,3 +53,10 @@ after_script:
   - docker logs docker_data-app_1
   - docker logs docker_ecc-provider_1
   - docker logs docker_ecc-consumer_1
+
+jobs:
+  include:
+    - stage: deploy
+      # Deploy in DockerHub
+      script: echo Deploy
+      env: NET=HTTPS NETE=HTTPSE DAPS=false CH=true
