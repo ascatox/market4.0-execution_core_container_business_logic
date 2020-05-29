@@ -5,6 +5,7 @@ DOCKER_COMPOSE_VERSION=1.25.5
 mkdir $HOME/hash
 cp -rf ./travis/cert $HOME
 
+echo "NETWORKE is : "${NETWORKE}
 
 echo "Installing Newman CLI..."
 npm install -g newman@4.5.1
