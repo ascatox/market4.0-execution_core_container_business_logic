@@ -5,7 +5,11 @@ DOCKER_COMPOSE_VERSION=1.25.5
 mkdir $HOME/hash
 cp -rf ./travis/cert $HOME
 
-echo "NETWORK EDGE is : "${NETWORK_E}
+BRANCH_DATA_APP=master
+
+if [ "$1" != "" ]; then
+  BRANCH_DATA_APP=$1
+fi
 
 echo "Installing Newman CLI..."
 npm install -g newman@4.5.1
@@ -32,10 +36,10 @@ mvn clean install -DskipTests
 cd ..
 echo "Installed websocket-message-streamer-lib"
 
-echo "Cloning and Dockerizing Data-App repo..."
+echo "Cloning and Creating Docker Container from Data-App repo..."
 git clone https://github.com/ascatox/market4.0-data_app_test_BE.git
 cd market4.0-data_app_test_BE
-git checkout master
+git checkout ${BRANCH_DATA_APP}
 mvn clean package -DskipTests
 docker build -f Dockerfile -t market4.0/data-app .
 cd ..
@@ -50,9 +54,9 @@ mvn install -DskipTests
 cd ..
 echo "Clearing-House Model installed!"
 
-echo "Dockerizing ECCs..."
+echo "Creating Docker Container for ECCs..."
 mvn clean package -DskipTests
 docker build -f Dockerfile -t market4.0/execution_core_container_business .
 
 echo "Starting services..."
-docker-compose -f travis/docker/docker-compose-${NETWORK}-${NETWORK_E}.yaml up -d
+docker-compose -f travis/docker/docker-compose-${NET}-${NETE}.yaml up -d

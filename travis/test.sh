@@ -1,2 +1,2 @@
 #!/bin/bash
-newman run ./travis/tests/tests-${NETWORK}-${NETWORK_E}.json --insecure
+newman run ./travis/tests/tests-${NET}-${NETE}.json --insecure
