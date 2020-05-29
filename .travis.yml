@@ -47,7 +47,7 @@ before_script:
 script:
   - bash ./travis/test.sh
 
-#after_script:
-#    - docker logs market40-execution_core_container_business_logic_data-app_1
-#    - docker logs market40-execution_core_container_business_logic_ecc-consumer_1
-#    - docker logs market40-execution_core_container_business_logic_ecc-provider_1
+after_script:
+  - docker logs docker_data-app_1
+  - docker logs docker_ecc-provider_1
+  - docker logs docker_ecc-consumer_1
