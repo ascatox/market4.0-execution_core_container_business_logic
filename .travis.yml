@@ -4,35 +4,35 @@ cache:
   directories:
     - "$HOME/.m2"
 env:
-  - NET=WSS NET-E=WSSE DAPS=true CH=false
-  - NET=WSS NET-E=WSSE DAPS=false CH=false
-  - NET=WSS NET-E=WSSE DAPS=true CH=true
-  - NET=WSS NET-E=WSSE DAPS=false CH=true
+  - NET=WSS NETE=WSSE DAPS=true CH=false
+  - NET=WSS NETE=WSSE DAPS=false CH=false
+  - NET=WSS NETE=WSSE DAPS=true CH=true
+  - NET=WSS NETE=WSSE DAPS=false CH=true
 
-  - NET=IDSCP NET-E=WSSE DAPS=true CH=false
-  - NET=IDSCP NET-E=WSSE DAPS=false CH=false
-  - NET=IDSCP NET-E=WSSE DAPS=true CH=true
-  - NET=IDSCP NET-E=WSSE DAPS=false CH=true
+  - NET=IDSCP NETE=WSSE DAPS=true CH=false
+  - NET=IDSCP NETE=WSSE DAPS=false CH=false
+  - NET=IDSCP NETE=WSSE DAPS=true CH=true
+  - NET=IDSCP NETE=WSSE DAPS=false CH=true
 
-  - NET=HTTPS NET-E=WSSE DAPS=true CH=false
-  - NET=HTTPS NET-E=WSSE DAPS=false CH=false
-  - NET=HTTPS NET-E=WSSE DAPS=true CH=true
-  - NET=HTTPS NET-E=WSSE DAPS=false CH=true
+  - NET=HTTPS NETE=WSSE DAPS=true CH=false
+  - NET=HTTPS NETE=WSSE DAPS=false CH=false
+  - NET=HTTPS NETE=WSSE DAPS=true CH=true
+  - NET=HTTPS NETE=WSSE DAPS=false CH=true
 
-  - NET=WSS NET-E=HTTPSE DAPS=true CH=false
-  - NET=WSS NET-E=HTTPSE DAPS=false CH=false
-  - NET=WSS NET-E=HTTPSE DAPS=true CH=true
-  - NET=WSS NET-E=HTTPSE DAPS=false CH=true
+  - NET=WSS NETE=HTTPSE DAPS=true CH=false
+  - NET=WSS NETE=HTTPSE DAPS=false CH=false
+  - NET=WSS NETE=HTTPSE DAPS=true CH=true
+  - NET=WSS NETE=HTTPSE DAPS=false CH=true
 
-  - NET=IDSCP NET-E=HTTPSE DAPS=true CH=false
-  - NET=IDSCP NET-E=HTTPSE DAPS=false CH=false
-  - NET=IDSCP NET-E=HTTPSE DAPS=true CH=true
-  - NET=IDSCP NET-E=HTTPSE DAPS=false CH=true
+  - NET=IDSCP NETE=HTTPSE DAPS=true CH=false
+  - NET=IDSCP NETE=HTTPSE DAPS=false CH=false
+  - NET=IDSCP NETE=HTTPSE DAPS=true CH=true
+  - NET=IDSCP NETE=HTTPSE DAPS=false CH=true
 
-  - NET=HTTPS NET-E=HTTPSE DAPS=true CH=false
-  - NET=HTTPS NET-E=HTTPSE DAPS=false CH=false
-  - NET=HTTPS NET-E=HTTPSE DAPS=true CH=true
-  - NET=HTTPS NET-E=HTTPSE DAPS=false CH=true
+  - NET=HTTPS NETE=HTTPSE DAPS=true CH=false
+  - NET=HTTPS NETE=HTTPSE DAPS=false CH=false
+  - NET=HTTPS NETE=HTTPSE DAPS=true CH=true
+  - NET=HTTPS NETE=HTTPSE DAPS=false CH=true
 
 services:
   - docker
