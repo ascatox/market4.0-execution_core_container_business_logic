@@ -4,9 +4,9 @@ cache:
   directories:
     - "$HOME/.m2"
 env:
-  - NETWORK=WSS
-  - NETWORK=IDSCP
-  - NETWORK=HTTPS
+  - NETWORK=WSS NETWORKE=WSSE
+  - NETWORK=IDSCP NETWORKE=WSSE
+  - NETWORK=HTTPS NETWORKE=WSSE
 
 services:
   - docker
