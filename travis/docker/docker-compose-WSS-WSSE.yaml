@@ -10,8 +10,8 @@ services:
       - SPRING_PROFILES_ACTIVE=CONSUMER_DOCKER
       - MULTIPART=mixed  #Data APP endpoint multipart/mixed content type
       - CLEARING_HOUSE=http://109.232.32.193:8280/data
-      - CH=false
-      - DAPS=false
+      - CH=${CH}
+      - DAPS=${DAPS}
       - WSS=true
       - IDSCP=false
       - WSSE=true
@@ -30,8 +30,8 @@ services:
       - SPRING_PROFILES_ACTIVE=PRODUCER_DOCKER
       - MULTIPART=mixed  #Data APP endpoint multipart/mixed content type
       - CLEARING_HOUSE=http://109.232.32.193:8280/data
-      - CH=false
-      - DAPS=false
+      - CH=${CH}
+      - DAPS=${DAPS}
       - WSS=true
       - IDSCP=false
       - WSSE=true

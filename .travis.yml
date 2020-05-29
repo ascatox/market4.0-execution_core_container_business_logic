@@ -4,16 +4,40 @@ cache:
   directories:
     - "$HOME/.m2"
 env:
-  - NET=WSS NETE=WSSE
-  - NET=IDSCP NETE=WSSE
-  - NET=HTTPS NETE=WSSE
-  - NET=WSS NETE=HTTPSE
-  - NET=IDSCP NETE=HTTPSE
-  - NET=HTTPS NETE=HTTPSE
+  - NET=WSS NET-E=WSSE DAPS=true CH=false
+  - NET=WSS NET-E=WSSE DAPS=false CH=false
+  - NET=WSS NET-E=WSSE DAPS=true CH=true
+  - NET=WSS NET-E=WSSE DAPS=false CH=true
+
+  - NET=IDSCP NET-E=WSSE DAPS=true CH=false
+  - NET=IDSCP NET-E=WSSE DAPS=false CH=false
+  - NET=IDSCP NET-E=WSSE DAPS=true CH=true
+  - NET=IDSCP NET-E=WSSE DAPS=false CH=true
+
+  - NET=HTTPS NET-E=WSSE DAPS=true CH=false
+  - NET=HTTPS NET-E=WSSE DAPS=false CH=false
+  - NET=HTTPS NET-E=WSSE DAPS=true CH=true
+  - NET=HTTPS NET-E=WSSE DAPS=false CH=true
+
+  - NET=WSS NET-E=HTTPSE DAPS=true CH=false
+  - NET=WSS NET-E=HTTPSE DAPS=false CH=false
+  - NET=WSS NET-E=HTTPSE DAPS=true CH=true
+  - NET=WSS NET-E=HTTPSE DAPS=false CH=true
+
+  - NET=IDSCP NET-E=HTTPSE DAPS=true CH=false
+  - NET=IDSCP NET-E=HTTPSE DAPS=false CH=false
+  - NET=IDSCP NET-E=HTTPSE DAPS=true CH=true
+  - NET=IDSCP NET-E=HTTPSE DAPS=false CH=true
+
+  - NET=HTTPS NET-E=HTTPSE DAPS=true CH=false
+  - NET=HTTPS NET-E=HTTPSE DAPS=false CH=false
+  - NET=HTTPS NET-E=HTTPSE DAPS=true CH=true
+  - NET=HTTPS NET-E=HTTPSE DAPS=false CH=true
+
 services:
   - docker
 
-install:
+install:  # Data-app branch name optional ex. install.sh develop
   - bash ./travis/install.sh
 
 before_script:
