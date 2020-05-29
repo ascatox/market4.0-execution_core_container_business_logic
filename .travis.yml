@@ -5,6 +5,7 @@ cache:
     - "$HOME/.m2"
 env:
   global:
+    # secure:
   jobs:
     - NET=WSS NETE=WSSE DAPS=true CH=false
     - NET=WSS NETE=WSSE DAPS=false CH=false
@@ -59,4 +60,4 @@ jobs:
     - stage: deploy
       # Deploy in DockerHub
       script: echo Deploy
-      env: NET=HTTPS NETE=HTTPSE DAPS=false CH=true
+      env: NET=WSS NETE=WSSE DAPS=true CH=false
