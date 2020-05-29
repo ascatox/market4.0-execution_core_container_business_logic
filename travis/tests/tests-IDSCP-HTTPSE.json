@@ -46,7 +46,7 @@
 					},
 					{
 						"key": "Forward-To",
-						"value": "idscp://ecc-consumer:8680",
+						"value": "idscp://ecc-consumer:8086",
 						"type": "text"
 					}
 				],
@@ -87,8 +87,8 @@
 					"script": {
 						"id": "52b59fa6-cab8-4050-a58b-2bda75d3a5a4",
 						"exec": [
-							"pm.test(\"Response time is less than 1min\", function () {",
-							"    var timeout = 1 * 60 * 1000; //milliseconds",
+							"pm.test(\"Response time is less than 2min\", function () {",
+							"    var timeout = 2 * 60 * 1000; //milliseconds",
 							"    pm.expect(pm.response.responseTime).to.be.below(timeout);",
 							"});",
 							"",
@@ -120,7 +120,7 @@
 					},
 					{
 						"key": "Forward-To",
-						"value": "idscp://ecc-consumer:8680",
+						"value": "idscp://ecc-consumer:8086",
 						"type": "text"
 					}
 				],
