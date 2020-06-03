@@ -26,7 +26,8 @@ echo "docker-compose correctly installed"
 
 echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
-cp -rf ./travis/.m2/repository  $HOME/.m2/
+mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
+cp -rf ./travis/.m2/repository/de/fraunhofer/aisec/ids  $HOME/.m2/repository/de/fraunhofer/aisec
 echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 
 echo "Installing Multipart Message Lib..."
