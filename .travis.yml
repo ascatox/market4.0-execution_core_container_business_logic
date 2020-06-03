@@ -3,7 +3,7 @@ cache:
   directories:
   - "$HOME/.m2"
 env:
-  matrix:
+  jobs:
   - NET=WSS NETE=WSSE DAPS=true CH=false
   - NET=WSS NETE=WSSE DAPS=false CH=false
   - NET=WSS NETE=WSSE DAPS=true CH=true
