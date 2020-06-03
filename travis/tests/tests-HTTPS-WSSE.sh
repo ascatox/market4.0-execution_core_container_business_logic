@@ -1,5 +1,5 @@
 echo "Stress TEST DATA over HTTPS (WSS internal comm) - SMALL size"
-./travis/tests//naive-stress-test.sh -c ${CONCURR} -r ${REPS}} -a 'https://localhost:9000/sendFile' \
+bash ./travis/tests//naive-stress-test.sh -c ${CONCURR} -r ${REPS}} -a 'https://localhost:9000/sendFile' \
 -X POST \
 -H 'Forward-To-Internal: wss://ecc-provider:8887' \
 -H 'Forward-To: https://ecc-consumer:8890/incoming-data-channel/receivedMessage' \

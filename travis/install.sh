@@ -16,8 +16,6 @@ npm install -g newman@4.5.1
 newman --version
 echo "Newman installed, READY TO TEST..."
 
-chmod +x ./travis/tests/naive-stess-test.sh
-
 echo "Downloading and Installing docker-compose..."
 sudo rm /usr/local/bin/docker-compose
 curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose

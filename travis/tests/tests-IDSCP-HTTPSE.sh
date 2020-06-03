@@ -1,5 +1,5 @@
 echo "Stress TEST DATA over IDSCP (HTTPS internal comm) - SMALL size"
-./travis/tests/naive-stress-test.sh -c ${CONCURR} -r ${REPS}} -a 'https://localhost:8887/incoming-data-app/multipartMessageBodyBinary' \
+bash ./travis/tests/naive-stress-test.sh -c ${CONCURR} -r ${REPS}} -a 'https://localhost:8887/incoming-data-app/multipartMessageBodyBinary' \
 -X POST \
 -H 'Content-Type: multipart/mixed; boundary=CQWZRdCCXr5aIuonjmRXF-QzcZ2Kyi4Dkn6' \
 -H 'Forward-To: idscp://ecc-consumer:8086' \
