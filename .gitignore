@@ -40,3 +40,4 @@ build/
 /src/main/resources/application-CONSUMER_LOCAL.properties
 /src/main/resources/application-PRODUCER_LOCAL.properties
 /travis/install.sh
+/travis/tests/stress-tests/
