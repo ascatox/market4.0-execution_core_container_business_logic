@@ -47,7 +47,8 @@ echo "Installed  Multipart Message Lib"
 echo "Installing websocket-message-streamer-lib..."
 #git clone https://github.com/ascatox/websocket-message-streamer.git
 git clone https://github.com/Engineering-Research-and-Development/market4.0-websocket_message_streamer.git
-cd websocket-message-streamer
+#cd websocket-message-streamer
+cd market4.0-websocket_message_streamer
 mvn clean install -DskipTests
 cd ..
 echo "Installed websocket-message-streamer-lib"
