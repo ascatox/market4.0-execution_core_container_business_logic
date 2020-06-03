@@ -1,63 +1,51 @@
 language: java, node_js
-
 cache:
   directories:
-    - "$HOME/.m2"
+  - "$HOME/.m2"
 env:
   global:
-    # secure:
+  - secure: qHN3EG7+AzRq35fj+PAxKghjuksqiBsJm+Q2B7VZgZN0x9U47GsylEf5m1zEjF7Nx3En8ecdUgf/cuZI5pjRgjXqNvlJclpXypeiiDxtMcJYNjBPh1LjOETg0CNL/6tKwT8YJRRdXlm2Lc4r9FYjM99V/B35g9ASx9IgE2RS40uA+3FjaqhFUdAaV6DfXBKFCEHDI+SxzhTo3AnY9/SAlvikyH33/WsaJ1sKd5oDEYf8X1ZdyqQnLt/4NZfmcecn2GYWIzBlNECHo7Y0Wi2B7jmrFyNZka9D2POa9jC4321OhclnM5bzjJjTXrtI3p8lEykLT3RamUWlUbj6CnvOdqTbU209Yilgk4i4X/pWZ8z4VuXOg33JQEbK3f9cGshmWK+ZDOnPFLNkubiP4Hwd10OIveY1DVkMZmaaWn+vTOnmBTYpLSAbqQu3igo41qRuo6L9zhlG/29tuWi57kO4b8ZOLcOYoDqp2zrP+ybihbX6QiAELe00jDJeQozD5NwZoUCOk/OEWUxJmDxMdHtxAB47mbVoN4hMjjLlsOI7QmmKv4oeVEuZgXheNlT99pkIi8fHBI48VQHkhlxltOK4285Dy8wkGX7Pnzc/AT3MUeNYdE+NEowSjzaR27AcAkx6dU6kqKlRxG5OiGXkFGnAE9WMkyS1ih6CfuJkRk46Tm0=
+  - secure: cThu+fi7Tousq9zI4eCECyETDaAQgzZJJx4rGysH16eRcobIr5UJq1ECqBvDMPBOPL7pdsg15Nl+DCCTUi664b5IUsJGkm9DfLgbPXTBWEXyJyvbQH/kd7nEIN/NNJHXn0BZDBuZLw/rEfJmOw4351Bd/kMENyBGDmt8v0/zwUUc9qX8x9aHByPn7f5/QY1lE8T+swBbO0gE8GSnPalw9WCMvFifBbS7XLEUYp1LRWh/GM2E//g1Ynzj8IMSDvhTr3/A7ektUmKFAzy0YuLXIRW3PV9XdwJgjepkWC8o8FYlqbpsp78OaFitkhDeoY/T/axzheFTBDbcesUIeQfhVrxOUv2IJqUmXdGW0KwLj69gOtxaSFzWsx2a+RPA1vY9/7AzBZfDxwBH2g5mxWeVct0YdIPHNwDr6rTrbhEq6BOIHk8E35yMtHmaukjo35/lbX+uPVRTFeS0jav6+MP/7x4l52DHs0zTJYKjJKp9OinB+WwYmoXkWu1qoeXJFTqvpuJl3FqAwo2sQd0Gcf/ftuTjD10nId2IYLBXOBpolZgm1u8qZoZBZeEOiGRgNSW8fq3EXKlbjrJtc+/H6GSq5Wd/BvhSlzlfl4Tajgr6sUqaWruxgHB8/1ou2qLkd/CQromjDopV5sA4NDgb32g+/3ytpRtSUi5BLJPbI7sF4wE=
   jobs:
-    - NET=WSS NETE=WSSE DAPS=true CH=false
-    - NET=WSS NETE=WSSE DAPS=false CH=false
-    - NET=WSS NETE=WSSE DAPS=true CH=true
-    - NET=WSS NETE=WSSE DAPS=false CH=true
-
-    - NET=IDSCP NETE=WSSE DAPS=true CH=false
-    - NET=IDSCP NETE=WSSE DAPS=false CH=false
-    - NET=IDSCP NETE=WSSE DAPS=true CH=true
-    - NET=IDSCP NETE=WSSE DAPS=false CH=true
-
-    - NET=HTTPS NETE=WSSE DAPS=true CH=false
-    - NET=HTTPS NETE=WSSE DAPS=false CH=false
-    - NET=HTTPS NETE=WSSE DAPS=true CH=true
-    - NET=HTTPS NETE=WSSE DAPS=false CH=true
-
-    - NET=WSS NETE=HTTPSE DAPS=true CH=false
-    - NET=WSS NETE=HTTPSE DAPS=false CH=false
-    - NET=WSS NETE=HTTPSE DAPS=true CH=true
-    - NET=WSS NETE=HTTPSE DAPS=false CH=true
-
-    - NET=IDSCP NETE=HTTPSE DAPS=true CH=false
-    - NET=IDSCP NETE=HTTPSE DAPS=false CH=false
-    - NET=IDSCP NETE=HTTPSE DAPS=true CH=true
-    - NET=IDSCP NETE=HTTPSE DAPS=false CH=true
-
-    - NET=HTTPS NETE=HTTPSE DAPS=true CH=false
-    - NET=HTTPS NETE=HTTPSE DAPS=false CH=false
-    - NET=HTTPS NETE=HTTPSE DAPS=true CH=true
-    - NET=HTTPS NETE=HTTPSE DAPS=false CH=true
-
+  - NET=WSS NETE=WSSE DAPS=true CH=false
+  - NET=WSS NETE=WSSE DAPS=false CH=false
+  - NET=WSS NETE=WSSE DAPS=true CH=true
+  - NET=WSS NETE=WSSE DAPS=false CH=true
+  - NET=IDSCP NETE=WSSE DAPS=true CH=false
+  - NET=IDSCP NETE=WSSE DAPS=false CH=false
+  - NET=IDSCP NETE=WSSE DAPS=true CH=true
+  - NET=IDSCP NETE=WSSE DAPS=false CH=true
+  - NET=HTTPS NETE=WSSE DAPS=true CH=false
+  - NET=HTTPS NETE=WSSE DAPS=false CH=false
+  - NET=HTTPS NETE=WSSE DAPS=true CH=true
+  - NET=HTTPS NETE=WSSE DAPS=false CH=true
+  - NET=WSS NETE=HTTPSE DAPS=true CH=false
+  - NET=WSS NETE=HTTPSE DAPS=false CH=false
+  - NET=WSS NETE=HTTPSE DAPS=true CH=true
+  - NET=WSS NETE=HTTPSE DAPS=false CH=true
+  - NET=IDSCP NETE=HTTPSE DAPS=true CH=false
+  - NET=IDSCP NETE=HTTPSE DAPS=false CH=false
+  - NET=IDSCP NETE=HTTPSE DAPS=true CH=true
+  - NET=IDSCP NETE=HTTPSE DAPS=false CH=true
+  - NET=HTTPS NETE=HTTPSE DAPS=true CH=false
+  - NET=HTTPS NETE=HTTPSE DAPS=false CH=false
+  - NET=HTTPS NETE=HTTPSE DAPS=true CH=true
+  - NET=HTTPS NETE=HTTPSE DAPS=false CH=true
 services:
-  - docker
-
-install:  # Data-app branch name optional ex. install.sh develop
-  - bash ./travis/install.sh
-
+- docker
+install:
+- bash ./travis/install.sh
 before_script:
-  - docker ps -a
-  - sleep 60 #seconds
-
+- docker ps -a
+- sleep 60
 script:
-  - bash ./travis/test.sh
-
+- bash ./travis/test.sh
 after_script:
-  - docker logs docker_data-app_1
-  - docker logs docker_ecc-provider_1
-  - docker logs docker_ecc-consumer_1
-
+- docker logs docker_data-app_1
+- docker logs docker_ecc-provider_1
+- docker logs docker_ecc-consumer_1
 jobs:
   include:
-    - stage: deploy
-      # Deploy in DockerHub
-      script: echo Deploy
-      env: NET=WSS NETE=WSSE DAPS=true CH=false
+  - stage: deploy
+    script: echo Deploy
+    env: NET=WSS NETE=WSSE DAPS=true CH=false

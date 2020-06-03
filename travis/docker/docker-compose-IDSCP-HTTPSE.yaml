@@ -10,6 +10,8 @@ services:
       - SPRING_PROFILES_ACTIVE=CONSUMER_DOCKER
       - MULTIPART=mixed  #Data APP endpoint multipart/mixed content type
       - CLEARING_HOUSE=http://109.232.32.193:8280/data
+      - SSL_KEY_PASSWORD=${SSL_KEY_PASSWORD}
+      - KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD}
       - CH=${CH}
       - DAPS=${DAPS}
       - WSS=false
@@ -30,6 +32,8 @@ services:
       - SPRING_PROFILES_ACTIVE=PRODUCER_DOCKER
       - MULTIPART=mixed  #Data APP endpoint multipart/mixed content type
       - CLEARING_HOUSE=http://109.232.32.193:8280/data
+      - SSL_KEY_PASSWORD=${SSL_KEY_PASSWORD}
+      - KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD}
       - CH=${CH}
       - DAPS=${DAPS}
       - WSS=false
