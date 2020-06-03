@@ -25,7 +25,9 @@ echo "docker-compose correctly installed"
 
 
 echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
-cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
+#cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
+envsubst '${MVN_PASSWORD} ${MVN_USER}' <./travis/.m2/settings.xml >$HOME/.m2/settings.xml
+
 mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
 mkdir -p  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
 cp -rf ./travis/.m2/repository/de/fraunhofer/aisec/ids  $HOME/.m2/repository/de/fraunhofer/aisec
@@ -43,7 +45,8 @@ cd ..
 echo "Installed  Multipart Message Lib"
 
 echo "Installing websocket-message-streamer-lib..."
-git clone https://github.com/ascatox/websocket-message-streamer.git
+#git clone https://github.com/ascatox/websocket-message-streamer.git
+git clone https://github.com/Engineering-Research-and-Development/market4.0-websocket_message_streamer.git
 cd websocket-message-streamer
 mvn clean install -DskipTests
 cd ..
