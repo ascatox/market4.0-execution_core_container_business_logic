@@ -25,6 +25,7 @@ echo "docker-compose correctly installed"
 
 
 echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
+cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
 mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
 mkdir -p  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
 cp -rf ./travis/.m2/repository/de/fraunhofer/aisec/ids  $HOME/.m2/repository/de/fraunhofer/aisec
