@@ -1,4 +1,0 @@
-#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Thu Jul 25 09:33:45 CEST 2019
-http\://maven.iais.fraunhofer.de/artifactory/eis-ids-snapshot/.error=Could not transfer artifact de.fraunhofer.iais.eis.ids\:protocol\:jar\:javadoc\:0.0.9-SNAPSHOT from/to eis-snapshot-repo (http\://maven.iais.fraunhofer.de/artifactory/eis-ids-snapshot)\: Access denied to http\://maven.iais.fraunhofer.de/artifactory/eis-ids-snapshot/de/fraunhofer/iais/eis/ids/protocol/0.0.9-SNAPSHOT/protocol-0.0.9-SNAPSHOT-javadoc.jar. Error code 401, Unauthorized
-@default-eis-snapshot-repo-http\://maven.iais.fraunhofer.de/artifactory/eis-ids-snapshot/.lastUpdated=1564040025534
