@@ -1,7 +1,0 @@
-#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Fri Feb 21 07:56:03 CET 2020
-http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.error=
-http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.lastUpdated=1582268084127
-https\://repo.maven.apache.org/maven2/.lastUpdated=1582268084631
-http\://repository.netsec.aisec.fraunhofer.de/repository/releases/.lastUpdated=1582268163771
-https\://repo.maven.apache.org/maven2/.error=
