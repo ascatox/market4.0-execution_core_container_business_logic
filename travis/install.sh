@@ -24,6 +24,7 @@ sudo mv docker-compose /usr/local/bin
 echo "docker-compose correctly installed"
 
 
+
 echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 #cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
 envsubst '${MVN_PASSWORD} ${MVN_USER}' <./travis/.m2/settings.xml >$HOME/.m2/settings.xml
