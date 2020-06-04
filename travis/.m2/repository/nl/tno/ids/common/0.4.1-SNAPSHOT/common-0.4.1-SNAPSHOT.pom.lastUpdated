@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Feb 26 10:13:34 CET 2020
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.error=
+https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.error=Could not transfer artifact nl.tno.ids\:common\:pom\:0.4.1-SNAPSHOT from/to nl.tno.ids (https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/)\: Not authorized , ReasonPhrase\:Unauthorized.
+http\://maven.iais.fraunhofer.de/artifactory/eis-ids-public/.lastUpdated=1582707668497
+@default-nl.tno.ids-https\://ci.ids.smart-connected.nl/nexus/repository/tno-ids/.lastUpdated=1582708414326
