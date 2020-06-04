@@ -15,7 +15,7 @@
 						"exec": [
 							"pm.test(\"Response time is less than 1min\", function () {",
 							"    var timeout = 60000; //milliseconds",
-							"    pm.expect(pm.response.responseTime).to.be.below(60000);",
+							"    pm.expect(pm.response.responseTime).to.be.below(timeout);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
