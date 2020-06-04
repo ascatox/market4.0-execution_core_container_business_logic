@@ -3,8 +3,10 @@
 DOCKER_COMPOSE_VERSION=1.25.5
 
 mkdir $HOME/hash
-cp -rf ./travis/cert $HOME
-
+mkdir $HOME/cert
+cd $HOME/cert
+curl -O https://github.com/Engineering-Research-and-Development/private-files-repo/raw/master/engineering1-keystore.jks
+cd ..
 BRANCH_DATA_APP=master
 
 if [ "$1" != "" ]; then
