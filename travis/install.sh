@@ -6,7 +6,7 @@ mkdir $HOME/hash
 mkdir $HOME/cert
 cd $HOME/cert
 curl -O https://github.com/Engineering-Research-and-Development/private-files-repo/raw/master/engineering1-keystore.jks
-cd ..
+cd -
 BRANCH_DATA_APP=master
 
 if [ "$1" != "" ]; then
