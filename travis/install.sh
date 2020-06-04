@@ -5,12 +5,13 @@ DOCKER_COMPOSE_VERSION=1.25.5
 mkdir $HOME/hash
 #cp -rf ./travis/cert $HOME
 
-mkdir $HOME/cert
-cd $HOME/cert
+#mkdir $HOME/cert
+#cd $HOME/cert
 echo "Downloading certificate from private repository..."
-wget https://github.com/Engineering-Research-and-Development/private-files-repo/raw/master/engineering1-keystore.jks
+git clone https://github.com/Engineering-Research-and-Development/private-files-repo.git
+mv private-files-repo $HOME/cert
 echo "Certificate from private repository downloaded"
-cd -
+#cd -
 BRANCH_DATA_APP=master
 
 if [ "$1" != "" ]; then
