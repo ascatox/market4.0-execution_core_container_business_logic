@@ -28,6 +28,9 @@ echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 #cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
 envsubst '${MVN_PASSWORD} ${MVN_USER}' <./travis/.m2/settings.xml >$HOME/.m2/settings.xml
 
+cp -rf ./travis/.m2/repository/nl  $HOME/.m2/repository # remove asap
+
+
 mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
 mkdir -p  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
 cp -rf ./travis/.m2/repository/de/fraunhofer/aisec/ids  $HOME/.m2/repository/de/fraunhofer/aisec
