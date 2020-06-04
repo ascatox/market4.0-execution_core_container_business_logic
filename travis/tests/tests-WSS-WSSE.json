@@ -14,8 +14,8 @@
 						"id": "52b59fa6-cab8-4050-a58b-2bda75d3a5a4",
 						"exec": [
 							"pm.test(\"Response time is less than 1min\", function () {",
-							"    var timeout = 1 * 60 * 1000; //milliseconds",
-							"    pm.expect(pm.response.responseTime).to.be.below(timeout);",
+							"    var timeout = 60000; //milliseconds",
+							"    pm.expect(pm.response.responseTime).to.be.below(60000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -95,7 +95,7 @@
 						"id": "887b3e5f-647a-4ce9-804c-be899862f81e",
 						"exec": [
 							"pm.test(\"Response time is less than 2min\", function () {",
-							"    var timeout = 2 * 60 * 1000; //milliseconds",
+							"    var timeout = 120000; //milliseconds",
 							"    pm.expect(pm.response.responseTime).to.be.below(timeout);",
 							"});",
 							"",
