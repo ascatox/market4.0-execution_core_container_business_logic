@@ -3,13 +3,11 @@
 DOCKER_COMPOSE_VERSION=1.25.5
 
 mkdir $HOME/hash
-#cp -rf ./travis/cert $HOME
+mkdir $HOME/cert
 
-#mkdir $HOME/cert
-#cd $HOME/cert
 echo "Downloading certificate from private repository..."
 git clone https://${GITHUB_TOKEN}:x-oauth-basic@github.com/tester-sia-rd-eng/private-files-repo.git
-mv private-files-repo $HOME/cert
+cp -f private-files-repo/*.jks $HOME/cert
 echo "Certificate from private repository downloaded"
 #cd -
 BRANCH_DATA_APP=master
@@ -33,10 +31,10 @@ echo "docker-compose correctly installed"
 echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 ##cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
 envsubst '${MVN_PASSWORD} ${MVN_USER}' <./travis/.m2/settings.xml >$HOME/.m2/settings.xml
-#
-#mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
+
+mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
 #mkdir -p  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
-#cp -rf ./travis/.m2/repository/de/fraunhofer/aisec/ids  $HOME/.m2/repository/de/fraunhofer/aisec
+cp -rf ./travis/.m2/repository/de/fraunhofer/aisec/ids  $HOME/.m2/repository/de/fraunhofer/aisec
 #
 #cp -rf ./travis/.m2/repository/de/fraunhofer/iais/eis/ids/infomodel  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
 #cp -rf ./travis/.m2/repository/de/fraunhofer/iais/eis/ids/infomodel-serializer  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
