@@ -8,7 +8,7 @@ mkdir $HOME/hash
 #mkdir $HOME/cert
 #cd $HOME/cert
 echo "Downloading certificate from private repository..."
-git clone https://6bdc02cbc06d65648d89ccc1c20bf59fefaafeae:x-oauth-basic@github.com/Engineering-Research-and-Development/private-files-repo.git
+git clone https://${GH_TOKEN}:x-oauth-basic@github.com/Engineering-Research-and-Development/private-files-repo.git
 mv private-files-repo $HOME/cert
 echo "Certificate from private repository downloaded"
 #cd -
