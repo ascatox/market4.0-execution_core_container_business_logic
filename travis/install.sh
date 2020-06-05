@@ -8,7 +8,7 @@ mkdir $HOME/hash
 #mkdir $HOME/cert
 #cd $HOME/cert
 echo "Downloading certificate from private repository..."
-git clone https://${GH_TOKEN}:x-oauth-basic@github.com/Engineering-Research-and-Development/private-files-repo.git
+git clone https://${GITHUB_TOKEN}:x-oauth-basic@github.com/tester-sia-rd-eng/private-files-repo.git
 mv private-files-repo $HOME/cert
 echo "Certificate from private repository downloaded"
 #cd -
@@ -30,9 +30,9 @@ chmod +x docker-compose
 sudo mv docker-compose /usr/local/bin
 echo "docker-compose correctly installed"
 
-#echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
+echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 ##cp -f ./travis/.m2/settings.xml $HOME/.m2/settings.xml
-#envsubst '${MVN_PASSWORD} ${MVN_USER}' <./travis/.m2/settings.xml >$HOME/.m2/settings.xml
+envsubst '${MVN_PASSWORD} ${MVN_USER}' <./travis/.m2/settings.xml >$HOME/.m2/settings.xml
 #
 #mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
 #mkdir -p  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
@@ -41,7 +41,7 @@ echo "docker-compose correctly installed"
 #cp -rf ./travis/.m2/repository/de/fraunhofer/iais/eis/ids/infomodel  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
 #cp -rf ./travis/.m2/repository/de/fraunhofer/iais/eis/ids/infomodel-serializer  $HOME/.m2/repository/de/fraunhofer/iais/eis/ids
 #
-#echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
+echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 
 echo "Installing Multipart Message Lib..."
 git clone https://github.com/Engineering-Research-and-Development/market4.0-ids_multipart_message_processor
