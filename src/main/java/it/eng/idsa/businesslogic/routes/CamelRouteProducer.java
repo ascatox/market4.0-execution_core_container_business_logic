@@ -66,32 +66,19 @@ public class CamelRouteProducer extends RouteBuilder {
 	@Autowired
 	CamelContext camelContext;
 
-	@Value("${application.idscp.isEnabled}")
-	private boolean isEnabledIdscp;
-
-	@Value("${application.websocket.isEnabled}")
-	private boolean isEnabledWebSocket;
-
 	@Value("${application.dataApp.websocket.isEnabled}")
 	private boolean isEnabledDataAppWebSocket;
 
 	@Override
 	public void configure() throws Exception {
-            logger.debug("Starting Camel Routes...producer side");
+		logger.debug("Starting Camel Routes...producer side");
 
-            camelContext.getShutdownStrategy().setLogInflightExchangesOnTimeout(false);
-            camelContext.getShutdownStrategy().setTimeout(3);
+		camelContext.getShutdownStrategy().setLogInflightExchangesOnTimeout(false);
+		camelContext.getShutdownStrategy().setTimeout(3);
 
-            onException(ExceptionForProcessor.class)
-                .handled(true)
-                .process(processorException)
-				.process(sendResponseToDataAppProcessor);
-
-            onException(RuntimeException.class)
-            .handled(true)
-            .process(processorException)
-			.process(sendResponseToDataAppProcessor);
-
+		onException(ExceptionForProcessor.class, RuntimeException.class)
+			.handled(true)
+			.process(processorException);
 
 		if(!isEnabledDataAppWebSocket) {
             // Camel SSL - Endpoint: A - Body binary

@@ -1,8 +1,11 @@
 package it.eng.idsa.businesslogic.processor.exception;
 
+import it.eng.idsa.businesslogic.configuration.WebSocketServerConfigurationA;
+import it.eng.idsa.businesslogic.processor.consumer.websocket.server.ResponseMessageBufferBean;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import it.eng.idsa.businesslogic.service.MultipartMessageService;
@@ -22,6 +25,12 @@ public class ExceptionProcessorProducer implements Processor {
 	@Autowired
 	private MultipartMessageService multipartMessageService;
 
+	@Value("${application.dataApp.websocket.isEnabled}")
+	private boolean isEnabledDataAppWebSocket;
+
+	@Autowired(required = false)
+	WebSocketServerConfigurationA webSocketServerConfiguration;
+
 	@Override
 	public void process(Exchange exchange) throws Exception {
 
@@ -33,6 +42,11 @@ public class ExceptionProcessorProducer implements Processor {
 				.withHeaderContent(message)
 				.build();
 		String multipartMessageString = MultipartMessageProcessor.multipartMessagetoString(multipartMessage, false);
+
+		if(isEnabledDataAppWebSocket) {
+			ResponseMessageBufferBean responseMessageServerBean = webSocketServerConfiguration.responseMessageBufferWebSocket();
+			responseMessageServerBean.add(multipartMessageString.getBytes());
+		}
 
 		exchange.getOut().setBody(multipartMessageString);
 		String contentType = multipartMessage.getHttpHeaders().getOrDefault("Content-Type", "multipart/mixed");
