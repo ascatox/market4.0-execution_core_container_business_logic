@@ -84,11 +84,14 @@ public class CamelRouteProducer extends RouteBuilder {
 
             onException(ExceptionForProcessor.class)
                 .handled(true)
-                .process(processorException);
+                .process(processorException)
+				.process(sendResponseToDataAppProcessor);
 
             onException(RuntimeException.class)
             .handled(true)
-            .process(processorException);
+            .process(processorException)
+			.process(sendResponseToDataAppProcessor);
+
 
 		if(!isEnabledDataAppWebSocket) {
             // Camel SSL - Endpoint: A - Body binary
