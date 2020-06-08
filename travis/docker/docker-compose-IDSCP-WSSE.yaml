@@ -17,6 +17,7 @@ services:
       - WSS=false
       - IDSCP=true
       - WSSE=true
+      - producerEndpointForCHConsensus=idscp://ecc-provider:8098
     command: --spring.profiles.active=CONSUMER_DOCKER
     volumes:
       - /home/travis/cert:/cert

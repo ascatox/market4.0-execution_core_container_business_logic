@@ -98,8 +98,8 @@ public class CamelRouteConsumer extends RouteBuilder {
 					.choice()
 					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 						.process(validateTokenProcessor)
-						//					.process(sendToActiveMQ)
-						//					.process(receiveFromActiveMQ)
+						//.process(sendToActiveMQ)
+						//.process(receiveFromActiveMQ)
 						// Send to the Endpoint: F
 						.choice()
 						.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))

@@ -17,6 +17,7 @@ services:
       - WSS=false
       - IDSCP=false
       - WSSE=true
+      - producerEndpointForCHConsensus=https://ecc-provider:8889/incoming-data-channel/receivedMessage
     command: --spring.profiles.active=CONSUMER_DOCKER
     volumes:
       - /home/travis/cert:/cert
