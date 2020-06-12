@@ -46,3 +46,6 @@ jobs:
   - stage: deploy
     script: echo Deploy
     env: NET=WSS NETE=WSSE DAPS=true CH=false
+#branches:
+  #only:
+  #- master
