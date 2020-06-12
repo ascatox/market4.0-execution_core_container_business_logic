@@ -1,5 +1,6 @@
 package it.eng.idsa.businesslogic.routes;
 
+import de.fhg.aisec.ids.camel.ids.CamelComponent;
 import de.fhg.aisec.ids.camel.ids.server.WebsocketComponent;
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
 import it.eng.idsa.businesslogic.processor.consumer.*;
@@ -178,7 +179,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 			from(idscpEndpoint)
 					.log("Received via IDS protocol: ${body}")
 					.to("cxf://http://consumer-app:8081/temp?dataFormat=MESSAGE");
-			//.to("jetty://https4://data-app:8083/incoming-data-app/dataAppIncomingMessageSender");
+					//.to("jetty://https4://data-app:8083/incoming-data-app/dataAppIncomingMessageSender");
 		}
 
 	}
