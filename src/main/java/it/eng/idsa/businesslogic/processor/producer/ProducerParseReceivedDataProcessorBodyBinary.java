@@ -30,6 +30,9 @@ public class ProducerParseReceivedDataProcessorBodyBinary implements Processor {
 	@Value("${application.isEnabledDapsInteraction}")
 	private boolean isEnabledDapsInteraction;
 
+	@Value("${application.idscp.isEnabled}")
+	private boolean isEnabledIdscp;
+
 	@Autowired
 	private MultipartMessageService multipartMessageService;
 	
@@ -60,7 +63,9 @@ public class ProducerParseReceivedDataProcessorBodyBinary implements Processor {
 		try {
 			// Create headers parts
 			// Put in the header value of the application.property: application.isEnabledDapsInteraction
+			headesParts.put("Is-Enabled-Idscp", isEnabledIdscp);
 			headesParts.put("Is-Enabled-Daps-Interaction", isEnabledDapsInteraction);
+
 			contentType = receivedDataHeader.get("Content-Type").toString();
 			headesParts.put("Content-Type", contentType);
 			forwardTo = receivedDataHeader.get("Forward-To").toString();

@@ -3,32 +3,6 @@
  */
 package it.eng.idsa.businesslogic.service.impl;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.Properties;
-import java.util.UUID;
-
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.project.MavenProject;
-import org.json.simple.JsonObject;
-import org.json.simple.Jsoner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
 import de.fraunhofer.iais.eis.LogNotification;
 import de.fraunhofer.iais.eis.LogNotificationBuilder;
 import de.fraunhofer.iais.eis.Message;
@@ -38,6 +12,28 @@ import it.eng.idsa.businesslogic.service.ClearingHouseService;
 import it.eng.idsa.businesslogic.service.HashFileService;
 import it.eng.idsa.clearinghouse.model.Body;
 import it.eng.idsa.clearinghouse.model.NotificationContent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.project.MavenProject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.Properties;
+import java.util.UUID;
 
 
 /**
@@ -101,12 +97,13 @@ public class ClearingHouseServiceImpl implements ClearingHouseService {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			String msgSerialized = new Serializer().serializePlainJson(notificationContent);
 			logger.info("msgSerialized to CH="+msgSerialized);
-			JsonObject jsonObject = (JsonObject) Jsoner.deserialize(msgSerialized);
+			//JsonObject jsonObject = (JsonObject) Jsoner.deserialize(msgSerialized);
 
 			//JSONParser parser = new JSONParser();
 			//JSONObject jsonObject = (JSONObject) parser.parse(msgSerialized);
 
-			HttpEntity<JsonObject> entity = new HttpEntity<>(jsonObject, headers);
+			//HttpEntity<JsonObject> entity = new HttpEntity<>(jsonObject, headers);
+			HttpEntity<String> entity = new HttpEntity<>(msgSerialized, headers);
 			
 			logger.info("Sending Data to the Clearing House "+endpoint+" ...");
 			restTemplate.postForObject(endpoint, entity, String.class);
