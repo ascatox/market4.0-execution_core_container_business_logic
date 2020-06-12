@@ -44,8 +44,9 @@ after_script:
 jobs:
   include:
   - stage: deploy
-    script: echo Deploy
+    script: bash ./travis/deploy.sh
     env: NET=WSS NETE=WSSE DAPS=true CH=false
+
 #branches:
   #only:
-  #- master
+   #- master
