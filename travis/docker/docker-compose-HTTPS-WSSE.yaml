@@ -1,7 +1,7 @@
 version: '2.2'
 services:
   ecc-consumer:
-    image: market4.0/execution_core_container_business
+    image: rdlabengpa/execution_core_container_bl:latest
     ports:
       - 8086:8086
       - 8888:8888
@@ -24,7 +24,7 @@ services:
       - /home/travis/hash:/hash
 
   ecc-provider:
-    image: market4.0/execution_core_container_business
+    image: rdlabengpa/execution_core_container_bl:latest
     ports:
       - 8097:8097
       - 8887:8887
@@ -46,7 +46,7 @@ services:
       - /home/travis/hash:/hash
 
   data-app:
-   image: market4.0/data-app
+   image: rdlabengpa/data-app:latest
    environment:
      - SPRING_PROFILES_ACTIVE=DOCKER
      - WSSE=true

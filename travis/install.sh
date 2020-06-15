@@ -27,7 +27,7 @@ chmod +x docker-compose
 sudo mv docker-compose /usr/local/bin
 echo "docker-compose correctly installed"
 
-echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
+echo "Settings.xml copy on Travis Home_M2 at: "$HOME
 envsubst '${MVN_PASSWORD} ${MVN_USER}' <./travis/.m2/settings.xml >$HOME/.m2/settings.xml
 
 mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
@@ -55,7 +55,7 @@ git clone https://github.com/ascatox/market4.0-data_app_test_BE.git
 cd market4.0-data_app_test_BE
 git checkout ${BRANCH_DATA_APP}
 mvn clean package -DskipTests
-docker build -f Dockerfile -t market4.0/data-app .
+docker build -f Dockerfile -t rdlabengpa/data-app .
 cd ..
 echo "Data-App is ready to start"
 
@@ -69,7 +69,7 @@ echo "Clearing-House Model installed!"
 
 echo "Creating Docker Container for ECCs..."
 mvn clean package -DskipTests
-docker build -f Dockerfile -t market4.0/execution_core_container_business .
+docker build -f Dockerfile -t rdlabengpa/execution_core_container_bl .
 
 echo "Starting services..."
 docker-compose -f travis/docker/docker-compose-${NET}-${NETE}.yaml up -d
