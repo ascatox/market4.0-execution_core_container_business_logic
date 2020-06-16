@@ -41,11 +41,6 @@ after_script:
 - docker logs docker_data-app_1
 - docker logs docker_ecc-provider_1
 - docker logs docker_ecc-consumer_1
-jobs:
-  include:
-  - stage: deploy
-    script: bash ./travis/deploy.sh
-    env: NET=WSS NETE=WSSE DAPS=true CH=false
 
 branches:
   only:
