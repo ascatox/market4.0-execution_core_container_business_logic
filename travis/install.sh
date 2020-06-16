@@ -49,7 +49,7 @@ cd ..
 echo "Installed websocket-message-streamer-lib"
 
 echo "Cloning and Creating Docker Container from Data-App repo..."
-git clone https://github.com/Engineering-Research-and-Development/market4.0-data_app_test_BE.git
+git clone https://github.com/ascatox/market4.0-data_app_test_BE.git
 cd market4.0-data_app_test_BE
 git checkout ${BRANCH_DATA_APP}
 mvn clean package -DskipTests
