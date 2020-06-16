@@ -47,6 +47,6 @@ jobs:
     script: bash ./travis/deploy.sh
     env: NET=WSS NETE=WSSE DAPS=true CH=false
 
-#branches:
-  #only:
-   #- master
+branches:
+  only:
+   - master

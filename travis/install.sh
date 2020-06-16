@@ -42,16 +42,14 @@ cd ..
 echo "Installed  Multipart Message Lib"
 
 echo "Installing websocket-message-streamer-lib..."
-git clone https://github.com/ascatox/websocket-message-streamer.git
-#git clone https://github.com/Engineering-Research-and-Development/market4.0-websocket_message_streamer.git
-cd websocket-message-streamer
-#cd market4.0-websocket_message_streamer
+git clone https://github.com/Engineering-Research-and-Development/market4.0-websocket_message_streamer.git
+cd market4.0-websocket_message_streamer
 mvn clean install -DskipTests
 cd ..
 echo "Installed websocket-message-streamer-lib"
 
 echo "Cloning and Creating Docker Container from Data-App repo..."
-git clone https://github.com/ascatox/market4.0-data_app_test_BE.git
+git clone https://github.com/Engineering-Research-and-Development/market4.0-data_app_test_BE.git
 cd market4.0-data_app_test_BE
 git checkout ${BRANCH_DATA_APP}
 mvn clean package -DskipTests
