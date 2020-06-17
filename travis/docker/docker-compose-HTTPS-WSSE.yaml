@@ -1,7 +1,7 @@
 version: '2.2'
 services:
   ecc-consumer:
-    image: rdlabengpa/execution_core_container_bl:latest
+    image: rdlabengpa/execution_core_container_bl:develop
     ports:
       - 8086:8086
       - 8888:8888
@@ -24,7 +24,7 @@ services:
       - /home/travis/hash:/hash
 
   ecc-provider:
-    image: rdlabengpa/execution_core_container_bl:latest
+    image: rdlabengpa/execution_core_container_bl:develop
     ports:
       - 8097:8097
       - 8887:8887

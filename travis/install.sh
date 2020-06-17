@@ -66,7 +66,7 @@ echo "Clearing-House Model installed!"
 
 echo "Creating Docker Container for ECCs..."
 mvn clean package -DskipTests
-docker build -f Dockerfile -t rdlabengpa/execution_core_container_bl .
+docker build -f Dockerfile -t rdlabengpa/execution_core_container_bl:develop .
 
 echo "Starting services..."
 docker-compose -f travis/docker/docker-compose-${NET}-${NETE}.yaml up -d
