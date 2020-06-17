@@ -146,24 +146,24 @@ public class CamelRouteConsumer extends RouteBuilder {
 								.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(false))
 								.process(sendDataToDataAppProcessor)
 							.endChoice()
-								.process(multiPartMessageProcessor)
-								.process(getTokenFromDapsProcessor)
-								.process(sendDataToBusinessLogicProcessor)
-
-							.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-							.choice()
-							.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-								.process(sendTransactionToCHProcessor)
-							.endChoice()
-							// Send to the Endpoint: F
-							.choice()
-							.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))
-								.process(sendDataToDataAppProcessorOverWS)
-							.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(false))
-								.process(sendDataToDataAppProcessor)
-							.endChoice()
 							.process(multiPartMessageProcessor)
+							.process(getTokenFromDapsProcessor)
 							.process(sendDataToBusinessLogicProcessor)
+
+						.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
+						.choice()
+						.when(header("Is-Enabled-Clearing-House").isEqualTo(true))
+							.process(sendTransactionToCHProcessor)
+						.endChoice()
+						// Send to the Endpoint: F
+						.choice()
+						.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))
+							.process(sendDataToDataAppProcessorOverWS)
+						.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(false))
+							.process(sendDataToDataAppProcessor)
+						.endChoice()
+						.process(multiPartMessageProcessor)
+						.process(sendDataToBusinessLogicProcessor)
 					.endChoice();
 			//@formatter:on
         }
