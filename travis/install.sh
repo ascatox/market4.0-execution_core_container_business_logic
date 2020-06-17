@@ -32,7 +32,7 @@ echo "docker-compose correctly installed"
 
 mkdir -p  $HOME/.m2/repository/de/fraunhofer/aisec
 cp -rf ./travis/.m2/repository/de/fraunhofer/aisec/ids  $HOME/.m2/repository/de/fraunhofer/aisec
-echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
+#echo "REMOVE ASAP-> Settings.xml copy on Travis Home_M2 at: "$HOME
 
 echo "Installing Multipart Message Lib..."
 git clone https://github.com/Engineering-Research-and-Development/market4.0-ids_multipart_message_processor
