@@ -87,7 +87,7 @@ public class CamelRouteProducer extends RouteBuilder {
                             .process(getTokenFromDapsProcessor)
                             .choice()
                             .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                                .process(sendTransactionToCHProcessor)
+                                //.process(sendTransactionToCHProcessor)
                             .endChoice()
                             // Send data to Endpoint B
                             .process(sendDataToBusinessLogicProcessor)
@@ -97,7 +97,7 @@ public class CamelRouteProducer extends RouteBuilder {
                         .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
                             .choice()
                             .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                                .process(sendTransactionToCHProcessor)
+                                //.process(sendTransactionToCHProcessor)
                             .endChoice()
                             // Send data to Endpoint B
                             .process(sendDataToBusinessLogicProcessor)
@@ -114,7 +114,7 @@ public class CamelRouteProducer extends RouteBuilder {
                             .process(getTokenFromDapsProcessor)
                             .choice()
                             .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                                .process(sendTransactionToCHProcessor)
+                                //.process(sendTransactionToCHProcessor)
                             .endChoice()
                             // Send data to Endpoint B
                             .process(sendDataToBusinessLogicProcessor)
@@ -124,7 +124,7 @@ public class CamelRouteProducer extends RouteBuilder {
                         .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
                             .choice()
                             .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                                .process(sendTransactionToCHProcessor)
+                                //.process(sendTransactionToCHProcessor)
                             .endChoice()
                             // Send data to Endpoint B
                             .process(sendDataToBusinessLogicProcessor)
@@ -141,7 +141,7 @@ public class CamelRouteProducer extends RouteBuilder {
 								.process(getTokenFromDapsProcessor)
                                 .choice()
                                 .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                                    .process(sendTransactionToCHProcessor)
+                                    //.process(sendTransactionToCHProcessor)
                                 .endChoice()
 								// Send data to Endpoint B
 								.process(sendDataToBusinessLogicProcessor)
@@ -153,7 +153,7 @@ public class CamelRouteProducer extends RouteBuilder {
                             .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
                                 .choice()
                                 .when(header("Is-Enabled-Clearing-House").isEqualTo(true))
-                                    .process(sendTransactionToCHProcessor)
+                                    //.process(sendTransactionToCHProcessor)
                                 .endChoice()
                                 // Send data to Endpoint B
                                 .process(sendDataToBusinessLogicProcessor)
