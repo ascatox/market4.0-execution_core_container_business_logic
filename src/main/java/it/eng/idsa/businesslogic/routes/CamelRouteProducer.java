@@ -1,6 +1,12 @@
 package it.eng.idsa.businesslogic.routes;
 
-import de.fhg.aisec.ids.camel.ids.client.WsComponent;
+import de.fhg.aisec.ids.api.infomodel.ConnectorProfile;
+import de.fhg.aisec.ids.api.settings.ConnectionSettings;
+import de.fhg.aisec.ids.api.settings.ConnectorConfig;
+import de.fhg.aisec.ids.api.settings.Settings;
+import de.fhg.aisec.ids.camel.idscp2.Idscp2OsgiComponent;
+import de.fhg.aisec.ids.camel.idscp2.client.Idscp2ClientComponent;
+import de.fhg.aisec.ids.camel.idscp2.client.Idscp2ClientEndpoint;
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionForProcessor;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionProcessorConsumer;
@@ -15,6 +21,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  *
@@ -88,6 +96,7 @@ public class CamelRouteProducer extends RouteBuilder {
 				.handled(true)
 				.process(processorException);
 
+		//@formatter:off
 		if(!isEnabledDataAppWebSocket) {
 			if(!isEnabledIdscp) {
 				// Camel SSL - Endpoint: A - Body binary
@@ -185,14 +194,85 @@ public class CamelRouteProducer extends RouteBuilder {
 					.process(sendTransactionToCHProcessor)
 					.endChoice()
 					.endChoice();
+			//@formatter:on
 		}
 	}
 
+	@Value("${application.idscp.ttc.host}")
+	private String ttcConsumerHost;
+
+	@Value("${application.idscp.ttc.port}")
+	private int ttcConsumerPort;
+
+	@Autowired
+	private TruststoreConfig truststoreConfig;
 
 	private Endpoint setupIDSCPEndPoint(CamelContext camelContext) throws Exception {
-		WsComponent wsComponent = camelContext.getComponent("idsclient", WsComponent.class);
-		wsComponent.setSslContextParameters(TruststoreConfig.setupSSLContextParametters());
-		return wsComponent.createEndpoint("idsclient://ecc-consumer:8086/?attestation=0");
+		//TODO Use Spring for this
+		Idscp2OsgiComponent idscp2OsgiComponent = new Idscp2OsgiComponent();
+		idscp2OsgiComponent.activate();
+		idscp2OsgiComponent.setSettings(new Settings() {
+			@Override
+			public ConnectorConfig getConnectorConfig() {
+				return new ConnectorConfig();
+			}
+
+			@Override
+			public void setConnectorConfig(ConnectorConfig connectorConfig) {
+
+			}
+
+			@Override
+			public ConnectorProfile getConnectorProfile() {
+				return new ConnectorProfile();
+			}
+
+			@Override
+			public void setConnectorProfile(ConnectorProfile connectorProfile) {
+
+			}
+
+			@Override
+			public String getConnectorJsonLd() {
+				return null;
+			}
+
+			@Override
+			public void setConnectorJsonLd(String s) {
+
+			}
+
+			@Override
+			public String getDynamicAttributeToken() {
+				return null;
+			}
+
+			@Override
+			public void setDynamicAttributeToken(String s) {
+
+			}
+
+			@Override
+			public ConnectionSettings getConnectionSettings(String s) {
+				return null;
+			}
+
+			@Override
+			public void setConnectionSettings(String s, ConnectionSettings connectionSettings) {
+
+			}
+
+			@Override
+			public Map<String, ConnectionSettings> getAllConnectionSettings() {
+				return null;
+			}
+		});
+		Idscp2ClientComponent idscp2ClientComponent = camelContext.getComponent("idscp2client", Idscp2ClientComponent.class);
+		Idscp2ClientEndpoint idscp2ClientComponentEndpoint = (Idscp2ClientEndpoint) idscp2ClientComponent
+				.createEndpoint(("idscp2client://" + ttcConsumerHost + ":" + ttcConsumerPort + "/"));
+		idscp2ClientComponentEndpoint.setSslContextParameters(truststoreConfig.setupSSLContextParameters());
+		return idscp2ClientComponentEndpoint;
+				//wsComponent.createEndpoint("idscp2client://"+ttcConsumerHost+":"+ttcConsumerPort+"/?attestation=0");
 	}
 
 }

@@ -19,8 +19,8 @@
 	<properties>
 		<java.version>11</java.version>
 		<start-class>it.eng.idsa.businesslogic.Application</start-class>
-		<camel.version>2.24.2</camel.version>
-		<camel.version.rc>3.0.0-RC3</camel.version.rc>
+		<camel.version>3.4.0</camel.version>
+		<camel.version.m4>3.0.0-M4</camel.version.m4>
 		<tomcat.version>9.0.24</tomcat.version>
 		<information.model.version>2.1.0-SNAPSHOT</information.model.version>
 		<application.basedir>${basedir}</application.basedir>
@@ -120,22 +120,22 @@
 			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.camel</groupId>
+			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-servlet-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.camel</groupId>
+			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-jackson-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.camel</groupId>
+			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-swagger-java-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.camel</groupId>
+			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-spring-boot-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
@@ -147,34 +147,40 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-http4</artifactId>
-			<version>${camel.version}</version>
+			<version>${camel.version.m4}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-jetty9-starter</artifactId>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-jetty-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-util</artifactId>
-			<version>${camel.version.rc}</version>
+			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.camel</groupId>
+			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-websocket-starter</artifactId>
 			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-jms</artifactId>
-            <version>${camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-activemq</artifactId>
-            <version>${camel.version.rc}</version>
-        </dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jms</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-activemq</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.camel/camel-http-common -->
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-http-common</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
 		<!-- IDSCP -->
 		<!-- https://mvnrepository.com/artifact/de.fraunhofer.aisec.ids/ids-comm -->
 		<dependency>
@@ -188,6 +194,13 @@
 			<artifactId>ids-api</artifactId>
 			<version>2.1.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>de.fhg.aisec.ids</groupId>
+			<artifactId>idscp2</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/javax.xml/jaxb-api -->
 		<dependency>
 			<groupId>javax.xml</groupId>
@@ -327,27 +340,34 @@
 			<version>0.3.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-ahc</artifactId>
-			<version>${camel.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.apache.camel</groupId>-->
+<!--			<artifactId>camel-ahc</artifactId>-->
+<!--			<version>${camel.version}</version>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>de.fhg.aisec.ids</groupId>
-			<artifactId>camel-ids</artifactId>
+			<artifactId>camel-idscp2</artifactId>
 			<version>3.0.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-cxf</artifactId>
-			<version>${camel.version}</version>
+			<version>3.3.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>jakarta.xml.ws</groupId>
 			<artifactId>jakarta.xml.ws-api</artifactId>
 			<version>2.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bitbucket.b_c</groupId>
+			<artifactId>jose4j</artifactId>
+			<version>0.6.5</version>
 		</dependency>
 	</dependencies>
 

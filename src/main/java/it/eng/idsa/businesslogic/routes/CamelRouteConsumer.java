@@ -1,7 +1,12 @@
 package it.eng.idsa.businesslogic.routes;
 
-import de.fhg.aisec.ids.camel.ids.CamelComponent;
-import de.fhg.aisec.ids.camel.ids.server.WebsocketComponent;
+import de.fhg.aisec.ids.api.infomodel.ConnectorProfile;
+import de.fhg.aisec.ids.api.settings.ConnectionSettings;
+import de.fhg.aisec.ids.api.settings.ConnectorConfig;
+import de.fhg.aisec.ids.api.settings.Settings;
+import de.fhg.aisec.ids.camel.idscp2.Idscp2OsgiComponent;
+import de.fhg.aisec.ids.camel.idscp2.server.Idscp2ServerComponent;
+import de.fhg.aisec.ids.camel.idscp2.server.Idscp2ServerEndpoint;
 import it.eng.idsa.businesslogic.configuration.ApplicationConfiguration;
 import it.eng.idsa.businesslogic.processor.consumer.*;
 import it.eng.idsa.businesslogic.processor.exception.ExceptionForProcessor;
@@ -15,6 +20,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  *
@@ -80,6 +87,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 
 		Endpoint idscpEndpoint = setupIDSCPEndPoint(getContext());
 
+		//@formatter:off
 		onException(ExceptionForProcessor.class, RuntimeException.class)
 				.handled(true)
 				.process(exceptionProcessorConsumer)
@@ -180,13 +188,80 @@ public class CamelRouteConsumer extends RouteBuilder {
 					.log("Received via IDS protocol: ${body}")
 					.to("cxf://http://consumer-app:8081/temp?dataFormat=MESSAGE");
 					//.to("jetty://https4://data-app:8083/incoming-data-app/dataAppIncomingMessageSender");
+			//@formatter:on
 		}
 
 	}
 
+	@Autowired
+	private TruststoreConfig truststoreConfig;
+
 	private Endpoint setupIDSCPEndPoint(CamelContext camelContext) throws Exception {
-		WebsocketComponent wsComponent = camelContext.getComponent("idsserver", WebsocketComponent.class);
-		wsComponent.setSslContextParameters(TruststoreConfig.setupSSLContextParametters());
-		return wsComponent.createEndpoint("idsserver://0.0.0.0:" + idscPort + "/?attestation=0");
+		//TODO Use Spring for this
+		Idscp2OsgiComponent idscp2OsgiComponent = new Idscp2OsgiComponent();
+		idscp2OsgiComponent.activate();
+		idscp2OsgiComponent.setSettings(new Settings() {
+			@Override
+			public ConnectorConfig getConnectorConfig() {
+				return new ConnectorConfig();
+			}
+
+			@Override
+			public void setConnectorConfig(ConnectorConfig connectorConfig) {
+
+			}
+
+			@Override
+			public ConnectorProfile getConnectorProfile() {
+				return new ConnectorProfile();
+			}
+
+			@Override
+			public void setConnectorProfile(ConnectorProfile connectorProfile) {
+
+			}
+
+			@Override
+			public String getConnectorJsonLd() {
+				return null;
+			}
+
+			@Override
+			public void setConnectorJsonLd(String s) {
+
+			}
+
+			@Override
+			public String getDynamicAttributeToken() {
+				return null;
+			}
+
+			@Override
+			public void setDynamicAttributeToken(String s) {
+
+			}
+
+			@Override
+			public ConnectionSettings getConnectionSettings(String s) {
+				return null;
+			}
+
+			@Override
+			public void setConnectionSettings(String s, ConnectionSettings connectionSettings) {
+
+			}
+
+			@Override
+			public Map<String, ConnectionSettings> getAllConnectionSettings() {
+				return null;
+			}
+		});
+		Idscp2ServerComponent idscp2ServerComponent = camelContext.getComponent("idscp2server", Idscp2ServerComponent.class);
+		Idscp2ServerEndpoint idscp2ServerComponentEndpoint = (Idscp2ServerEndpoint) idscp2ServerComponent
+				.createEndpoint("idscp2server://0.0.0.0:" + idscPort + "/");
+		idscp2ServerComponentEndpoint.setSslContextParameters(truststoreConfig.setupSSLContextParameters());
+		return idscp2ServerComponentEndpoint;
 	}
+
+
 }
