@@ -50,10 +50,8 @@ public class ConsumerWebSocketSendDataToDataAppProcessor implements Processor {
 
         Map<String, Object> multipartMessageParts = exchange.getIn().getBody(HashMap.class);
 
-        logger.info("IMPORTANT!!!Print Header before Send To FilterHeader: "+ multipartMessageParts.get("header").toString());
         // Get header, payload and message
         String header = filterHeader(multipartMessageParts.get("header").toString());
-        logger.info("IMPORTANT!!!Print Header before before Send to DataApp: "+ header);
         String payload = null;
         if (multipartMessageParts.containsKey("payload")) {
             payload = multipartMessageParts.get("payload").toString();

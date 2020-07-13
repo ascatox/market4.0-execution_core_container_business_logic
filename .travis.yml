@@ -25,10 +25,10 @@ env:
     #  - NET=IDSCP NETE=HTTPSE DAPS=true CH=true
     #  - NET=IDSCP NETE=HTTPSE DAPS=false CH=true
     - NET=HTTPS NETE=HTTPSE DAPS=false CH=false
-#  - NET=HTTPS NETE=HTTPSE DAPS=true CH=false
-#  - NET=HTTPS NETE=HTTPSE DAPS=true CH=true
-#  - NET=HTTPS NETE=HTTPSE DAPS=false CH=true
-services:
+    #  - NET=HTTPS NETE=HTTPSE DAPS=true CH=false
+    #  - NET=HTTPS NETE=HTTPSE DAPS=true CH=true
+    #  - NET=HTTPS NETE=HTTPSE DAPS=false CH=true
+  services:
   - docker
 install:
   - bash ./travis/install.sh
