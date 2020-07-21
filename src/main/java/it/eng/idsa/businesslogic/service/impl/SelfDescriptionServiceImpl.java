@@ -124,7 +124,7 @@ public class SelfDescriptionServiceImpl implements SelfDescriptionService {
         this.resourceLang = resourceLang;
     }
 
-    @Value("${it.eng.idsa.service.resources.title?:'Execution Core Container'")
+    @Value("${it.eng.idsa.service.resources.title?:'Execution Core Container}")
     public void setResourceDesription(String resourceDesription) {
         this.resourceDesription = resourceDesription;
     }

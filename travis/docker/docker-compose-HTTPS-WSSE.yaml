@@ -17,6 +17,7 @@ services:
       - WSS=false
       - IDSCP=false
       - WSSE=true
+      - UC=true
     command: --spring.profiles.active=CONSUMER_DOCKER
     volumes:
       - /home/travis/cert:/cert
