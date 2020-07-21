@@ -142,6 +142,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 					.choice()
 						.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 							.process(validateTokenProcessor)
+							.process(consumerUcappProcessor)
 							// Send to the Endpoint: F
 							.choice()
 								.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))
@@ -157,6 +158,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 									.process(sendTransactionToCHProcessor)
 							.endChoice()
 								.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
+								.process(consumerUcappProcessor)
 							// Send to the Endpoint: F
 							.choice()
 							.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))

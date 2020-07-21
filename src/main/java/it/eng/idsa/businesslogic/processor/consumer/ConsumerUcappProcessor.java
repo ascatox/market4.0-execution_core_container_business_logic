@@ -1,9 +1,9 @@
 package it.eng.idsa.businesslogic.processor.consumer;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import de.fraunhofer.dataspaces.iese.camel.interceptor.model.IdsMsgTarget;
 import de.fraunhofer.dataspaces.iese.camel.interceptor.model.IdsUseObject;
 import de.fraunhofer.dataspaces.iese.camel.interceptor.model.UsageControlObject;
@@ -24,9 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,16 +35,11 @@ import java.util.Map;
 public class ConsumerUcappProcessor implements Processor {
 
     private Gson gson;
-
     private static final Logger logger = LoggerFactory.getLogger(ConsumerUcappProcessor.class);
-
-
     @Value("${application.isEnabledUsageControl}")
     private boolean isEnabledUsageControl;
-
     @Autowired
     private UcService ucService;
-
     @Autowired
     private MultipartMessageService multipartMessageService;
     @Autowired
@@ -57,10 +49,6 @@ public class ConsumerUcappProcessor implements Processor {
 
     public ConsumerUcappProcessor(UcService ucService) {
         gson = ProducerUcappProcessor.createGson();
-    }
-
-    public static ConsumerUcappProcessor ucappProcessor(UcService ucService) {
-        return new ConsumerUcappProcessor(ucService);
     }
 
     public void setDefinition(NamedNode definition) {

@@ -44,12 +44,9 @@ import java.util.Map;
 public class ProducerUcappProcessor implements Processor {
 
     private Gson gson;
-
     private static final Logger logger = LoggerFactory.getLogger(ProducerUcappProcessor.class);
-
     @Value("${application.isEnabledUsageControl}")
     private boolean isEnabledUsageControl;
-
     @Autowired
     private UcService ucService;
     @Autowired
@@ -167,6 +164,7 @@ public class ProducerUcappProcessor implements Processor {
         return gson;
     }
 
+    //TODO
     public static IdsMsgTarget getIdsMsgTarget() {
         IdsMsgTarget idsMsgTarget = new IdsMsgTarget();
         idsMsgTarget.setName("Anwendung A");

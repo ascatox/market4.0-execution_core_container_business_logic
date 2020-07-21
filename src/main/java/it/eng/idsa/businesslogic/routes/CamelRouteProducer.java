@@ -119,8 +119,7 @@ public class CamelRouteProducer extends RouteBuilder {
                     .choice()
                         .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
                             .process(getTokenFromDapsProcessor)
-    //						.process(sendToActiveMQ)
-    //						.process(receiveFromActiveMQ)
+					        .process(producerUcappProcessor)
                             // Send data to Endpoint B
                             .process(sendDataToBusinessLogicProcessor)
                             .process(parseReceivedResponseMessage)
@@ -131,8 +130,7 @@ public class CamelRouteProducer extends RouteBuilder {
                                     .process(sendTransactionToCHProcessor)
                             .endChoice()
                         .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-        //					.process(sendToActiveMQ)
-        //					.process(receiveFromActiveMQ)
+							.process(producerUcappProcessor)
                             // Send data to Endpoint B
                             .process(sendDataToBusinessLogicProcessor)
                             .process(parseReceivedResponseMessage)
@@ -151,6 +149,7 @@ public class CamelRouteProducer extends RouteBuilder {
 						.choice()
 							.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 								.process(getTokenFromDapsProcessor)
+								.process(producerUcappProcessor)
 								// Send data to Endpoint B
 								.process(sendDataToBusinessLogicProcessor)
 								.process(parseReceivedResponseMessage)
@@ -162,6 +161,7 @@ public class CamelRouteProducer extends RouteBuilder {
 									.process(sendTransactionToCHProcessor)
 								.endChoice()
 									.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
+										.process(producerUcappProcessor)
 										// Send data to Endpoint B
 										.process(sendDataToBusinessLogicProcessor)
 										.process(parseReceivedResponseMessage)
