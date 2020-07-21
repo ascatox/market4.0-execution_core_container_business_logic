@@ -64,6 +64,9 @@ public class CamelRouteProducer extends RouteBuilder {
 	ExceptionProcessorConsumer exceptionProcessorConsumer;
 
 	@Autowired
+	ProducerUcappProcessor producerUcappProcessor;
+
+	@Autowired
 	CamelContext camelContext;
 
 	@Value("${application.dataApp.websocket.isEnabled}")
@@ -87,8 +90,7 @@ public class CamelRouteProducer extends RouteBuilder {
                     .choice()
                         .when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
                             .process(getTokenFromDapsProcessor)
-    //						.process(sendToActiveMQ)
-    //						.process(receiveFromActiveMQ)
+							.process(producerUcappProcessor)
                             // Send data to Endpoint B
                             .process(sendDataToBusinessLogicProcessor)
                             .process(parseReceivedResponseMessage)
@@ -99,8 +101,8 @@ public class CamelRouteProducer extends RouteBuilder {
                                 .process(sendTransactionToCHProcessor)
                             .endChoice()
                         .when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
-    //						.process(sendToActiveMQ)
-    //						.process(receiveFromActiveMQ)
+							// Usage Control App Enforcement
+							.process(producerUcappProcessor)
                             // Send data to Endpoint B
                             .process(sendDataToBusinessLogicProcessor)
                             .process(parseReceivedResponseMessage)

@@ -64,6 +64,9 @@ public class ProducerParseReceivedDataFromDAppProcessorBodyBinary implements Pro
 			forwardTo = null != receivedDataHeader.get("Forward-To")? receivedDataHeader.get("Forward-To").toString() : url;
 			headesParts.put("Forward-To", forwardTo);
 
+			String usageControl = receivedDataHeader.get("Usage-Control") != null ? receivedDataHeader.get("Usage-Control").toString(): null;
+			headesParts.put("Usage-Control",usageControl);
+
 			// Create multipart message parts
 			header = receivedDataHeader.get("header").toString();
 			multipartMessageParts.put("header", header);

@@ -57,6 +57,9 @@ public class CamelRouteConsumer extends RouteBuilder {
 	ConsumerWebSocketSendDataToDataAppProcessor sendDataToDataAppProcessorOverWS;
 
 	@Autowired
+	ConsumerUcappProcessor consumerUcappProcessor;
+
+	@Autowired
 	CamelContext camelContext;
 
 	@Value("${application.idscp.isEnabled}")
@@ -98,8 +101,7 @@ public class CamelRouteConsumer extends RouteBuilder {
 					.choice()
 					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(true))
 						.process(validateTokenProcessor)
-						//.process(sendToActiveMQ)
-						//.process(receiveFromActiveMQ)
+						.process(consumerUcappProcessor)
 						// Send to the Endpoint: F
 						.choice()
 						.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))
@@ -115,8 +117,11 @@ public class CamelRouteConsumer extends RouteBuilder {
 							.process(sendTransactionToCHProcessor)
 						.endChoice()
 					.when(header("Is-Enabled-Daps-Interaction").isEqualTo(false))
+						// Usage Control App Enforcement
+						.process(consumerUcappProcessor)
 						// Send to the Endpoint: F
 						.choice()
+
 						.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(true))
 							.process(sendDataToDataAppProcessorOverWS)
 						.when(header("Is-Enabled-DataApp-WebSocket").isEqualTo(false))

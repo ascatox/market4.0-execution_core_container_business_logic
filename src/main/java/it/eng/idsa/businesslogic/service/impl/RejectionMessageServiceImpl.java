@@ -70,7 +70,10 @@ public class RejectionMessageServiceImpl implements RejectionMessageService{
 				break;
 			case "REJECTION_COMMUNICATION_LOCAL_ISSUES":
 				rejectionMessage = createRejectionCommunicationLocalIssues(message);
-				break;	
+				break;
+			case "REJECTION_USAGE_CONTROL":
+				rejectionMessage = createRejectionUsageControl(message);
+				break;
 			default:
 				rejectionMessage = createResultMessage(message);
 				break;
@@ -78,7 +81,7 @@ public class RejectionMessageServiceImpl implements RejectionMessageService{
 		return rejectionMessage;
 	}
 
-	private String getInformationModelVersion() {
+	/*private String getInformationModelVersion() {
 		String currentInformationModelVersion = null;
 		try {
 
@@ -105,11 +108,11 @@ public class RejectionMessageServiceImpl implements RejectionMessageService{
 		}
 
 		return currentInformationModelVersion;
-	}
-	
-	/*private String getInformationModelVersion() {
-		return "2.1.0-SNAPSHOT";
 	}*/
+	
+	private String getInformationModelVersion() {
+		return "2.1.0-SNAPSHOT";
+	}
 
 	public void setInformationModelVersion(String informationModelVersion) {
 		this.informationModelVersion = informationModelVersion;
@@ -183,6 +186,16 @@ public class RejectionMessageServiceImpl implements RejectionMessageService{
 				._recipientConnector_(asList(header.getIssuerConnector()))
 				._correlationMessage_(header.getId())
 				._rejectionReason_(RejectionReason.NOT_FOUND)
+				.build();
+	}
+	private Message createRejectionUsageControl(Message header) {
+		return new RejectionMessageBuilder()
+				._issuerConnector_(header.getIssuerConnector())
+				._issued_(DateUtil.now())
+				._modelVersion_(getInformationModelVersion())
+				._recipientConnector_(asList(header.getIssuerConnector()))
+				._correlationMessage_(header.getId())
+				._rejectionReason_(RejectionReason.NOT_AUTHORIZED)
 				.build();
 	}
 }
