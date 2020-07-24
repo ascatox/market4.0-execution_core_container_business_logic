@@ -59,8 +59,8 @@ public class ProducerParseReceivedDataProcessorBodyFormData implements Processor
 			headesParts.put("Content-Type", contentType);
 			forwardTo = receivedDataHeader.get("Forward-To").toString();
 			headesParts.put("Forward-To", forwardTo);
-			String usageControl = receivedDataHeader.get("Usage-Control") != null ? receivedDataHeader.get("Usage-Control").toString(): null;
-			headesParts.put("Usage-Control",usageControl);
+			//String usageControl = receivedDataHeader.get("Usage-Control") != null ? receivedDataHeader.get("Usage-Control").toString(): null;
+			//headesParts.put("Usage-Control",usageControl);
 
 			// Create multipart message parts
 			header = receivedDataHeader.get("header").toString();

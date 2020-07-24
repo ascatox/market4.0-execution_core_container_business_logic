@@ -87,14 +87,15 @@ public class ProducerUcappProcessor implements Processor {
             Map<String, Object> multipartMessageParts = exchange.getIn().getBody(HashMap.class);
             String header = multipartMessageParts.get("header").toString();
             message = multipartMessageService.getMessage(header);
-            String meta = exchange.getIn().getHeaders().get("Usage-Control").toString();
-            String dataAsString = createUsageControlObject(meta, multipartMessageParts.get("payload").toString());
+            //String meta = exchange.getIn().getHeaders().get("Usage-Control").toString();
+            //String dataAsString = createUsageControlObject(meta, multipartMessageParts.get("payload").toString());
+            String dataAsString = createUsageControlObject(message.getId(), multipartMessageParts.get("payload").toString());
             logger.info("from: " + exchange.getFromEndpoint());
             logger.info("Message Body: " + dataAsString);
             logger.info("Message Body Out: " + exchange.getOut().getBody(String.class));
 
             // Dummy connectionid
-            UsageControlObject ucObj = null;
+           /* UsageControlObject ucObj = null;
             JsonElement transferedDataObject = getDataObject(dataAsString);
             boolean isUsageControlObject = false;
             ucObj = gson.fromJson(transferedDataObject, UsageControlObject.class);
@@ -124,7 +125,11 @@ public class ProducerUcappProcessor implements Processor {
                     exchange.getIn().setBody(multipartMessageParts);
                     exchange.getMessage().setBody(multipartMessageParts);
                 }
-            }
+            }*/
+            multipartMessageParts.put("payload", dataAsString);
+            exchange.getIn().setBody(multipartMessageParts);
+            exchange.getMessage().setBody(multipartMessageParts);
+
             exchange.getOut().setHeaders(exchange.getIn().getHeaders());
             exchange.getOut().setBody(exchange.getIn().getBody());
         } catch (Exception e) {
@@ -173,7 +178,7 @@ public class ProducerUcappProcessor implements Processor {
         return idsMsgTarget;
     }
 
-    private String createUsageControlObject(String meta, String payload) {
+    /*private String createUsageControlObject(String meta, String payload) {
         UsageControlObject usageControlObject = new UsageControlObject();
         JsonElement jsonElement = gson.fromJson(payload, JsonElement.class);
         usageControlObject.setPayload(jsonElement);
@@ -181,5 +186,24 @@ public class ProducerUcappProcessor implements Processor {
         usageControlObject.setMeta(meta1);
         String usageControlObjectPayload = gson.toJson(usageControlObject, UsageControlObject.class);
         return usageControlObjectPayload;
+    }*/
+
+    private String createUsageControlObject(URI targetId, String payload) throws URISyntaxException {
+        UsageControlObject usageControlObject = new UsageControlObject();
+        JsonElement jsonElement = gson.fromJson(payload, JsonElement.class);
+        usageControlObject.setPayload(jsonElement);
+        Meta meta = new Meta();
+        meta.setAssignee(new URI("http://ids-b.iese.de/consumer")); //TODO
+        meta.setAssigner(new URI("http://ids-b.iese.de/provider")); //TODO
+        TargetArtifact targetArtifact = new TargetArtifact();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("CET"));
+        targetArtifact.setCreationDate(zonedDateTime);
+        targetArtifact.setId(targetId);
+        meta.setTargetArtifact(targetArtifact);
+        usageControlObject.setMeta(meta);
+        String usageControlObjectPayload = gson.toJson(usageControlObject, UsageControlObject.class);
+        return usageControlObjectPayload;
     }
+
 }
